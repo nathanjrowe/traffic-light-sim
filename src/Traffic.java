@@ -20,12 +20,14 @@ public class Traffic extends Application {
         TrafficLightCreation trafficLight = new TrafficLightCreation();
         pane.getChildren().add(trafficLight.getTrafficLight());
 
+        TrafficScene trafficScene = new TrafficScene();
+
         Scene scene = new Scene(pane, 800, 400);
         scene.setFill(Color.GRAY);
 
 
         primaryStage.setTitle("Traffic Light");
-        primaryStage.setScene(scene);
+        primaryStage.setScene(trafficScene.Traffic());
         primaryStage.show();
     }
 }
