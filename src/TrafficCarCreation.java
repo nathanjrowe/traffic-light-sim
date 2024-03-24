@@ -1,6 +1,8 @@
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class TrafficCarCreation {
 
@@ -8,7 +10,14 @@ public class TrafficCarCreation {
 
     public TrafficCarCreation() {
 
-        Image image = new Image("images/Screenshot 2024-03-23 at 9.49.30 PM.png");
+        //new Image(new FileInputStream("/car.png"));
+        Image image = null;
+        try {
+            image = new Image(new FileInputStream("./images/car.png"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
         imageView = new ImageView(image);
 
     }

@@ -1,9 +1,13 @@
+import javafx.animation.TranslateTransition;
 import javafx.scene.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
+import javafx.util.Duration;
 
 public class TrafficScene {
 
@@ -19,18 +23,65 @@ public class TrafficScene {
 
         //Ground
         Box groundBox = new Box(width*8,height*14,10);
-        groundBox.setLayoutY(150);
+        groundBox.setLayoutY(350);
         groundBox.setLayoutX(width/2);
         groundBox.setTranslateZ(0);
 
+        //StopLight
+        Pane trafficLight1 = new Pane();
+        TrafficLightCreation trafficLight = new TrafficLightCreation();
+        trafficLight1.getChildren().add(trafficLight.getTrafficLight());
+        trafficLight1.setLayoutY(0);
+        trafficLight1.setLayoutX(width/2);
+        trafficLight1.setTranslateZ(0);
+
+        //Set the traffic light to red
+        trafficLight.setRed();
+
         //Ground Material
         PhongMaterial groundMaterial = new PhongMaterial();
-        groundMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/map.png"));
-        groundMaterial.setDiffuseMap(imageHelper.getImage("./images/map.png"));
+        groundMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/map2.png"));
+        groundMaterial.setSpecularColor(Color.GRAY);
+        groundMaterial.setDiffuseMap(imageHelper.getImage("./images/map2.png"));
         groundBox.setMaterial(groundMaterial);
 
+        //Car
+        TrafficCarCreation car = new TrafficCarCreation();
+        car.getTrafficCar().setFitWidth(50);
+        car.getTrafficCar().setFitHeight(100);
+        car.getTrafficCar().setLayoutY(330);
+        car.getTrafficCar().setTranslateZ(200);
+        car.getTrafficCar().getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),new Rotate(-90, Rotate.Z_AXIS));
+
+        //Car Movement
+        TranslateTransition transition = new TranslateTransition(Duration.millis(2500),car.getTrafficCar());
+        transition.setByX(2000);
+        transition.setAutoReverse(true);
+        transition.play();
+
+        transition.setOnFinished(event -> {
+            car.getTrafficCar().getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),new Rotate(-90, Rotate.Z_AXIS));
+            TranslateTransition transition1 = new TranslateTransition(Duration.millis(2500),car.getTrafficCar());
+            transition1.setByZ(-2000);
+            transition1.setAutoReverse(true);
+            transition1.play();
+
+            transition1.setOnFinished(event1 -> {
+                car.getTrafficCar().getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),new Rotate(90, Rotate.Z_AXIS));
+                TranslateTransition transition2 = new TranslateTransition(Duration.millis(2500),car.getTrafficCar());
+                transition2.setByX(-2000);
+                transition2.setAutoReverse(true);
+                transition2.play();
+                transition2.setOnFinished(event2 -> {
+                    transition.play();
+                });
+            });
+
+        });
+        //end Car Movement
+
         //Add to root
-        root.getChildren().add(groundBox);
+        root.getChildren().addAll(groundBox, trafficLight1, car.getTrafficCar());
 
         //Scene camera (what makes it 3D)
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(true);
@@ -74,9 +125,10 @@ public class TrafficScene {
         scene.setFill(Color.GRAY);
 
         //Sets the camera properties
-        perspectiveCamera.setLayoutY(-50);
+        perspectiveCamera.setLayoutY(-1550);
         perspectiveCamera.setLayoutX(0);
-        perspectiveCamera.setTranslateZ(-1500);
+        perspectiveCamera.setTranslateZ(-2500);
+        perspectiveCamera.getTransforms().addAll(new Rotate(-40, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),new Rotate(0, Rotate.Z_AXIS));
 
         //Camera controls (Zoom in/out, move camera)
         Camera fpsCamera = new Camera();
