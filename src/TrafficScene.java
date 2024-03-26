@@ -40,9 +40,9 @@ public class TrafficScene {
 
         //Ground Material
         PhongMaterial groundMaterial = new PhongMaterial();
-        groundMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/map2.png"));
+        groundMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/roads.png"));
         groundMaterial.setSpecularColor(Color.GRAY);
-        groundMaterial.setDiffuseMap(imageHelper.getImage("./images/map2.png"));
+        groundMaterial.setDiffuseMap(imageHelper.getImage("./images/roads.png"));
         groundBox.setMaterial(groundMaterial);
 
         //Car
@@ -53,7 +53,7 @@ public class TrafficScene {
         car.getTrafficCar().setTranslateZ(200);
         car.getTrafficCar().getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),new Rotate(-90, Rotate.Z_AXIS));
 
-        //Car Movement
+        //Car Movement (REMOVE)
         TranslateTransition transition = new TranslateTransition(Duration.millis(2500),car.getTrafficCar());
         transition.setByX(2000);
         transition.setAutoReverse(true);
