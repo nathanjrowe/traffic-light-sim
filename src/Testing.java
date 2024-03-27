@@ -1,15 +1,16 @@
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
-import javafx.scene.paint.Color;
+import org.w3c.dom.events.Event;
 
-import java.awt.*;
 import java.util.List;
 
 public class Testing extends Application {
@@ -25,7 +26,16 @@ public class Testing extends Application {
         ImageHelper imageHelper = new ImageHelper();
         Image map = imageHelper.getImage("./images/roads.png");
         ImageView fullMap = new ImageView(map);
+        double imageW = map.getWidth();
+        double imageH = map.getHeight();
+        System.out.println("Original Image Width: " + imageW + " Original Image Height: " + imageH);
+
         Pane mapPane = resizeImage(fullMap, 1200, 800);
+
+        root.setOnMouseClicked(event -> {
+            double temp[] = reverseCoords(event.getX(), event.getY(), imageW, imageH);
+            System.out.println("X Position: " + temp[0] + " Y Position: " + temp[1]);
+        });
 
         root.getChildren().add(mapPane);
 
@@ -45,6 +55,13 @@ public class Testing extends Application {
         }
 
         return pane;
+    }
+
+    public double[] reverseCoords(double mouseX, double mouseY, double imageWidth, double imageHeight) {
+        double originalX = mouseX * (imageWidth / 1200);
+        double originalY = mouseY * (imageHeight / 800);
+
+        return new double[]{originalX, originalY};
     }
 
     public Pane resizeImage(ImageView imageView, double maxWidth, double maxHeight) {
