@@ -24,7 +24,7 @@ public class Testing extends Application {
         StackPane root = new StackPane();
 
         ImageHelper imageHelper = new ImageHelper();
-        Image map = imageHelper.getImage("./images/roads.png");
+        Image map = imageHelper.getImage("./images/Updated 2 of 460 Traffic Map-2.png");
         ImageView fullMap = new ImageView(map);
         double imageW = map.getWidth();
         double imageH = map.getHeight();

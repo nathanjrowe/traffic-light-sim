@@ -1,3 +1,5 @@
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -10,11 +12,18 @@ import javafx.scene.shape.Rectangle;
  */
 public class TrafficLightCreation {
 
+    public enum LightColor {
+        RED, YELLOW, GREEN, GREENLEFT, GREENRIGHT
+    }
+
     private final Pane pane;
     private final Rectangle rectangle;
     private final Circle redCircle;
     private final Circle yellowCircle;
     private final Circle greenCircle;
+    private final ImageView leftTurnArrowImageView;
+    private final ImageView rightTurnArrowImageView;
+    private LightColor lightColor;
 
     /**
      * Constructor that creates a traffic light with three circles and a rectangle.
@@ -36,6 +45,26 @@ public class TrafficLightCreation {
         greenCircle.setFill(null);
         greenCircle.setStroke(Color.WHITE);
 
+        leftTurnArrowImageView = new ImageView();
+        rightTurnArrowImageView = new ImageView();
+        ImageHelper imageHelper = new ImageHelper();
+        Image map = imageHelper.getImage("./images/Steady_Green_Arrow-removebg-preview.png");
+
+        leftTurnArrowImageView.setImage(map);
+        leftTurnArrowImageView.setFitWidth(50); // Match the diameter of the greenCircle
+        leftTurnArrowImageView.setFitHeight(50);
+        leftTurnArrowImageView.setX(325); // Position it over the greenCircle
+        leftTurnArrowImageView.setY(205);
+
+        map = imageHelper.getImage("./images/right_Steady_Green_Arrow-removebg-preview.png");
+        rightTurnArrowImageView.setImage(map);
+        rightTurnArrowImageView.setFitWidth(50); // Match the diameter of the greenCircle
+        rightTurnArrowImageView.setFitHeight(50);
+        rightTurnArrowImageView.setX(325); // Position it over the greenCircle
+        rightTurnArrowImageView.setY(205);
+
+        lightColor = null;
+
         pane.getChildren().addAll(rectangle, redCircle, yellowCircle, greenCircle);
     }
 
@@ -54,6 +83,13 @@ public class TrafficLightCreation {
         redCircle.setFill(Color.RED);
         yellowCircle.setFill(null);
         greenCircle.setFill(null);
+        lightColor = LightColor.RED;
+        if(pane.getChildren().contains(leftTurnArrowImageView)){
+            pane.getChildren().remove(leftTurnArrowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnArrowImageView)) {
+            pane.getChildren().remove(rightTurnArrowImageView);
+        }
     }
 
     /**
@@ -63,6 +99,13 @@ public class TrafficLightCreation {
         redCircle.setFill(null);
         yellowCircle.setFill(Color.YELLOW);
         greenCircle.setFill(null);
+        lightColor = LightColor.YELLOW;
+        if(pane.getChildren().contains(leftTurnArrowImageView)){
+            pane.getChildren().remove(leftTurnArrowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnArrowImageView)) {
+            pane.getChildren().remove(rightTurnArrowImageView);
+        }
     }
 
     /**
@@ -72,6 +115,53 @@ public class TrafficLightCreation {
         redCircle.setFill(null);
         yellowCircle.setFill(null);
         greenCircle.setFill(Color.GREEN);
+        lightColor = LightColor.GREEN;
+        if(pane.getChildren().contains(leftTurnArrowImageView)){
+            pane.getChildren().remove(leftTurnArrowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnArrowImageView)) {
+            pane.getChildren().remove(rightTurnArrowImageView);
+        }
+    }
+
+    public void setGreenLeftTurnArrow(){
+        redCircle.setFill(null);
+        yellowCircle.setFill(null);
+        greenCircle.setFill(null);
+
+        // Add the ImageView to the pane if it's not already there
+        if (!pane.getChildren().contains(leftTurnArrowImageView)) {
+            pane.getChildren().add(leftTurnArrowImageView);
+        }
+
+
+        if (pane.getChildren().contains(rightTurnArrowImageView)) {
+            pane.getChildren().remove(rightTurnArrowImageView);
+        }
+
+
+        lightColor = LightColor.GREENLEFT;
+    }
+
+    public void setGreenRightTurnArrow(){
+        redCircle.setFill(null);
+        yellowCircle.setFill(null);
+        greenCircle.setFill(null);
+
+        if(pane.getChildren().contains(leftTurnArrowImageView)){
+            pane.getChildren().remove(leftTurnArrowImageView);
+        }
+
+        // Add the ImageView to the pane if it's not already there
+        if (!pane.getChildren().contains(rightTurnArrowImageView)) {
+            pane.getChildren().add(rightTurnArrowImageView);
+        }
+
+        lightColor = LightColor.GREENRIGHT;
+    }
+
+    public LightColor getLightColor() {
+        return lightColor;
     }
 
 }
