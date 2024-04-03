@@ -5,11 +5,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -17,11 +14,8 @@ public class Testing extends Application {
 
     private final Boolean DEBUG = false;
 
-    private double[] polygonPoints = new double[100];
+    private List<Double> polygonPoints = new ArrayList<>();
     private List<Double> polygonTemp = new ArrayList<>();
-    private List<double[]> polygonTempArray = new ArrayList<>();
-    private int count = 0;
-
 
     private List<double[]> allPossiblePaths = new ArrayList<>(); //Does not include Starting Paths
     private List<double[]> startingPaths = new ArrayList<>();
@@ -46,27 +40,17 @@ public class Testing extends Application {
 
         Pane tempPane = new Pane();
 
-        polygonTempArray.add(new double[4]);
-
         root.setOnMouseClicked(event -> {
             double[] temp = {event.getX(), event.getY()};
             polygonTemp.add(temp[0]);
             polygonTemp.add(temp[1]);
+            polygonPoints.add(temp[0]);
+            polygonPoints.add(temp[1]);
             if (DEBUG) System.out.println("X Position: " + temp[0] + " Y Position: " + temp[1]);
-            int var1 = 0;
             if (polygonTemp.size() == 4) {
-                for (Double value : polygonTemp) {
-                    polygonPoints[count] = value;
-                    polygonTempArray.get(0)[var1] = value;
-                    count++;
-                    var1++;
-                }
-                tempPane.getChildren().add(drawPossibilities(polygonTempArray));
-                polygonTempArray.clear();
+                tempPane.getChildren().add(drawPossibilities(polygonTemp));
                 polygonTemp.clear();
-                polygonTempArray.add(new double[4]);
-                System.out.println(DoubleArrayToString(polygonPoints));
-                var1 = 0;
+                if (DEBUG) System.out.println(DoubleArrayToString(polygonPoints));
             }
         });
 
@@ -78,23 +62,19 @@ public class Testing extends Application {
         primaryStage.show();
     }
 
-    public Line drawPossibilities(List<double[]> Path) {
-        Line line = new Line();
+    public Line drawPossibilities(List<Double> Path) {
+        Line line = new Line(Path.get(0), Path.get(1), Path.get(2), Path.get(3));
 
-        for (double[] singlePath : Path){
-            //              Line(startX, startY, endX, endY);
-            if (DEBUG) System.out.println("starX: " + singlePath[0] + " startY: " + singlePath[1] +
-                    " endX: " + singlePath[2] + " endY: " + singlePath[3]);
-            line = new Line(singlePath[0], singlePath[1], singlePath[2], singlePath[3]);
-            if (DEBUG) System.out.println("starX: " + line.getStartX() + " startY: " + line.getStartY() +
-                    " endX: " + line.getEndX() + " endY: " + line.getEndY());
-        }
-        System.out.println("Attempting to draw the line");
+        if (DEBUG) System.out.println("starX: " + Path.get(0) + " startY: " + Path.get(1) +
+                " endX: " + Path.get(2) + " endY: " + Path.get(3));
+        if (DEBUG) System.out.println("starX: " + line.getStartX() + " startY: " + line.getStartY() +
+                " endX: " + line.getEndX() + " endY: " + line.getEndY());
+        if (DEBUG) System.out.println("Attempting to draw the line");
 
         return line;
     }
 
-    public double[] reverseCoords(double mouseX, double mouseY, double imageWidth, double imageHeight) {
+    public double[] reverseCords(double mouseX, double mouseY, double imageWidth, double imageHeight) {
         double originalX = mouseX * (imageWidth / 1200);
         double originalY = mouseY * (imageHeight / 800);
 
@@ -132,22 +112,21 @@ public class Testing extends Application {
         return pane;
     }
 
-    private String DoubleArrayToString(double[] array){
-        String temp = "[ ";
-        int i = 0;
-        for (double value : array){
-            if (value != 0.0) {
-                if (i == 0 ){
-                    temp += "[" + value + ", ";
+    private String DoubleArrayToString(List<Double> array){
+        String temp = "[";
+
+        for (int i = 0; i < array.size(); i++){
+            if (i % 4 == 0) {
+                temp += "[";
+            }
+            temp += array.get(i);
+            if (i % 4 == 3) {
+                temp += "]";
+                if (i < array.size() - 1) {
+                    temp += ", ";
                 }
-                if (i > 0 && i < 3){
-                    temp += value + ", ";
-                }
-                i++;
-                if (i == 4){
-                    temp += value + "] ";
-                    i = 0;
-                }
+            } else {
+                temp += ", ";
             }
         }
         temp += "]";
