@@ -259,7 +259,7 @@ public class Testing extends Application {
         List<double[]> availablePaths = new ArrayList<>(allPathsList);
         List<double[]> startingTemp = new ArrayList<>(startingPathList);
 
-        System.out.println(startingTemp.size());
+        if (DEBUG) System.out.println(startingTemp.size());
         double[] currentPath = startingTemp.remove(random.nextInt(startingTemp.size()));
         path.add(currentPath);
 
