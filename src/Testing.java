@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static java.lang.Math.abs;
+
+
 public class Testing extends Application {
     //[startX, startY, endX, endY];
     private final double[][] INITIALPATHS = {
@@ -99,6 +102,7 @@ public class Testing extends Application {
     private List<double[]> allPossiblePaths = new ArrayList<>(); //Does not include Starting Paths
     private int allPathSize;
     private List<double[]> startingPaths = new ArrayList<>();
+    private TrafficCarCreation trafficCarCreation = new TrafficCarCreation();
 
     public static void main(String[] args) {
 
@@ -135,23 +139,71 @@ public class Testing extends Application {
         Pane tempPane = new Pane();
         root.setOnMouseClicked(event -> {
 
-            for (int j = 0; j < 10; j++) {
-                List<double[]> temp = generateRandomPath(allPossiblePaths, startingPaths);
-                Path path = new Path();
-                path.getElements().add(new MoveTo(temp.get(0)[0], temp.get(0)[1]));
-                for (int i = 0; i < temp.size(); i++) {
-                    double[] point = temp.get(i);
-                    path.getElements().add(new LineTo(point[2], point[3]));
-                }
-                path.setOpacity(0);
-                Circle car = new Circle(4);
-                car.setFill(Color.GREEN);
+            for (int j = 0; j < 1; j++) {
+//                List<double[]> temp = generateRandomPath(allPossiblePaths, startingPaths);
+//                Path path = new Path();
+//                path.getElements().add(new MoveTo(temp.get(0)[0], temp.get(0)[1]));
+//                double distance = 0;
+//                double startX = temp.get(0)[0];
+//                double startY = temp.get(0)[1];
+//                for (int i = 0; i < temp.size(); i++) {
+//                    double[] point = temp.get(i);
+//                    path.getElements().add(new LineTo(point[2], point[3]));
+//
+//                    double endX = point[2];
+//                    double endY = point[3];
+//                    distance += abs((endX - startX)) + abs((endY - startY));
+//                    startX = point[2];
+//                    startY = point[3];
+//                }
+//                //This is where you edit the Speed
+//                double seconds = distance / 200;
+//
+//                path.setOpacity(0);
+//
+//                Rectangle car = new Rectangle(8, 15);
+//                car.setFill(Color.GREEN);
+//
+//                tempPane.getChildren().addAll(path, car);
+//                PathTransition pt = new PathTransition(Duration.seconds(seconds), path, car);
+//                pt.setDelay(Duration.seconds(0.2));
+//                pt.setCycleCount(1);
+//                pt.setInterpolator(Interpolator.LINEAR);
+//                double[] firstSegment = temp.get(0);
+//                car.setRotate(calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
+
+                //Add vehicle class in
+                Vehicle vehicle = new Vehicle();
+                Shape car = vehicle.carShape();
+                List<double[]> temp = vehicle.returnPathArray();
+                Path path = vehicle.returnPath();
+                double seconds = vehicle.returnSeconds();
+
+                //Initialize the Pane and Path Transition
                 tempPane.getChildren().addAll(path, car);
-                PathTransition pt = new PathTransition(Duration.seconds(2), path, car);
+                PathTransition pt = new PathTransition(Duration.seconds(seconds), path, car);
                 pt.setDelay(Duration.seconds(0.2));
                 pt.setCycleCount(1);
                 pt.setInterpolator(Interpolator.LINEAR);
+
+                //Car Rotation Code
+                double[] firstSegment = temp.get(0);
+                car.setRotate(calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
+                pt.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+                    //get car position
+                    double xPosition = car.getLayoutX() + car.getTranslateX();
+                    double yPosition = car.getLayoutY() + car.getTranslateY();
+                    //Now we are going to find which segment it is currently on
+                    double[] currentSegment = findClosestSegmentBasedOnPosition(xPosition, yPosition, temp);
+                    //Calculate angle based upon the current segment
+                    if (currentSegment != null) {
+                        double angle = calculateAngle(currentSegment[0], currentSegment[1], currentSegment[2], currentSegment[3]);
+                        car.setRotate(angle);
+                    }
+                });
                 pt.play();
+
+                //Add Collision and Removal of it here
             }
         });
 
@@ -161,6 +213,55 @@ public class Testing extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Testing");
         primaryStage.show();
+    }
+
+    private double[] findClosestSegmentBasedOnPosition(double xPosition, double yPosition, List<double[]> segments) {
+        //Initialize variables
+        double[] closestSegment = null;
+        double minDistance = Double.MAX_VALUE;
+        //Loop through checking for closest segment from its path segments
+        for (double[] segment : segments) {
+            //Finding which segment is closest
+            double distance = pointToSegmentDistance(xPosition, yPosition, segment[0], segment[1], segment[2], segment[3]);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestSegment = segment;
+            }
+        }
+        //return closest segment
+        return closestSegment;
+    }
+
+    private double pointToSegmentDistance(double pointX, double pointY, double startX, double startY, double endX, double endY) {
+        double changeX = endX - startX;
+        double changeY = endY - startY;
+        //Check if the same
+        if (changeX == 0 && changeY == 0) {
+            changeX = pointX - startX;
+            changeY = pointY - startY;
+            return Math.sqrt(changeX * changeX + changeY * changeY);
+        }
+
+        double projectionOnSegment = ((pointX - startX) * changeX + (pointY - startY) * changeY) /
+                (changeX * changeX + changeY * changeY);
+        //confirm it is on the line
+        projectionOnSegment = Math.max(0, Math.min(1, projectionOnSegment));
+        //Calculate the closest pixel to where it is at on the line
+        double closestX = startX + projectionOnSegment * changeX;
+        double closestY = startY + projectionOnSegment * changeY;
+        //Adjust the position of where it is to segment
+        changeX = pointX - closestX;
+        changeY = pointY - closestY;
+        //return distance from segment
+        return Math.sqrt(changeX * changeX + changeY * changeY);
+    }
+
+    private double calculateAngle(double startX, double startY, double endX, double endY) {
+        double angle = Math.toDegrees(Math.atan2(endX - startX, endY - startY));
+        if(angle < 0){
+            angle += 360;
+        }
+        return angle;
     }
 
     public Line arrayToLine(double[] array) {
@@ -226,7 +327,30 @@ public class Testing extends Application {
         return pane;
     }
 
-    private String arrayListToString(List<Double> array){
+    private String listDoubleArrayToString(List<double[]> array){
+        String temp = "[";
+
+        for (double[] arr : array) {
+            for (int i = 0; i < 4; i++) {
+                if (i % 4 == 0) {
+                    temp += "[";
+                }
+                temp += arr[i];
+                if (i % 4 == 3) {
+                    temp += "]";
+                } else {
+                    temp += ", ";
+                }
+            }
+            if (arr != array.get(array.size() - 1)) {
+                temp += ", ";
+            }
+        }
+        temp += "]";
+        return temp;
+    }
+
+    private String listDoubleToString(List<Double> array){
         String temp = "[";
 
         for (int i = 0; i < array.size(); i++){
@@ -268,13 +392,6 @@ public class Testing extends Application {
             pathFinished = true;
             List<double[]> potentialPaths = new ArrayList<>();
             for (double[] nextPath : availablePaths) {
-//                if (pathConnects(currentPath, nextPath)) {
-//                    path.add(nextPath);
-//                    availableSegments.remove(nextPath);
-//                    currentPath = nextPath;
-//                    pathFinished = false;
-//                    break;
-//                }
                 if (pathConnects(currentPath, nextPath)) {
                     potentialPaths.add(nextPath);
                     pathFinished = false;
