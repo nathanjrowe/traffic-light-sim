@@ -85,6 +85,7 @@ public class Vehicle {
     private double seconds;
     private List<double[]> temp;
     private Path path;
+    private Boolean collided;
 
     protected Vehicle(){
         for (double[] array : INITIALPATHS){
@@ -95,6 +96,7 @@ public class Vehicle {
         }
         allPathSize = allPossiblePaths.size();
         createPath();
+        collided = false;
     }
 
     protected Shape carShape() {
@@ -167,5 +169,13 @@ public class Vehicle {
             }
         }
         return path;
+    }
+
+    protected void setCollided(boolean bool){
+        collided = bool;
+    }
+
+    protected boolean returnCollided(){
+        return collided;
     }
 }
