@@ -25,6 +25,7 @@ import static java.lang.Math.abs;
 public class Testing extends Application {
     private final Boolean DEBUG = false;
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
+    private StackPane root = new StackPane();
 
     public static void main(String[] args) {
 
@@ -33,64 +34,8 @@ public class Testing extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        StackPane root = new StackPane();
 
-        ImageHelper imageHelper = new ImageHelper();
-        Image map = imageHelper.getImage("./images/Updated 2 of 460 Traffic Map-2.png");
-        ImageView fullMap = new ImageView(map);
-        double imageW = map.getWidth();
-        double imageH = map.getHeight();
-        System.out.println("Original Image Width: " + imageW + " Original Image Height: " + imageH);
-
-        Pane mapPane = resizeImage(fullMap, 1200, 800);
-        root.getChildren().add(mapPane);
-
-        Pane tempPane = new Pane();
-        root.setOnMouseClicked(event -> {
-
-            for (int j = 0; j < 10; j++) {
-                //Add vehicle class in
-                Vehicle vehicle = new Vehicle();
-                Shape car = vehicle.carShape();
-                List<double[]> temp = vehicle.returnPathArray();
-                Path path = vehicle.returnPath();
-                double seconds = vehicle.returnSeconds();
-                vehicleCollidables.add(vehicle);
-                System.out.println(vehicleCollidables.size());
-
-                //Initialize the Pane and Path Transition
-                tempPane.getChildren().addAll(path, car);
-                PathTransition pt = new PathTransition(Duration.seconds(seconds), path, car);
-                pt.setDelay(Duration.seconds(0.2));
-                pt.setCycleCount(1);
-                pt.setInterpolator(Interpolator.LINEAR);
-                pt.play();
-
-                //Car Rotation Code
-                double[] firstSegment = temp.get(0);
-                car.setRotate(calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
-                pt.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
-                    //get car position
-                    double xPosition = car.getLayoutX() + car.getTranslateX();
-                    double yPosition = car.getLayoutY() + car.getTranslateY();
-                    //Now we are going to find which segment it is currently on
-                    double[] currentSegment = findClosestSegmentBasedOnPosition(xPosition, yPosition, temp);
-                    //Calculate angle based upon the current segment
-                    if (currentSegment != null) {
-                        double angle = calculateAngle(currentSegment[0], currentSegment[1], currentSegment[2], currentSegment[3]);
-                        car.setRotate(angle);
-                    }
-
-                });
-                pt.setOnFinished(event1 -> {
-                    tempPane.getChildren().removeAll(path, car);
-                });
-            }
-
-        });
-
-        root.getChildren().add(tempPane);
-
+        createRoot();
         Scene scene = new Scene(root, 1200, 800);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Testing");
@@ -166,6 +111,70 @@ public class Testing extends Application {
         imageView.layoutYProperty().bind(pane.heightProperty().subtract(imageView.fitHeightProperty()).divide(2));
 
         return pane;
+    }
+
+    public void createRoot(){
+        ImageHelper imageHelper = new ImageHelper();
+        Image map = imageHelper.getImage("./images/Updated 2 of 460 Traffic Map-2.png");
+        ImageView fullMap = new ImageView(map);
+        double imageW = map.getWidth();
+        double imageH = map.getHeight();
+        System.out.println("Original Image Width: " + imageW + " Original Image Height: " + imageH);
+
+        Pane mapPane = resizeImage(fullMap, 1200, 800);
+        root.getChildren().add(mapPane);
+
+        Pane tempPane = new Pane();
+        root.setOnMouseClicked(event -> {
+            spawnVehicles(tempPane);
+        });
+
+        root.getChildren().add(tempPane);
+
+    }
+
+    public void spawnVehicles(Pane tempPane){
+        for (int j = 0; j < 10; j++) {
+            //Add vehicle class in
+            Vehicle vehicle = new Vehicle();
+            Shape car = vehicle.carShape();
+            List<double[]> temp = vehicle.returnPathArray();
+            Path path = vehicle.returnPath();
+            double seconds = vehicle.returnSeconds();
+            vehicleCollidables.add(vehicle);
+            System.out.println(vehicleCollidables.size());
+
+            //Initialize the Pane and Path Transition
+            tempPane.getChildren().addAll(path, car);
+            PathTransition pt = new PathTransition(Duration.seconds(seconds), path, car);
+            pt.setDelay(Duration.seconds(0.2));
+            pt.setCycleCount(1);
+            pt.setInterpolator(Interpolator.LINEAR);
+            pt.play();
+
+            //Car Rotation Code
+            double[] firstSegment = temp.get(0);
+            car.setRotate(calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
+            pt.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+                //get car position
+                double xPosition = car.getLayoutX() + car.getTranslateX();
+                double yPosition = car.getLayoutY() + car.getTranslateY();
+                //Now we are going to find which segment it is currently on
+                double[] currentSegment = findClosestSegmentBasedOnPosition(xPosition, yPosition, temp);
+                //Calculate angle based upon the current segment
+                if (currentSegment != null) {
+                    double angle = calculateAngle(currentSegment[0], currentSegment[1], currentSegment[2], currentSegment[3]);
+                    car.setRotate(angle);
+                }
+
+            });
+            pt.setOnFinished(event1 -> {
+                tempPane.getChildren().removeAll(path, car);
+            });
+        }
+    }
+    public Pane getRoot(){
+        return root;
     }
 
 
