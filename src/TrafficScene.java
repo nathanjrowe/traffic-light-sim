@@ -1,6 +1,7 @@
 
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.animation.TranslateTransition;
+import javafx.geometry.Insets;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -197,20 +198,35 @@ public class TrafficScene {
 
         Rectangle startRec = new Rectangle();
         startRec.setFill(Color.BLACK);
-        startRec.setOpacity(.25);
+        startRec.setOpacity(.45);
         startRec.setWidth(width);
         startRec.setHeight(100);
         //startRec.setLayoutX(-300);
 
         //Label label = new Label("2D");
         Pane buttonPane = new Pane();
-        Text tesr = new Text("Spawn Traffic");
-        tesr.setFill(Color.WHITE);
+        Text spawnTrafficT = new Text("Spawn Traffic");
+        spawnTrafficT.setFill(Color.WHITE);
+
+        Text currentTimeT = new Text("Current Sim Time: 10:40 AM");
+        currentTimeT.setFill(Color.WHITE);
+
+        Text currentTrafficT = new Text("Traffic: Moderate");
+        currentTrafficT.setFill(Color.WHITE);
+
+        Image uiT = imageHelper.getImage("./images/logo.png");
+        ImageView uiTitle = new ImageView(uiT);
+        uiTitle.setScaleX(.75);
+        uiTitle.setScaleY(.75);
+        //uiTitle.setFill(Color.WHITE);
         //Button testButton = new Button();
 
-        menuPane.getChildren().addAll(startRec,buttonPane, tesr);//, testButton);
-        menuPane.setTranslateX(640);
-        menuPane.setTranslateY(55);
+        menuPane.getChildren().addAll(startRec,buttonPane, spawnTrafficT, uiTitle, currentTimeT, currentTrafficT);//, testButton);
+        menuPane.setMargin(uiTitle, new Insets(-20,0,0,-775));
+        menuPane.setMargin(currentTimeT, new Insets(-50,0,0,950));
+        menuPane.setMargin(currentTrafficT, new Insets(0,0,0,895));
+        menuPane.setTranslateX(600);
+        menuPane.setTranslateY(50);
 
 
         cameraPane.setTranslateZ(-1500);
@@ -256,7 +272,7 @@ public class TrafficScene {
         tempPane.setTranslateX(-600);
         tempPane.setTranslateY(-400);
 
-        tesr.setOnMouseClicked(event -> {
+        spawnTrafficT.setOnMouseClicked(event -> {
             testing.spawnVehicles(tempPane);
             //streetScene.getChildren().add(tempPane);
         });
