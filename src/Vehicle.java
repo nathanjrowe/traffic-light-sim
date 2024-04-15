@@ -1,12 +1,12 @@
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import static java.lang.Math.abs;
 
 public class Vehicle {
@@ -80,23 +80,75 @@ public class Vehicle {
     private List<double[]> allPossiblePaths = new ArrayList<>(); //Does not include Starting Paths
     private int allPathSize;
     private List<double[]> startingPaths = new ArrayList<>();
-
     private double distance;
     private double seconds;
     private List<double[]> temp;
     private Path path;
     private Boolean collided;
+    private PathTransition pathTransition;
+    private Shape carShape;
 
-    protected Vehicle(){
+    public Vehicle(Pane tempPane) {
+        initializeArrays();
+        createPath();
+        initializeCarShape();
+        initializePathTransition(tempPane);
+    }
+
+    private void initializeCarShape() {
+        carShape = new Rectangle(8, 15);
+        //Set initial angle based on the first segment
+        if (!temp.isEmpty()) {
+            double[] firstSegment = temp.get(0);
+            carShape.setRotate(calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
+        }
+    }
+
+    private void initializePathTransition(Pane tempPane) {
+        tempPane.getChildren().addAll(path,carShape);
+        if (path != null && carShape != null) {
+            pathTransition = new PathTransition(Duration.seconds(seconds), path, carShape);
+            pathTransition.setInterpolator(Interpolator.LINEAR);
+            pathTransition.setCycleCount(1);
+
+            //Car Rotation Code
+            pathTransition.currentTimeProperty().addListener((obs, old, current) -> {
+                double xPosition = carShape.getLayoutX() + carShape.getTranslateX();
+                double yPosition = carShape.getLayoutY() + carShape.getTranslateY();
+                double[] currentSegment = findClosestSegmentBasedOnPosition(xPosition, yPosition, temp);
+                if (currentSegment != null) {
+                    double angle = calculateAngle(currentSegment[0], currentSegment[1], currentSegment[2], currentSegment[3]);
+                    carShape.setRotate(angle);
+                }
+            });
+
+            pathTransition.setOnFinished(event -> {
+                tempPane.getChildren().removeAll(path,carShape);
+            });
+        }
+    }
+
+    public void startAnimation() {
+        if (pathTransition != null) {
+            pathTransition.play();
+        }
+    }
+
+    public Path getPath() {
+        return path;
+    }
+
+    public Shape getCarShape() {
+        return carShape;
+    }
+
+    private void initializeArrays(){
         for (double[] array : INITIALPATHS){
             startingPaths.add(array);
         }
         for (double[] array : RESTOFPATHS){
             allPossiblePaths.add(array);
         }
-        allPathSize = allPossiblePaths.size();
-        createPath();
-        collided = false;
     }
 
     protected Shape carShape() {
@@ -169,6 +221,55 @@ public class Vehicle {
             }
         }
         return path;
+    }
+
+    protected double[] findClosestSegmentBasedOnPosition(double xPosition, double yPosition, List<double[]> segments) {
+        //Initialize variables
+        double[] closestSegment = null;
+        double minDistance = Double.MAX_VALUE;
+        //Loop through checking for closest segment from its path segments
+        for (double[] segment : segments) {
+            //Finding which segment is closest
+            double distance = pointToSegmentDistance(xPosition, yPosition, segment[0], segment[1], segment[2], segment[3]);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestSegment = segment;
+            }
+        }
+        //return closest segment
+        return closestSegment;
+    }
+
+    protected double pointToSegmentDistance(double pointX, double pointY, double startX, double startY, double endX, double endY) {
+        double changeX = endX - startX;
+        double changeY = endY - startY;
+        //Check if the same
+        if (changeX == 0 && changeY == 0) {
+            changeX = pointX - startX;
+            changeY = pointY - startY;
+            return Math.sqrt(changeX * changeX + changeY * changeY);
+        }
+
+        double projectionOnSegment = ((pointX - startX) * changeX + (pointY - startY) * changeY) /
+                (changeX * changeX + changeY * changeY);
+        //confirm it is on the line
+        projectionOnSegment = Math.max(0, Math.min(1, projectionOnSegment));
+        //Calculate the closest pixel to where it is at on the line
+        double closestX = startX + projectionOnSegment * changeX;
+        double closestY = startY + projectionOnSegment * changeY;
+        //Adjust the position of where it is to segment
+        changeX = pointX - closestX;
+        changeY = pointY - closestY;
+        //return distance from segment
+        return Math.sqrt(changeX * changeX + changeY * changeY);
+    }
+
+    protected double calculateAngle(double startX, double startY, double endX, double endY) {
+        double angle = Math.toDegrees(Math.atan2(endX - startX, endY - startY));
+        if(angle < 0){
+            angle += 360;
+        }
+        return angle;
     }
 
     protected void setCollided(boolean bool){
