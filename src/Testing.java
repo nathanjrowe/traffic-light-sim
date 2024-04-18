@@ -1,7 +1,5 @@
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -13,15 +11,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Testing extends Application {
     private final Boolean DEBUG = false;
-    private final Boolean getCoordinates = true;
+    private final Boolean getCoordinates = false;
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private StackPane root = new StackPane();
     private Pane tempPane = new Pane();
@@ -104,7 +100,7 @@ public class Testing extends Application {
         vehicleCollidables.add(vehicle);
 
         //Using a recursive method to guarantee that the timeframe actually occurs.
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(50));
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(100));
         pause.setOnFinished(event1 -> {
             addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
         });
@@ -173,6 +169,11 @@ public class Testing extends Application {
 
         return pane;
     }
+
+    public Pane getRoot(){
+        return root;
+    }
+
 
 
 }
