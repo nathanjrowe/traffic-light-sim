@@ -1,14 +1,20 @@
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,6 +26,8 @@ public class Testing extends Application {
     private StackPane root = new StackPane();
     private Pane tempPane = new Pane();
     private AtomicInteger clickCount = new AtomicInteger(0);
+    private boolean stopSpawning = false;
+    private boolean currentlySpawning = false;
 
     public static void main(String[] args) {
         launch(args);
@@ -31,6 +39,8 @@ public class Testing extends Application {
         createRoot(clickCount);
 
         Scene scene = new Scene(root, 1200, 800);
+        root.setFocusTraversable(true);
+        root.requestFocus();
         primaryStage.setScene(scene);
         primaryStage.setTitle("Testing");
         primaryStage.show();
@@ -59,16 +69,47 @@ public class Testing extends Application {
                 tempPane.getChildren().addAll(circle, dotCount);
             }
             else {
-                for (int j = 0; j < 10; j++) {
-                    Vehicle vehicle = new Vehicle(tempPane, vehicleCollidables);
-                    vehicle.startAnimation();
-                    vehicleCollidables.add(vehicle);
+                if (!currentlySpawning) {
+                    stopSpawning = false;
+                    currentlySpawning = true;
+                    addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
+                }
+                else {
+                    System.out.println("Currently Spawning Bool: " + currentlySpawning);
+                    System.out.println("Already Spawning");
+                }
+            }
+        });
+        root.setOnKeyPressed(event1 -> {
+            if (event1.getCode() == KeyCode.SPACE) {
+                if (!stopSpawning) {
+                    stopSpawning = true;
+                    currentlySpawning = false;
+                } else {
+                    currentlySpawning = false;
                 }
             }
         });
         root.getChildren().add(tempPane);
     }
 
+    public void addVehiclesUntilCount(int count, Pane tempPane, List<Vehicle> vehicleCollidables) {
+        System.out.println("Total Vehicles on Map: " + count);
+        System.out.println("Stop Spawning Boolean: " + stopSpawning);
+        if (count >= 60 || stopSpawning) {
+            return;
+        }
+        Vehicle vehicle = new Vehicle(tempPane, vehicleCollidables);
+        vehicle.startAnimation();
+        vehicleCollidables.add(vehicle);
+
+        //Using a recursive method to guarantee that the timeframe actually occurs.
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(100));
+        pause.setOnFinished(event1 -> {
+            addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
+        });
+        pause.play();
+    }
 
     private void startCollisionTimer() {
         AnimationTimer timer = new AnimationTimer() {
@@ -88,16 +129,12 @@ public class Testing extends Application {
                 //System.out.println(v2.returnCarShape().getBoundsInParent());
                 if ((Shape.intersect(v1.returnCarShape(), v2.returnCarShape()).getBoundsInParent().getWidth() > 0)
                         && !v1.returnCollided() && !v2.returnCollided()) {
-                    System.out.println((Shape.intersect(v1.returnCarShape(), v2.returnCarShape()).getBoundsInParent().getWidth()));
-                    System.out.println((Shape.intersect(v1.returnCarShape(), v2.returnCarShape()).getBoundsInParent()));
-                    //System.out.println("Collision Detected");
-                    //v1.setCollided(true);
+                    //System.out.println((Shape.intersect(v1.returnCarShape(), v2.returnCarShape()).getBoundsInParent().getWidth()));
+                    //System.out.println((Shape.intersect(v1.returnCarShape(), v2.returnCarShape()).getBoundsInParent().getHeight()));
                     v2.setCollided(true);
-                    //v1.stopVehicle();
                     v2.stopVehicle();
                 } else if ((Shape.intersect(v1.returnCarShape(), v2.returnCarShape()).getBoundsInParent().getWidth() <= 0)
                         && !v1.returnCollided() && v2.returnCollided()) {
-                    //System.out.println("Collision Over");
                     v2.setCollided(false);
                     v2.restartVehicle();
                 }
