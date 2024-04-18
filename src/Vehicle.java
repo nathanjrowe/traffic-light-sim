@@ -3,7 +3,6 @@ import javafx.animation.PathTransition;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -88,11 +87,12 @@ public class Vehicle {
     private PathTransition pathTransition;
     private Shape carShape;
 
-    public Vehicle(Pane tempPane) {
+    public Vehicle(Pane tempPane, List<Vehicle> collidableVehicles) {
         initializeArrays();
         createPath();
         initializeCarShape();
-        initializePathTransition(tempPane);
+        initializePathTransition(tempPane, collidableVehicles);
+        this.collided = false;
     }
 
     private void initializeCarShape() {
@@ -104,10 +104,10 @@ public class Vehicle {
         }
     }
 
-    private void initializePathTransition(Pane tempPane) {
+    private void initializePathTransition(Pane tempPane, List<Vehicle> collidableVehicles) {
         tempPane.getChildren().addAll(path,carShape);
         if (path != null && carShape != null) {
-            pathTransition = new PathTransition(Duration.seconds(seconds), path, carShape);
+            pathTransition = new PathTransition(Duration.millis(seconds*1000), path, carShape);
             pathTransition.setInterpolator(Interpolator.LINEAR);
             pathTransition.setCycleCount(1);
 
@@ -124,22 +124,27 @@ public class Vehicle {
 
             pathTransition.setOnFinished(event -> {
                 tempPane.getChildren().removeAll(path,carShape);
+                collidableVehicles.remove(this);
             });
         }
     }
 
-    public void startAnimation() {
+    protected void startAnimation() {
         if (pathTransition != null) {
             pathTransition.play();
         }
     }
 
-    public Path getPath() {
-        return path;
+    protected void stopVehicle() {
+        if (pathTransition != null) {
+            pathTransition.pause();
+        }
     }
 
-    public Shape getCarShape() {
-        return carShape;
+    protected void restartVehicle() {
+        if (pathTransition != null) {
+            pathTransition.play();
+        }
     }
 
     private void initializeArrays(){
@@ -149,11 +154,6 @@ public class Vehicle {
         for (double[] array : RESTOFPATHS){
             allPossiblePaths.add(array);
         }
-    }
-
-    protected Shape carShape() {
-        Shape shape = new Rectangle(8, 15);
-        return shape;
     }
 
     protected void createPath(){
@@ -174,18 +174,6 @@ public class Vehicle {
         //This is where you edit the Speed
         seconds = distance / 200;
         path.setOpacity(0);
-    }
-
-    protected Path returnPath(){
-        return path;
-    }
-
-    protected double returnSeconds(){
-        return seconds;
-    }
-
-    protected List<double[]> returnPathArray(){
-        return temp;
     }
 
     private boolean pathConnects(double[] path1, double[] path2) {
@@ -274,6 +262,22 @@ public class Vehicle {
 
     protected void setCollided(boolean bool){
         collided = bool;
+    }
+
+    protected Path returnPath(){
+        return path;
+    }
+
+    protected double returnSeconds(){
+        return seconds;
+    }
+
+    protected List<double[]> returnPathArray(){
+        return temp;
+    }
+
+    protected Shape returnCarShape() {
+        return carShape;
     }
 
     protected boolean returnCollided(){
