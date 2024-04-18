@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Testing extends Application {
     private final Boolean DEBUG = false;
-    private final Boolean getCoordinates = false;
+    private final Boolean getCoordinates = true;
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private StackPane root = new StackPane();
     private Pane tempPane = new Pane();
@@ -96,7 +96,7 @@ public class Testing extends Application {
     public void addVehiclesUntilCount(int count, Pane tempPane, List<Vehicle> vehicleCollidables) {
         System.out.println("Total Vehicles on Map: " + count);
         System.out.println("Stop Spawning Boolean: " + stopSpawning);
-        if (count >= 60 || stopSpawning) {
+        if (count >= 100 || stopSpawning) {
             return;
         }
         Vehicle vehicle = new Vehicle(tempPane, vehicleCollidables);
@@ -104,7 +104,7 @@ public class Testing extends Application {
         vehicleCollidables.add(vehicle);
 
         //Using a recursive method to guarantee that the timeframe actually occurs.
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(100));
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(50));
         pause.setOnFinished(event1 -> {
             addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
         });
