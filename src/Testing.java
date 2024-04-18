@@ -15,8 +15,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Testing extends Application {
     private final Boolean DEBUG = false;
-    private final Boolean getCoordinates = true;
+    private final Boolean getCoordinates = false;
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
+    private StackPane root = new StackPane();
+    private Pane tempPane = new Pane();
+    private AtomicInteger clickCount = new AtomicInteger(0);
 
     public static void main(String[] args) {
         launch(args);
@@ -24,8 +27,16 @@ public class Testing extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        StackPane root = new StackPane();
+        startCollisionTimer();
+        createRoot(clickCount);
 
+        Scene scene = new Scene(root, 1200, 800);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Testing");
+        primaryStage.show();
+    }
+
+    public void createRoot(AtomicInteger clickCount){
         ImageHelper imageHelper = new ImageHelper();
         Image map = imageHelper.getImage("./images/Updated 2 of 460 Traffic Map-2.png");
         ImageView fullMap = new ImageView(map);
@@ -36,9 +47,6 @@ public class Testing extends Application {
         Pane mapPane = resizeImage(fullMap, 1200, 800);
         root.getChildren().add(mapPane);
 
-        Pane tempPane = new Pane();
-
-        AtomicInteger clickCount = new AtomicInteger();
         root.setOnMouseClicked(event -> {
             if (getCoordinates) {
                 double[] temp = {event.getX(), event.getY()};
@@ -58,15 +66,9 @@ public class Testing extends Application {
                 }
             }
         });
-
-        startCollisionTimer();
-
         root.getChildren().add(tempPane);
-        Scene scene = new Scene(root, 1200, 800);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Testing");
-        primaryStage.show();
     }
+
 
     private void startCollisionTimer() {
         AnimationTimer timer = new AnimationTimer() {
