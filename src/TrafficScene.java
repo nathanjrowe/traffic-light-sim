@@ -1,15 +1,13 @@
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
+import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
+import javafx.scene.layout.*;
+import javafx.scene.paint.*;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
@@ -30,6 +28,7 @@ public class TrafficScene {
     private Testing testing = new Testing();
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private AtomicInteger clickCount = new AtomicInteger(0);
+    private int counter = 0;
     public Scene Traffic(){
 
         StlMeshImporter importer = new StlMeshImporter();
@@ -254,6 +253,8 @@ public class TrafficScene {
 
         testing.createRoot(clickCount);
         /*Image map = imageHelper.getImage("./images/Updated 2 of 460 Traffic Map-2.png");
+        testing.createRoot();
+        /*Image map = imageHelper.getImage("./images/TrafficMap.png");
         ImageView fullMap = new ImageView(map);
         double imageW = map.getWidth();
         double imageH = map.getHeight();
@@ -308,15 +309,100 @@ public class TrafficScene {
         group1.setTranslateX(1000);
         group1.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),new Rotate(0, Rotate.Z_AXIS));
 
-        streetScene.setScaleX(7);
-        streetScene.setScaleZ(7);
+        streetScene.setScaleX(3);
+        streetScene.setScaleZ(3);
         root.getChildren().addAll(subScene, menuPane);
-        root3D.getChildren().addAll(streetScene, mess, group, group1, groundBox, oceanBox, oceanBox1, oceanBoxN, skyBox, skyBox1, skyBox2);
+        root3D.getChildren().addAll(streetScene, mess, group, group1, groundBox, oceanBox, oceanBox1, oceanBoxN);
         //Set scene
         Scene scene = new Scene(root);
 
+
         //scene.setCamera(perspectiveCamera);
-        scene.setFill(Color.GRAY);
+        //region Sky Colors
+        Stop[] stops = new Stop[] { new Stop(0, Color.WHITE), new Stop(1, Color.rgb(150,200,225,1))};
+        LinearGradient lg1 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops);
+
+        Stop[] stops1 = new Stop[] { new Stop(0, Color.rgb(50,50,75)), new Stop(1, Color.rgb(100,100,125,1))};
+        LinearGradient lg2 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops1);
+        BackgroundFill backgroundFill1 = new BackgroundFill(lg2,new CornerRadii(1),new Insets(0));
+
+        Stop[] stops2 = new Stop[] { new Stop(0, Color.rgb(25,175,225)), new Stop(1, Color.rgb(25,125,175,1))};
+        LinearGradient lg3 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops2);
+        BackgroundFill backgroundFill2 = new BackgroundFill(lg3,new CornerRadii(1),new Insets(0));
+
+        Stop[] stops3 = new Stop[] { new Stop(0, Color.WHITE), new Stop(1, Color.rgb(150,200,225,1))};
+        LinearGradient lg4 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops3);
+        BackgroundFill backgroundFill3 = new BackgroundFill(lg4,new CornerRadii(1),new Insets(0));
+
+        Stop[] stops4 = new Stop[] { new Stop(0, Color.rgb(205,190,190)), new Stop(1, Color.rgb(125,150,175,1))};
+        LinearGradient lg5 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops4);
+        BackgroundFill backgroundFill4 = new BackgroundFill(lg5,new CornerRadii(1),new Insets(0));
+
+        Stop[] stops5 = new Stop[] { new Stop(0, Color.rgb(125,100,100)), new Stop(1, Color.rgb(225,100,75,1))};
+        LinearGradient lg6 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops5);
+        BackgroundFill backgroundFill5 = new BackgroundFill(lg6,new CornerRadii(1),new Insets(0));
+
+        Stop[] stops6 = new Stop[] { new Stop(0, Color.BLACK), new Stop(1,Color.rgb(50,50,75,1))};
+        LinearGradient lg7 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops6);
+        BackgroundFill backgroundFill6 = new BackgroundFill(lg7,new CornerRadii(1),new Insets(0));
+
+        Stop[] stops7 = new Stop[] { new Stop(0, Color.BLACK), new Stop(1, Color.rgb(25,25,50,1))};
+        LinearGradient lg8 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops7);
+        BackgroundFill backgroundFill7 = new BackgroundFill(lg8,new CornerRadii(1),new Insets(0));
+
+        Stop[] stops8 = new Stop[] { new Stop(0, Color.BLACK), new Stop(1, Color.rgb(25,25,65,1))};
+        LinearGradient lg9 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops8);
+        BackgroundFill backgroundFill8 = new BackgroundFill(lg9,new CornerRadii(1),new Insets(0));
+        Background backgroundss8 = new Background(backgroundFill8);
+
+        Stop[] stops9 = new Stop[] { new Stop(0, Color.BLACK), new Stop(1, Color.rgb(25,25,75,1))};
+        LinearGradient lg10 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops9);
+        BackgroundFill backgroundFill9 = new BackgroundFill(lg10,new CornerRadii(1),new Insets(0));
+
+        Stop[] stops10 = new Stop[] { new Stop(0, Color.BLACK), new Stop(1, Color.rgb(25,25,65,1))};
+        LinearGradient lg11 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops10);
+        BackgroundFill backgroundFill10 = new BackgroundFill(lg11,new CornerRadii(1),new Insets(0));
+
+        Stop[] stops11 = new Stop[] { new Stop(0, Color.BLACK), new Stop(1, Color.rgb(25,25,50,1))};
+        LinearGradient lg12 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops11);
+        BackgroundFill backgroundFill11 = new BackgroundFill(lg12,new CornerRadii(1),new Insets(0));
+        Background backgroundss11 = new Background(backgroundFill11);
+
+        Stop[] stops12 = new Stop[] { new Stop(0, Color.BLACK), new Stop(1,Color.rgb(25,25,35,1))};
+        LinearGradient lg13 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops12);
+        BackgroundFill backgroundFill12 = new BackgroundFill(lg13,new CornerRadii(1),new Insets(0));
+        //endregion
+
+
+        final long[] startingTime1 = {System.currentTimeMillis()};
+        final long[] startingTime = {System.currentTimeMillis()};
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long l) {
+                if ((l - startingTime1[0]) / 1000000 > 5000) {
+                    switch (counter){
+                        case 0: scene.setFill(lg2); currentTimeT.textProperty().set("Current Sim Time: 5:00am"); counter++; break;
+                        case 1: scene.setFill(lg3); currentTimeT.textProperty().set("Current Sim Time: 7:00 AM"); counter++;break;
+                        case 2: scene.setFill(lg4); currentTimeT.textProperty().set("Current Sim Time: 9:00 AM");counter++;break;
+                        case 3: scene.setFill(lg5); currentTimeT.textProperty().set("Current Sim Time: 11:00 AM");counter++;break;
+                        case 4: scene.setFill(lg6); currentTimeT.textProperty().set("Current Sim Time: 1:00 PM");counter++;break;
+                        case 5: scene.setFill(lg7); currentTimeT.textProperty().set("Current Sim Time: 3:00 PM");counter++;break;
+                        case 6: scene.setFill(lg8); currentTimeT.textProperty().set("Current Sim Time: 5:00 PM");counter++;break;
+                        case 7: scene.setFill(lg9); currentTimeT.textProperty().set("Current Sim Time: 7:00 PM");counter++;break;
+                        case 8: scene.setFill(lg10); currentTimeT.textProperty().set("Current Sim Time: 9:00 PM");counter++;break;
+                        case 9: scene.setFill(lg11); currentTimeT.textProperty().set("Current Sim Time: 11:00 PM");counter++;break;
+                        case 10: scene.setFill(lg12); currentTimeT.textProperty().set("Current Sim Time: 1:00 AM");counter++;break;
+                        case 11: scene.setFill(lg13); currentTimeT.textProperty().set("Current Time: 3:00am"); counter = 0;break;
+                    }
+
+                    startingTime1[0] = l;
+                }
+            }
+        };
+        timer.handle(5000);
+        timer.start();
+
+        scene.setFill(lg1);
 
         //Sets the camera properties
         perspectiveCamera.setLayoutY(-1550);
@@ -342,4 +428,3 @@ public class TrafficScene {
         return scene;
     }
 }
-
