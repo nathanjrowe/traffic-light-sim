@@ -1,38 +1,118 @@
+import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.animation.TranslateTransition;
+import javafx.geometry.Insets;
 import javafx.scene.*;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Mesh;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
+import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TrafficScene {
 
     private ImageHelper imageHelper = new ImageHelper();
+    private Testing testing = new Testing();
+    private List<Vehicle> vehicleCollidables = new ArrayList<>();
+    private AtomicInteger clickCount = new AtomicInteger(0);
     public Scene Traffic(){
-        int width = 1280;
-        int height = 720;
+
+        StlMeshImporter importer = new StlMeshImporter();
+        ObjModelImporter importe = new ObjModelImporter();
+        ObjModelImporter importe1 = new ObjModelImporter();
+
+        try {
+            importer.read(this.getClass().getResource("/building.stl"));
+            importe.read(this.getClass().getResource("/13941_Empire_State_Building_v1_l1.obj"));
+            importe1.read(this.getClass().getResource("/townhome/10091_townhome_V1_L1.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Mesh mesh = importer.getImport();
+        MeshView mess = new MeshView(mesh);
+        mess.setLayoutX(-500);
+        //mess.setLayoutY(500);
+        mess.setScaleX(50);
+        mess.setScaleY(50);
+        mess.setScaleZ(50);
+        MeshView[] meshViews = importe.getImport();//new MeshView(mesh)[] ;
+        MeshView[] meshViews1 = importe1.getImport();
+        //meshViews[0] = mess;
+
+        mess.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),new Rotate(0, Rotate.Z_AXIS));
+
+        int width = 1200;
+        int height = 800;
+
 
         //Root Pane
         BorderPane root = new BorderPane();
         root.setPrefHeight(height *1.1);
         root.setPrefWidth(width);
 
+        BorderPane root3D = new BorderPane();
+       /* root3D.setPrefHeight(height *1.1);
+        root3D.setPrefWidth(width);*/
+
         //Ground
-        Box groundBox = new Box(width*8,height*14,10);
-        groundBox.setLayoutY(350);
+        Box groundBox = new Box(width*10,height*10,10);
+        groundBox.setLayoutY(20);
         groundBox.setLayoutX(width/2);
-        groundBox.setTranslateZ(0);
+        groundBox.setTranslateZ(500);
+
+        Box oceanBox = new Box(width*2,height*10,10);
+        oceanBox.setLayoutY(0);
+        oceanBox.setLayoutX(width*5);
+        oceanBox.setTranslateZ(500);
+
+        Box oceanBox1 = new Box(width*2,height*10,10);
+        oceanBox1.setLayoutY(0);
+        oceanBox1.setLayoutX(-width*5);
+        oceanBox1.setTranslateZ(500);
+
+        Box oceanBoxN = new Box(width*2,height*18,10);
+        oceanBoxN.setLayoutY(0);
+        oceanBoxN.setLayoutX(0);
+        oceanBoxN.setTranslateZ(5300);
+
+        Box skyBox = new Box(width*25,height*8,10);
+        skyBox.setLayoutY(-3000);
+        skyBox.setLayoutX(width/2);
+        skyBox.setTranslateZ(6000);
+
+        Box skyBox1 = new Box(width*8.5,height*8,10);
+        skyBox1.setLayoutY(-3000);
+        skyBox1.setLayoutX(width*6);
+        skyBox1.setTranslateZ(500);
+
+        Box skyBox2 = new Box(width*8.5,height*8,10);
+        skyBox2.setLayoutY(-3000);
+        skyBox2.setLayoutX(-width*6);
+        skyBox2.setTranslateZ(500);
 
         //StopLight
         Pane trafficLight1 = new Pane();
         TrafficLightCreation trafficLight = new TrafficLightCreation();
         trafficLight1.getChildren().add(trafficLight.getTrafficLight());
-        trafficLight1.setLayoutY(0);
-        trafficLight1.setLayoutX(width/2);
+        trafficLight1.setLayoutY(-300);
+        trafficLight1.setLayoutX(-250);
         trafficLight1.setTranslateZ(0);
 
         //Set the traffic light to red
@@ -40,10 +120,26 @@ public class TrafficScene {
 
         //Ground Material
         PhongMaterial groundMaterial = new PhongMaterial();
-        groundMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/roads.png"));
+        groundMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/asphalt.jpg"));
         groundMaterial.setSpecularColor(Color.GRAY);
-        groundMaterial.setDiffuseMap(imageHelper.getImage("./images/roads.png"));
+        groundMaterial.setDiffuseMap(imageHelper.getImage("./images/asphalt.jpg"));
         groundBox.setMaterial(groundMaterial);
+
+        PhongMaterial oceanMaterial = new PhongMaterial();
+        oceanMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/ocean.jpg"));
+        oceanMaterial.setSpecularColor(Color.GRAY);
+        oceanMaterial.setDiffuseMap(imageHelper.getImage("./images/ocean.jpg"));
+        oceanBox.setMaterial(oceanMaterial);
+        oceanBox1.setMaterial(oceanMaterial);
+        oceanBoxN.setMaterial(oceanMaterial);
+
+        PhongMaterial skyMaterial = new PhongMaterial();
+        skyMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/sky.jpg"));
+        skyMaterial.setSpecularColor(Color.GRAY);
+        skyMaterial.setDiffuseMap(imageHelper.getImage("./images/sky.jpg"));
+        skyBox.setMaterial(skyMaterial);
+        skyBox1.setMaterial(skyMaterial);
+        skyBox2.setMaterial(skyMaterial);
 
         //Car
         TrafficCarCreation car = new TrafficCarCreation();
@@ -81,11 +177,11 @@ public class TrafficScene {
         //end Car Movement
 
         //Add to root
-        root.getChildren().addAll(groundBox, trafficLight1, car.getTrafficCar());
+        root3D.getChildren().addAll(trafficLight1, car.getTrafficCar());
 
         //Scene camera (what makes it 3D)
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(true);
-        perspectiveCamera.setFieldOfView(60);
+        perspectiveCamera.setFieldOfView(75);
         perspectiveCamera.setRotate(0);
 
         //Camera Rotation
@@ -96,32 +192,130 @@ public class TrafficScene {
         perspectiveCamera.getTransforms().addAll(xRotate,yRotate,zRotate);
 
         //The view distance
-        perspectiveCamera.setFarClip(10500);
+        perspectiveCamera.setFarClip(15500);
 
         //The movable camera
         PerspectiveCamera perspectiveCamera1 = new PerspectiveCamera();
         Group cameraPane = new Group();
 
+        //StartPane
+        StackPane menuPane = new StackPane();
+
+        Rectangle startRec = new Rectangle();
+        startRec.setFill(Color.BLACK);
+        startRec.setOpacity(.45);
+        startRec.setWidth(width);
+        startRec.setHeight(100);
+        //startRec.setLayoutX(-300);
+
+        //Label label = new Label("2D");
+        Pane buttonPane = new Pane();
+        Text spawnTrafficT = new Text("Spawn Traffic");
+        spawnTrafficT.setFill(Color.WHITE);
+
+        Text currentTimeT = new Text("Current Sim Time: 10:40 AM");
+        currentTimeT.setFill(Color.WHITE);
+
+        Text currentTrafficT = new Text("Traffic: Moderate");
+        currentTrafficT.setFill(Color.WHITE);
+
+        Image uiT = imageHelper.getImage("./images/logo.png");
+        ImageView uiTitle = new ImageView(uiT);
+        uiTitle.setScaleX(.75);
+        uiTitle.setScaleY(.75);
+        //uiTitle.setFill(Color.WHITE);
+        //Button testButton = new Button();
+
+        menuPane.getChildren().addAll(startRec,buttonPane, spawnTrafficT, uiTitle, currentTimeT, currentTrafficT);//, testButton);
+        menuPane.setMargin(uiTitle, new Insets(-20,0,0,-775));
+        menuPane.setMargin(currentTimeT, new Insets(-50,0,0,950));
+        menuPane.setMargin(currentTrafficT, new Insets(0,0,0,895));
+        menuPane.setTranslateX(600);
+        menuPane.setTranslateY(50);
+
+
         cameraPane.setTranslateZ(-1500);
         cameraPane.setTranslateY(-100);
         cameraPane.setTranslateX(0);
-        cameraPane.getChildren().addAll(perspectiveCamera1);
+        cameraPane.getChildren().addAll(menuPane    );
 
-        SubScene subScene = new SubScene(cameraPane, 300, 300, true, SceneAntialiasing.BALANCED);
+        SubScene subScene = new SubScene(root3D,width*1.1, height*1.1, true, SceneAntialiasing.BALANCED);
         //subScene.setFill(Color.AQUAMARINE);
-        subScene.setCamera(perspectiveCamera1);
+        subScene.setCamera(perspectiveCamera);
         subScene.setTranslateZ(-300);
         subScene.setTranslateX(-100);
         subScene.setTranslateY(-100);
+        subScene.setDepthTest(DepthTest.ENABLE);
         //End Move Camera
 
         //Group for the scene and camera
-        Group group = new Group();
-        group.getChildren().addAll(root, cameraPane);
+        /*Group group = new Group();
+        group.getChildren().addAll(root, cameraPane);*/
 
+        testing.createRoot(clickCount);
+        /*Image map = imageHelper.getImage("./images/Updated 2 of 460 Traffic Map-2.png");
+        ImageView fullMap = new ImageView(map);
+        double imageW = map.getWidth();
+        double imageH = map.getHeight();
+        System.out.println("Original Image Width: " + imageW + " Original Image Height: " + imageH);*/
+
+        Pane streetScene = testing.getRoot();//new Pane(fullMap);
+ /*       streetScene.setLayoutY(350);
+        streetScene.setLayoutX(width/2);
+        streetScene.setTranslateZ(0);
+        streetScene.setPrefHeight(height*14);
+        streetScene.setPrefWidth(width*8);
+        streetScene.setMinWidth(width*8);
+        streetScene.setMinHeight(height*14);*/
+      /*  streetScene.setTranslateX(-4000);
+        streetScene.setTranslateY(300);*/
+        //streetScene.setTranslateZ(1000);
+
+
+
+        Pane tempPane = new Pane();
+        tempPane.setTranslateX(-600);
+        tempPane.setTranslateY(-400);
+
+        spawnTrafficT.setOnMouseClicked(event -> {
+            testing.addVehiclesUntilCount(60, tempPane, vehicleCollidables);
+            //streetScene.getChildren().add(tempPane);
+        });
+        streetScene.getChildren().add(tempPane);
+
+        Group group = new Group();
+
+        Group group1 = new Group();
+
+        group.getChildren().addAll(meshViews);
+        group.setScaleX(.05);
+        group.setScaleY(.05);
+        group.setScaleZ(.05);
+
+        group1.getChildren().addAll(meshViews1);
+        group1.setScaleX(.25);
+        group1.setScaleY(.25);
+        group1.setScaleZ(.25);
+
+        //group.setTranslateY(1000);
+        group.setTranslateZ(11500);
+        group.setTranslateY(-500);
+        group.setTranslateX(-1000);
+        group.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),new Rotate(0, Rotate.Z_AXIS));
+
+        group1.setTranslateZ(1000);
+        group1.setTranslateY(-5);
+        group1.setTranslateX(1000);
+        group1.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),new Rotate(0, Rotate.Z_AXIS));
+
+        streetScene.setScaleX(7);
+        streetScene.setScaleZ(7);
+        root.getChildren().addAll(subScene, menuPane);
+        root3D.getChildren().addAll(streetScene, mess, group, group1, groundBox, oceanBox, oceanBox1, oceanBoxN, skyBox, skyBox1, skyBox2);
         //Set scene
-        Scene scene = new Scene(group,width, height, true, SceneAntialiasing.BALANCED);
-        scene.setCamera(perspectiveCamera);
+        Scene scene = new Scene(root);
+
+        //scene.setCamera(perspectiveCamera);
         scene.setFill(Color.GRAY);
 
         //Sets the camera properties
@@ -136,7 +330,16 @@ public class TrafficScene {
 
         //Rotate the groundbox
         groundBox.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),new Rotate(0, Rotate.Z_AXIS));
+        streetScene.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),new Rotate(0, Rotate.Z_AXIS));
+
+        skyBox1.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),new Rotate(0, Rotate.Z_AXIS));
+        skyBox2.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(-90, Rotate.Y_AXIS),new Rotate(0, Rotate.Z_AXIS));
+
+        oceanBox.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),new Rotate(0, Rotate.Z_AXIS));
+        oceanBox1.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),new Rotate(0, Rotate.Z_AXIS));
+        oceanBoxN.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),new Rotate(90, Rotate.Z_AXIS));
 
         return scene;
     }
 }
+

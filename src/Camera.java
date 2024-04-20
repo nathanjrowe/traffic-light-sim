@@ -4,6 +4,12 @@
  * I changed a few things in this class like the attachment of the UI elements that now will move with the camera.
  */
 
+/**
+ * Using this class that I found on GitHub. I was trying to get my own class made but the functionality was off
+ * and this code works so well that I felt I should use it.
+ * I changed a few things in this class like the attachment of the UI elements that now will move with the camera.
+ */
+
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -17,7 +23,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import javafx.util.Callback;
-        //import org.fxyz3d.geometry.MathUtils;
+//import org.fxyz3d.geometry.MathUtils;
 
 /**
  * A self initializing First Person Shooter camera
@@ -76,6 +82,7 @@ public class Camera extends Parent {
     private double mouseDeltaY;
 
     private void initialize() {
+        root.getTransforms().add(affine);
         getChildren().add(root);
         getTransforms().add(affine);
         initializeCamera();
@@ -215,7 +222,7 @@ public class Camera extends Parent {
      * @param ui
      */
     public void loadControlsForScene(Scene scene, SubScene subScene , Group ui) {
-        scene.addEventHandler(KeyEvent.ANY, ke -> {
+        subScene.addEventHandler(KeyEvent.ANY, ke -> {
             if (ke.getEventType() == KeyEvent.KEY_PRESSED) {
                 switch (ke.getCode()) {
                 /*    case Q:
@@ -269,12 +276,18 @@ public class Camera extends Parent {
             }
             ke.consume();
         });
-        scene.addEventHandler(MouseEvent.ANY, me -> {
+        subScene.addEventHandler(MouseEvent.ANY, me -> {
             if (me.getEventType().equals(MouseEvent.MOUSE_PRESSED)) {
                 mousePosX = me.getSceneX();
                 mousePosY = me.getSceneY();
                 mouseOldX = me.getSceneX();
                 mouseOldY = me.getSceneY();
+
+                fwd = false;
+                back = false;
+
+                strafeL = false;
+                strafeR = false;
 
             } else if (me.getEventType().equals(MouseEvent.MOUSE_DRAGGED)) {
                 mouseOldX = mousePosX;
@@ -304,12 +317,13 @@ public class Camera extends Parent {
                             MathUtils.clamp(-360, ((rotateY.getAngle() + mouseDeltaX * (mouseSpeed * mouseModifier)) % 360 + 540) % 360 - 180, 360)
                     ); // horizontal
                     rotateX.setAngle(
-                            MathUtils.clamp(-45, ((rotateX.getAngle() - mouseDeltaY * (mouseSpeed * mouseModifier)) % 360 + 540) % 360 - 180, 35)
+                            MathUtils.clamp(-90, ((rotateX.getAngle() - mouseDeltaY * (mouseSpeed * mouseModifier)) % 540 + 540) % 360 - 180, -70)
                     ); // vertical
-                    subScene.getTransforms().setAll(affine);
+
                     affine.prepend(t.createConcatenation(rotateY.createConcatenation(rotateX)));
-                    scene.getCamera().getTransforms().setAll(affine);
-                    ui.getTransforms().setAll(affine);
+                    subScene.getCamera().getTransforms().setAll(affine);
+                    //scene.getCamera().getTransforms().setAll(affine);
+                    //ui.getTransforms().setAll(affine);
                    /* subScene.setTranslateX(affine.getTx());
                     subScene.setTranslateY(affine.getTy());
                     subScene.setTranslateZ(affine.getTz());*/
@@ -320,22 +334,71 @@ public class Camera extends Parent {
                     /*
                      init zoom?
                      */
+                    System.out.println(me.getScreenX());
+                    if(me.getScreenX() > 800)
+                    {
+                        strafeR = true;
+                        strafeL = false;
+                    }
+                    else if (me.getSceneX() < 800){
+                        strafeR = false;
+                        strafeL = true;
+                    }
+
                 } else if (me.isMiddleButtonDown()) {
                     /*
                      init panning?
                      */
+
                 }
             }
         });
 
-        scene.addEventHandler(ScrollEvent.ANY, se -> {
+        subScene.addEventHandler(ScrollEvent.SCROLL, se -> {
 
             if (se.getEventType().equals(ScrollEvent.SCROLL_STARTED)) {
+         /*       double deltaY = se.getDeltaY();
 
+                //Scroll In
+                if(deltaY > 0){
+                    fwd = true;
+                    back = false;
+                    System.out.println("Scroll in");
+                }
+
+                //Scroll Out
+                if(deltaY < 0){
+                    back = true;
+                    fwd = false;
+                    System.out.println("Scroll back");
+                }
+                else {
+                    fwd = false;
+                    back = false;
+                    System.out.println("Is stopped");
+                }*/
+                //scroll down
             } else if (se.getEventType().equals(ScrollEvent.SCROLL)) {
+                double deltaY = se.getDeltaY();
+
+                //Scroll In
+                if(deltaY > 0){
+                    fwd = true;
+                    back = false;
+                    System.out.println("Scroll in");
+                }
+
+                //Scroll Out
+                if(deltaY < 0){
+                    back = true;
+                    fwd = false;
+                    System.out.println("Scroll back");
+                }
+
 
             } else if (se.getEventType().equals(ScrollEvent.SCROLL_FINISHED)) {
-
+                fwd = false;
+                back = false;
             }
         });
     }
@@ -343,9 +406,9 @@ public class Camera extends Parent {
     private void initializeCamera() {
         getCamera().setNearClip(0.1);
         getCamera().setFarClip(100000);
-        getCamera().setFieldOfView(42);
+        getCamera().setFieldOfView(90);
         getCamera().setVerticalFieldOfView(true);
-        root.getChildren().add(getCamera());
+        //root.getChildren().add(getCamera());
     }
 
     private void startUpdateThread() {
@@ -480,3 +543,4 @@ public class Camera extends Parent {
     }
 
 }
+
