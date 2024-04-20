@@ -29,70 +29,19 @@ public class TrafficScene {
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private AtomicInteger clickCount = new AtomicInteger(0);
     private int counter = 0;
+
+    private SubScene subScene;
+    private Pane root = new Pane();
+    private Pane menuPane = new Pane();
     int width = 1200;
     int height = 800;
     public Scene Traffic(){
 
+        createSubScene();
+
         //Root Pane
-        BorderPane root = new BorderPane();
         root.setPrefHeight(height *1.1);
         root.setPrefWidth(width);
-
-        //StartPane
-        StackPane menuPane = new StackPane();
-
-        Rectangle startRec = new Rectangle();
-        startRec.setFill(Color.BLACK);
-        startRec.setOpacity(.45);
-        startRec.setWidth(width);
-        startRec.setHeight(100);
-
-        //Label label = new Label("2D");
-        Pane buttonPane = new Pane();
-        Text spawnTrafficT = new Text("Spawn Traffic");
-        spawnTrafficT.setFill(Color.WHITE);
-
-        Text currentTimeT = new Text("Current Sim Time: 10:40 AM");
-        currentTimeT.setFill(Color.WHITE);
-
-        Text currentTrafficT = new Text("Traffic: Moderate");
-        currentTrafficT.setFill(Color.WHITE);
-
-        Image uiT = imageHelper.getImage("./images/logo.png");
-        ImageView uiTitle = new ImageView(uiT);
-        uiTitle.setScaleX(.75);
-        uiTitle.setScaleY(.75);
-        //uiTitle.setFill(Color.WHITE);
-        //Button testButton = new Button();
-
-        menuPane.getChildren().addAll(startRec,buttonPane, spawnTrafficT, uiTitle, currentTimeT, currentTrafficT);//, testButton);
-        menuPane.setMargin(uiTitle, new Insets(-20,0,0,-775));
-        menuPane.setMargin(currentTimeT, new Insets(-50,0,0,950));
-        menuPane.setMargin(currentTrafficT, new Insets(0,0,0,895));
-        menuPane.setTranslateX(600);
-        menuPane.setTranslateY(50);
-
-        testing.createRoot(clickCount);
-
-        Pane streetScene = testing.getRoot();
-
-        Pane tempPane = new Pane();
-        tempPane.setTranslateX(-600);
-        tempPane.setTranslateY(-400);
-
-        spawnTrafficT.setOnMouseClicked(event -> {
-            testing.addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
-            //streetScene.getChildren().add(tempPane);
-        });
-        streetScene.getChildren().add(tempPane);
-
-        SubScene subScene = new SubScene(create3DRoot(streetScene),width*1.1, height*1.1, true,
-                SceneAntialiasing.BALANCED);
-        subScene.setCamera(mainCamera());
-        subScene.setTranslateZ(-300);
-        subScene.setTranslateX(-100);
-        subScene.setTranslateY(-100);
-        subScene.setDepthTest(DepthTest.ENABLE);
 
         root.getChildren().addAll(subScene, menuPane);
 
@@ -105,7 +54,7 @@ public class TrafficScene {
 
 
         //Set the scene background color
-        scene.setFill(skyColors(scene, currentTimeT));
+        //scene.setFill(skyColors(scene, currentTimeT));
 
 
         return scene;
@@ -137,8 +86,8 @@ public class TrafficScene {
        return  perspectiveCamera;
     }
 
-    private BorderPane create3DRoot(Pane streetScene){
-        BorderPane root3D = new BorderPane();
+    private Pane create3DRoot(){
+        Pane root3D = new Pane();
        /* root3D.setPrefHeight(height *1.1);
         root3D.setPrefWidth(width);*/
 
@@ -266,9 +215,24 @@ public class TrafficScene {
         group1.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
 
+        testing.createRoot(clickCount);
+
+        Pane streetScene = testing.getRoot();
+
+        Pane tempPane = new Pane();
+
+        streetScene.getChildren().add(tempPane);
+
+        streetScene.setTranslateX(-200);
+        streetScene.setTranslateZ(-200);
+
         streetScene.setScaleX(3);
         streetScene.setScaleZ(3);
+
+        menuPane = menuPane(tempPane);
+
         //Add to root
+
 
         root3D.getChildren().addAll(streetScene, trafficLight1, mess, group, group1, groundBox, oceanBox, oceanBox1,
                 oceanBoxN);
@@ -291,6 +255,62 @@ public class TrafficScene {
         return root3D;
     }
 
+    private SubScene createSubScene(){
+        SubScene subScene = new SubScene(create3DRoot(),width*1.1, height*1.1, true,
+                SceneAntialiasing.BALANCED);
+        subScene.setCamera(mainCamera());
+        subScene.setTranslateZ(-300);
+        subScene.setTranslateX(-100);
+        subScene.setTranslateY(-100);
+        subScene.setDepthTest(DepthTest.ENABLE);
+        this.subScene = subScene;
+        return subScene;
+    }
+    private Pane menuPane(Pane tempPane){
+        //Menu
+        StackPane menuPane = new StackPane();
+
+        //Background
+        Rectangle startRec = new Rectangle();
+        startRec.setFill(Color.BLACK);
+        startRec.setOpacity(.45);
+        startRec.setWidth(width);
+        startRec.setHeight(100);
+
+        //Label label = new Label("2D");
+        //Pane for buttons
+        Pane buttonPane = new Pane();
+
+        //Current Simulation Time
+        Text currentTimeT = new Text("Current Sim Time: 10:40 AM");
+        currentTimeT.setFill(Color.WHITE);
+
+        Text currentTrafficT = new Text("Traffic: Moderate");
+        currentTrafficT.setFill(Color.WHITE);
+
+        Image uiT = imageHelper.getImage("./images/logo.png");
+        ImageView uiTitle = new ImageView(uiT);
+        uiTitle.setScaleX(.75);
+        uiTitle.setScaleY(.75);
+        //uiTitle.setFill(Color.WHITE);
+
+        menuPane.getChildren().addAll(startRec,buttonPane, spawnVehiclesBTN(tempPane), uiTitle, currentTimeT, currentTrafficT);//, testButton);
+        menuPane.setMargin(uiTitle, new Insets(-20,0,0,-775));
+        menuPane.setMargin(currentTimeT, new Insets(-50,0,0,950));
+        menuPane.setMargin(currentTrafficT, new Insets(0,0,0,895));
+
+        return menuPane;
+    }
+    private Text spawnVehiclesBTN(Pane tempPane){
+        Text spawnTrafficT = new Text("Spawn Traffic");
+        spawnTrafficT.setFill(Color.WHITE);
+
+        spawnTrafficT.setOnMouseClicked(event -> {
+            testing.addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
+            //streetScene.getChildren().add(tempPane);
+        });
+        return  spawnTrafficT;
+    }
     private LinearGradient skyColors(Scene scene, Text currentTimeT){
         //region Sky Colors
         Stop[] stops = new Stop[] { new Stop(0, Color.WHITE), new Stop(1, Color.rgb(150,200,225,1))};
