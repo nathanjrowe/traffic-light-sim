@@ -279,7 +279,7 @@ public class TrafficScene {
         tempPane.setTranslateY(-400);
 
         spawnTrafficT.setOnMouseClicked(event -> {
-            testing.addVehiclesUntilCount(60, tempPane, vehicleCollidables);
+            testing.addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
             //streetScene.getChildren().add(tempPane);
         });
         streetScene.getChildren().add(tempPane);
