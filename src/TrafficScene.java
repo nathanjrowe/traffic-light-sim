@@ -7,6 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Mesh;
@@ -18,6 +20,7 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -36,6 +39,11 @@ public class TrafficScene {
     int width = 1200;
     int height = 800;
     public Scene Traffic(){
+
+        Media backgroundMusic = new Media(new File("./resources/Music/cityTraffic.mp3").toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(backgroundMusic);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.play();
 
         createSubScene();
 
@@ -86,18 +94,44 @@ public class TrafficScene {
        return  perspectiveCamera;
     }
 
+    private Group empireStateBuilding(){
+        ObjModelImporter importe = new ObjModelImporter();
+        try {
+            importe.read(this.getClass().getResource("/13941_Empire_State_Building_v1_l1.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViews = importe.getImport();
+        Group group = new Group();
+
+
+        group.getChildren().addAll(meshViews);
+        group.setScaleX(.05);
+        group.setScaleY(.05);
+        group.setScaleZ(.05);
+
+        //group.setTranslateY(1000);
+        group.setTranslateZ(11500);
+        group.setTranslateY(-500);
+        group.setTranslateX(-1000);
+        group.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group;
+    }
+
     private Pane create3DRoot(){
         Pane root3D = new Pane();
        /* root3D.setPrefHeight(height *1.1);
         root3D.setPrefWidth(width);*/
 
         StlMeshImporter importer = new StlMeshImporter();
-        ObjModelImporter importe = new ObjModelImporter();
+
         ObjModelImporter importe1 = new ObjModelImporter();
 
         try {
             importer.read(this.getClass().getResource("/building.stl"));
-            importe.read(this.getClass().getResource("/13941_Empire_State_Building_v1_l1.obj"));
             importe1.read(this.getClass().getResource("/townhome/10091_townhome_V1_L1.obj"));
         }
         catch (Exception e) {
@@ -111,7 +145,7 @@ public class TrafficScene {
         mess.setScaleX(50);
         mess.setScaleY(50);
         mess.setScaleZ(50);
-        MeshView[] meshViews = importe.getImport();//new MeshView(mesh)[] ;
+        //new MeshView(mesh)[] ;
         MeshView[] meshViews1 = importe1.getImport();
         //meshViews[0] = mess;
 
@@ -188,26 +222,14 @@ public class TrafficScene {
         skyBox1.setMaterial(skyMaterial);
         skyBox2.setMaterial(skyMaterial);*/
 
-        Group group = new Group();
 
         Group group1 = new Group();
 
-        group.getChildren().addAll(meshViews);
-        group.setScaleX(.05);
-        group.setScaleY(.05);
-        group.setScaleZ(.05);
 
         group1.getChildren().addAll(meshViews1);
         group1.setScaleX(.25);
         group1.setScaleY(.25);
         group1.setScaleZ(.25);
-
-        //group.setTranslateY(1000);
-        group.setTranslateZ(11500);
-        group.setTranslateY(-500);
-        group.setTranslateX(-1000);
-        group.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
-                new Rotate(0, Rotate.Z_AXIS));
 
         group1.setTranslateZ(1000);
         group1.setTranslateY(-5);
@@ -223,18 +245,19 @@ public class TrafficScene {
 
         streetScene.getChildren().add(tempPane);
 
-        streetScene.setTranslateX(-200);
-        streetScene.setTranslateZ(-200);
+        streetScene.setTranslateX(-800);
+        streetScene.setTranslateZ(2200);
 
-        streetScene.setScaleX(3);
-        streetScene.setScaleZ(3);
+
+
+        streetScene.setScaleX(5);
+        streetScene.setScaleZ(5);
 
         menuPane = menuPane(tempPane);
 
         //Add to root
 
-
-        root3D.getChildren().addAll(streetScene, trafficLight1, mess, group, group1, groundBox, oceanBox, oceanBox1,
+        root3D.getChildren().addAll(streetScene, trafficLight1, mess, empireStateBuilding(), group1, oceanBox, oceanBox1,
                 oceanBoxN);
 
         groundBox.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),

@@ -44,7 +44,7 @@ public class Testing extends Application {
 
     public void createRoot(AtomicInteger clickCount){
         ImageHelper imageHelper = new ImageHelper();
-        Image map = imageHelper.getImage("./images/Updated 2 of 460 Traffic Map-2.png");
+        Image map = imageHelper.getImage("./images/trafficMap2.png");
         ImageView fullMap = new ImageView(map);
         double imageW = map.getWidth();
         double imageH = map.getHeight();
