@@ -1,23 +1,16 @@
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.animation.AnimationTimer;
-import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.scene.*;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.*;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.Mesh;
-import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
-import javafx.util.Duration;
 import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
 
 import java.io.File;
@@ -32,7 +25,6 @@ public class TrafficScene {
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private AtomicInteger clickCount = new AtomicInteger(0);
     private int counter = 0;
-
     private SubScene subScene;
     private Pane root = new Pane();
     private Pane menuPane = new Pane();
@@ -43,7 +35,7 @@ public class TrafficScene {
         Media backgroundMusic = new Media(new File("./resources/Music/cityTraffic.mp3").toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(backgroundMusic);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.play();
+        //mediaPlayer.play();
 
         createSubScene();
 
@@ -64,10 +56,60 @@ public class TrafficScene {
         //Set the scene background color
         //scene.setFill(skyColors(scene, currentTimeT));
 
-
         return scene;
     }
+    private Pane streetScene(){
+        //Root pane for the cars
+        Pane streetScene = testing.getRoot();
+        Pane tempPane = new Pane();
 
+        streetScene.getChildren().add(tempPane);
+
+        streetScene.setTranslateX(-800);
+        streetScene.setTranslateZ(2200);
+
+        streetScene.setScaleX(3.75);
+        streetScene.setScaleZ(3.75);
+
+        menuPane = menuPane(tempPane);
+
+        //Rotate the streetScene for the cars
+        streetScene.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+
+        return streetScene;
+    }
+    private Pane create3DRoot(){
+        Pane root3D = new Pane();
+
+        //StopLight
+        SystemController systemController = new SystemController();
+        //Add lights to the 3D scene
+        systemController.addLights(root3D);
+
+        //Flag to denote if the scene is 3D or not
+        testing.set3DFlag();
+        testing.createRoot(clickCount);
+
+        //Add to root pane here. Make any 3d Models as a function that returns a group then add.
+        //Commented out some models to keep the load times down when testing
+        root3D.getChildren().addAll(streetScene()); //,runWay(), oceanBlock(), empireStateBuilding(), building2(),car(), trees(),airport(),
+                //shoppingMall(), apartment());
+
+        return root3D;
+    }
+
+    private SubScene createSubScene(){
+        SubScene subScene = new SubScene(create3DRoot(),width*1.1, height*1.1, true,
+                SceneAntialiasing.BALANCED);
+        subScene.setCamera(mainCamera());
+        subScene.setTranslateZ(-300);
+        subScene.setTranslateX(-100);
+        subScene.setTranslateY(-100);
+        subScene.setDepthTest(DepthTest.ENABLE);
+        this.subScene = subScene;
+        return subScene;
+    }
     private PerspectiveCamera mainCamera(){
         //Scene camera (what makes it 3D)
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(true);
@@ -87,201 +129,11 @@ public class TrafficScene {
         //Sets the camera properties
         perspectiveCamera.setLayoutY(-1550);
         perspectiveCamera.setLayoutX(0);
-        perspectiveCamera.setTranslateZ(-2500);
+        perspectiveCamera.setTranslateZ(-1000);
         perspectiveCamera.getTransforms().addAll(new Rotate(-40, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS)
                 ,new Rotate(0, Rotate.Z_AXIS));
 
-       return  perspectiveCamera;
-    }
-
-    private Group empireStateBuilding(){
-        ObjModelImporter importe = new ObjModelImporter();
-        try {
-            importe.read(this.getClass().getResource("/13941_Empire_State_Building_v1_l1.obj"));
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        MeshView[] meshViews = importe.getImport();
-        Group group = new Group();
-
-
-        group.getChildren().addAll(meshViews);
-        group.setScaleX(.05);
-        group.setScaleY(.05);
-        group.setScaleZ(.05);
-
-        //group.setTranslateY(1000);
-        group.setTranslateZ(11500);
-        group.setTranslateY(-500);
-        group.setTranslateX(-1000);
-        group.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
-                new Rotate(0, Rotate.Z_AXIS));
-        return group;
-    }
-
-    private Pane create3DRoot(){
-        Pane root3D = new Pane();
-       /* root3D.setPrefHeight(height *1.1);
-        root3D.setPrefWidth(width);*/
-
-        StlMeshImporter importer = new StlMeshImporter();
-
-        ObjModelImporter importe1 = new ObjModelImporter();
-
-        try {
-            importer.read(this.getClass().getResource("/building.stl"));
-            importe1.read(this.getClass().getResource("/townhome/10091_townhome_V1_L1.obj"));
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Mesh mesh = importer.getImport();
-        MeshView mess = new MeshView(mesh);
-        mess.setLayoutX(-500);
-        //mess.setLayoutY(500);
-        mess.setScaleX(50);
-        mess.setScaleY(50);
-        mess.setScaleZ(50);
-        //new MeshView(mesh)[] ;
-        MeshView[] meshViews1 = importe1.getImport();
-        //meshViews[0] = mess;
-
-        mess.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
-                new Rotate(0, Rotate.Z_AXIS));
-
-        //Ground
-        Box groundBox = new Box(width*10,height*10,10);
-        groundBox.setLayoutY(20);
-        groundBox.setLayoutX(width/2);
-        groundBox.setTranslateZ(500);
-
-        Box oceanBox = new Box(width*2,height*10,10);
-        oceanBox.setLayoutY(0);
-        oceanBox.setLayoutX(width*5);
-        oceanBox.setTranslateZ(500);
-
-        Box oceanBox1 = new Box(width*2,height*10,10);
-        oceanBox1.setLayoutY(0);
-        oceanBox1.setLayoutX(-width*5);
-        oceanBox1.setTranslateZ(500);
-
-        Box oceanBoxN = new Box(width*2,height*18,10);
-        oceanBoxN.setLayoutY(0);
-        oceanBoxN.setLayoutX(0);
-        oceanBoxN.setTranslateZ(5300);
-
- /*       Box skyBox = new Box(width*25,height*8,10);
-        skyBox.setLayoutY(-3000);
-        skyBox.setLayoutX(width/2);
-        skyBox.setTranslateZ(6000);
-
-        Box skyBox1 = new Box(width*8.5,height*8,10);
-        skyBox1.setLayoutY(-3000);
-        skyBox1.setLayoutX(width*6);
-        skyBox1.setTranslateZ(500);
-
-        Box skyBox2 = new Box(width*8.5,height*8,10);
-        skyBox2.setLayoutY(-3000);
-        skyBox2.setLayoutX(-width*6);
-        skyBox2.setTranslateZ(500);*/
-
-        //StopLight
-        SystemController systemController = new SystemController();
-        //Add lights to the 3D scene
-        systemController.addLights(root3D);
-
-        //Ground Material
-        PhongMaterial groundMaterial = new PhongMaterial();
-        groundMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/asphalt.jpg"));
-        groundMaterial.setSpecularColor(Color.GRAY);
-        groundMaterial.setDiffuseMap(imageHelper.getImage("./images/asphalt.jpg"));
-        groundBox.setMaterial(groundMaterial);
-
-        PhongMaterial oceanMaterial = new PhongMaterial();
-        oceanMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/ocean.jpg"));
-        oceanMaterial.setSpecularColor(Color.GRAY);
-        oceanMaterial.setDiffuseMap(imageHelper.getImage("./images/ocean.jpg"));
-        oceanBox.setMaterial(oceanMaterial);
-        oceanBox1.setMaterial(oceanMaterial);
-        oceanBoxN.setMaterial(oceanMaterial);
-
-    /*    PhongMaterial skyMaterial = new PhongMaterial();
-        skyMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/sky.jpg"));
-        skyMaterial.setSpecularColor(Color.GRAY);
-        skyMaterial.setDiffuseMap(imageHelper.getImage("./images/sky.jpg"));
-        skyBox.setMaterial(skyMaterial);
-        skyBox1.setMaterial(skyMaterial);
-        skyBox2.setMaterial(skyMaterial);*/
-
-
-        Group group1 = new Group();
-
-
-        group1.getChildren().addAll(meshViews1);
-        group1.setScaleX(.25);
-        group1.setScaleY(.25);
-        group1.setScaleZ(.25);
-
-        group1.setTranslateZ(1000);
-        group1.setTranslateY(-5);
-        group1.setTranslateX(1000);
-        group1.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
-                new Rotate(0, Rotate.Z_AXIS));
-
-        testing.createRoot(clickCount);
-
-        Pane streetScene = testing.getRoot();
-
-        Pane tempPane = new Pane();
-
-        streetScene.getChildren().add(tempPane);
-
-        streetScene.setTranslateX(-800);
-        streetScene.setTranslateZ(2200);
-
-
-
-        streetScene.setScaleX(5);
-        streetScene.setScaleZ(5);
-
-        menuPane = menuPane(tempPane);
-
-        //Add to root
-
-        root3D.getChildren().addAll(streetScene, mess, empireStateBuilding(), group1, oceanBox, oceanBox1,
-                oceanBoxN);
-
-        groundBox.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
-                new Rotate(0, Rotate.Z_AXIS));
-        streetScene.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
-                new Rotate(0, Rotate.Z_AXIS));
-
-     /*   skyBox1.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),new Rotate(0, Rotate.Z_AXIS));
-        skyBox2.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(-90, Rotate.Y_AXIS),new Rotate(0, Rotate.Z_AXIS));
-*/
-        oceanBox.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
-                new Rotate(0, Rotate.Z_AXIS));
-        oceanBox1.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
-                new Rotate(0, Rotate.Z_AXIS));
-        oceanBoxN.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
-                new Rotate(90, Rotate.Z_AXIS));
-
-        return root3D;
-    }
-
-    private SubScene createSubScene(){
-        SubScene subScene = new SubScene(create3DRoot(),width*1.1, height*1.1, true,
-                SceneAntialiasing.BALANCED);
-        subScene.setCamera(mainCamera());
-        subScene.setTranslateZ(-300);
-        subScene.setTranslateX(-100);
-        subScene.setTranslateY(-100);
-        subScene.setDepthTest(DepthTest.ENABLE);
-        this.subScene = subScene;
-        return subScene;
+        return  perspectiveCamera;
     }
     private Pane menuPane(Pane tempPane){
         //Menu
@@ -327,6 +179,400 @@ public class TrafficScene {
             //streetScene.getChildren().add(tempPane);
         });
         return  spawnTrafficT;
+    }
+    private Group empireStateBuilding(){
+        ObjModelImporter importe = new ObjModelImporter();
+        try {
+            importe.read(this.getClass().getResource("/empireState/13941_Empire_State_Building_v1_l1.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViews = importe.getImport();
+        Group group = new Group();
+
+
+        group.getChildren().addAll(meshViews);
+        group.setScaleX(.06);
+        group.setScaleY(.06);
+        group.setScaleZ(.06);
+
+        //group.setTranslateY(1000);
+        group.setTranslateZ(11300);
+        group.setTranslateY(-700);
+        group.setTranslateX(-575);
+        group.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group;
+    }
+
+    private Group trees(){
+        ObjModelImporter importe = new ObjModelImporter();
+        ObjModelImporter importes = new ObjModelImporter();
+        ObjModelImporter importe1 = new ObjModelImporter();
+        ObjModelImporter importe2 = new ObjModelImporter();
+        ObjModelImporter importe3 = new ObjModelImporter();
+        ObjModelImporter importe4 = new ObjModelImporter();
+
+        ObjModelImporter importe5 = new ObjModelImporter();
+        ObjModelImporter importe6 = new ObjModelImporter();
+
+        try {
+            importe.read(this.getClass().getResource("/trees/CommonTree_1.obj"));
+            importes.read(this.getClass().getResource("/trees/CommonTree_2.obj"));
+            importe1.read(this.getClass().getResource("/trees/CommonTree_3.obj"));
+            importe2.read(this.getClass().getResource("/trees/CommonTree_4.obj"));
+            importe3.read(this.getClass().getResource("/trees/Bush_1.obj"));
+            importe4.read(this.getClass().getResource("/trees/Bush_2.obj"));
+
+            importe5.read(this.getClass().getResource("/trees/Grass.obj"));
+            importe6.read(this.getClass().getResource("/trees/Grass_2.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViews = importe.getImport();
+        MeshView[] meshViews1 = importes.getImport();
+        MeshView[] meshViews2 = importe1.getImport();
+        MeshView[] meshViews3 = importe2.getImport();
+        MeshView[] meshViews4 = importe3.getImport();
+        MeshView[] meshViews5 = importe4.getImport();
+
+        MeshView[] meshViews6 = importe5.getImport();
+        MeshView[] meshViews7 = importe6.getImport();
+
+        Group group = new Group();
+
+        Group group0 = new Group();
+
+        Group group1 = new Group();
+
+        Group group2 = new Group();
+
+        Group group3 = new Group();
+
+        Group group4 = new Group();
+
+        Group group5 = new Group();
+
+        Group group6 = new Group();
+
+        Group group7 = new Group();
+
+        group.getChildren().addAll(meshViews);
+        group1.getChildren().addAll(meshViews1);
+        group2.getChildren().addAll(meshViews2);
+        group3.getChildren().addAll(meshViews3);
+
+        group4.getChildren().addAll(meshViews4);
+        group5.getChildren().addAll(meshViews5);
+
+        group6.getChildren().addAll(meshViews6);
+        group7.getChildren().addAll(meshViews7);
+
+        group.setScaleX(50);
+        group.setScaleY(50);
+        group.setScaleZ(50);
+
+        group1.setScaleX(50);
+        group1.setScaleY(50);
+        group1.setScaleZ(50);
+
+        group2.setScaleX(50);
+        group2.setScaleY(50);
+        group2.setScaleZ(50);
+
+        group3.setScaleX(50);
+        group3.setScaleY(50);
+        group3.setScaleZ(50);
+
+        group4.setScaleX(50);
+        group4.setScaleY(50);
+        group4.setScaleZ(50);
+
+        group5.setScaleX(50);
+        group5.setScaleY(50);
+        group5.setScaleZ(50);
+
+        group6.setScaleX(50);
+        group6.setScaleY(50);
+        group6.setScaleZ(50);
+
+        group7.setScaleX(50);
+        group7.setScaleY(50);
+        group7.setScaleZ(50);
+
+        group1.setTranslateZ(0);
+        group1.setTranslateY(0);
+        group1.setTranslateX(150);
+
+        group2.setTranslateZ(0);
+        group2.setTranslateY(0);
+        group2.setTranslateX(-80);
+
+        group3.setTranslateZ(0);
+        group3.setTranslateY(0);
+        group3.setTranslateX(-300);
+
+        group.setTranslateZ(0);
+        group.setTranslateY(0);
+        group.setTranslateX(-550);
+
+        group4.setTranslateZ(0);
+        group4.setTranslateY(35);
+        group4.setTranslateX(-200);
+
+        group5.setTranslateZ(0);
+        group5.setTranslateY(35);
+        group5.setTranslateX(-400);
+
+        group6.setTranslateZ(-100);
+        group6.setTranslateY(35);
+        group6.setTranslateX(-400);
+
+        group7.setTranslateZ(100);
+        group7.setTranslateY(35);
+        group7.setTranslateX(-400);
+
+
+        //group.setTranslateY(1000);
+        group0.getChildren().addAll(group, group1, group2, group3, group4, group5, group6, group7);
+        group0.setTranslateZ(300);
+        group0.setTranslateY(-70);
+        group0.setTranslateX(-505);
+        group0.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group0;
+    }
+
+    private Group airport(){
+        ObjModelImporter importe = new ObjModelImporter();
+        try {
+            importe.read(this.getClass().getResource("/airport/3d-model.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViews = importe.getImport();
+        Group group = new Group();
+
+
+        group.getChildren().addAll(meshViews);
+        group.setScaleX(.15);
+        group.setScaleY(.15);
+        group.setScaleZ(.15);
+
+        //group.setTranslateY(1000);
+        group.setTranslateZ(3400);
+        group.setTranslateY(1500);
+        group.setTranslateX(575);
+        group.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(-87.5, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group;
+    }
+
+    private Group building2(){
+        ObjModelImporter importes = new ObjModelImporter();
+        try {
+            importes.read(this.getClass().getResource("/apartmentBuilding/Apartment Building_01_obj.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViewss = importes.getImport();
+        Group group3 = new Group();
+
+
+        group3.getChildren().addAll(meshViewss);
+        group3.setScaleX(.75);
+        group3.setScaleY(.75);
+        group3.setScaleZ(.75);
+
+        //group.setTranslateY(1000);
+        group3.setTranslateZ(1250);
+        group3.setTranslateY(120);
+        group3.setTranslateX(-2000);
+        group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group3;
+    }
+
+    /*private Group water(){
+        ObjModelImporter importes = new ObjModelImporter();
+        try {
+            importes.read(this.getClass().getResource("/water/uploads_files_2723489_POOL.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViewss = importes.getImport();
+        Group group3 = new Group();
+
+
+        group3.getChildren().addAll(meshViewss);
+        group3.setScaleX(.75);
+        group3.setScaleY(.75);
+        group3.setScaleZ(.75);
+
+        //group.setTranslateY(1000);
+        group3.setTranslateZ(1250);
+        group3.setTranslateY(120);
+        group3.setTranslateX(-2000);
+        group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group3;
+    }*/
+
+    private Group apartment(){
+        ObjModelImporter importes = new ObjModelImporter();
+        try {
+            importes.read(this.getClass().getResource("/apartment1/3d-model.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViewss = importes.getImport();
+        Group group3 = new Group();
+
+
+        group3.getChildren().addAll(meshViewss);
+        group3.setScaleX(1.05);
+        group3.setScaleY(.25);
+        group3.setScaleZ(.25);
+
+        //group.setTranslateY(1000);
+        group3.setTranslateZ(-70);
+        group3.setTranslateY(1200);
+        group3.setTranslateX(-2000);
+        group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group3;
+    }
+    private Group shoppingMall(){
+        ObjModelImporter importes = new ObjModelImporter();
+        try {
+            importes.read(this.getClass().getResource("/shoppingMall/3d-model.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViewss = importes.getImport();
+        Group group3 = new Group();
+
+
+        group3.getChildren().addAll(meshViewss);
+        group3.setScaleX(.25);
+        group3.setScaleY(.15);
+        group3.setScaleZ(.15);
+
+        //group.setTranslateY(1000);
+        group3.setTranslateZ(1250);
+        group3.setTranslateY(350);
+        group3.setTranslateX(1000);
+        group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(170, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group3;
+    }
+
+    private Group car(){
+        ObjModelImporter importes = new ObjModelImporter();
+        try {
+            importes.read(this.getClass().getResource("/vehicleModels/NormalCar2.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViewss = importes.getImport();
+        Group group3 = new Group();
+
+
+        group3.getChildren().addAll(meshViewss);
+        group3.setScaleX(10);
+        group3.setScaleY(10);
+        group3.setScaleZ(10);
+
+        //group.setTranslateY(1000);
+        group3.setTranslateZ(50);
+        group3.setTranslateY(-120);
+        group3.setTranslateX(200);
+        group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group3;
+    }
+
+    private Group townHome(){
+        ObjModelImporter importes = new ObjModelImporter();
+        try {
+            importes.read(this.getClass().getResource("/townhome/10091_townhome_V1_L1.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViewss = importes.getImport();
+        Group group3 = new Group();
+
+
+        group3.getChildren().addAll(meshViewss);
+        group3.setScaleX(10);
+        group3.setScaleY(10);
+        group3.setScaleZ(10);
+
+        //group.setTranslateY(1000);
+        group3.setTranslateZ(800);
+        group3.setTranslateY(50);
+        group3.setTranslateX(-2000);
+        group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group3;
+    }
+
+    private Box oceanBlock(){
+        Box oceanBox = new Box(width*2,height*10,10);
+        oceanBox.setLayoutY(0);
+        oceanBox.setLayoutX(-width*3.25);
+        oceanBox.setTranslateZ(500);
+
+        PhongMaterial oceanMaterial = new PhongMaterial();
+        oceanMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/ocean.jpg"));
+        oceanMaterial.setSpecularColor(Color.GRAY);
+        oceanMaterial.setDiffuseMap(imageHelper.getImage("./images/ocean.jpg"));
+        oceanBox.setMaterial(oceanMaterial);
+        oceanBox.setMaterial(oceanMaterial);
+
+        oceanBox.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+
+        return oceanBox;
+    }
+
+    private Box runWay(){
+        //Simple runway for airplanes
+        Box runWay = new Box(width*1.5,height*10,10);
+        runWay.setLayoutY(0);
+        runWay.setLayoutX(0);
+        runWay.setTranslateZ(4300);
+
+
+        PhongMaterial runway = new PhongMaterial();
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/runway.png"));
+        runway.setSpecularColor(Color.GRAY);
+        runway.setDiffuseMap(imageHelper.getImage("./images/runway.png"));
+        runWay.setMaterial(runway);
+
+
+        runWay.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(90, Rotate.Z_AXIS));
+
+        return runWay;
     }
     private LinearGradient skyColors(Scene scene, Text currentTimeT){
         //region Sky Colors

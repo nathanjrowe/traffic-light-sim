@@ -6,12 +6,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import static java.lang.Math.abs;
 
-public class Vehicle {
+public class Vehicle3D {
     private static final double[][] INITIALPATHS = {
             /**Left Side Starting*/
             //Straight/Right First Lane, Right Second Lane, Left First Lane, Left Second Lane
@@ -89,8 +91,9 @@ public class Vehicle {
     private Boolean collided;
     private PathTransition pathTransition;
     private Shape carShape;
+    private Group cars = new Group();
 
-    public Vehicle(Pane tempPane, List<Vehicle> collidableVehicles) {
+    public Vehicle3D(Pane tempPane, List<Vehicle3D> collidableVehicles) {
         initializeArrays();
         createPath();
         initializeCarShape();
@@ -99,6 +102,7 @@ public class Vehicle {
     }
 
     private void initializeCarShape() {
+        car();
         carShape = new Rectangle(8, 15);
         //Set initial angle based on the first segment
         if (!temp.isEmpty()) {
@@ -107,26 +111,56 @@ public class Vehicle {
         }
     }
 
-    private void initializePathTransition(Pane tempPane, List<Vehicle> collidableVehicles) {
-        tempPane.getChildren().addAll(path,carShape);
-        if (path != null && carShape != null) {
-            pathTransition = new PathTransition(Duration.millis(seconds*1000), path, carShape);
+    private Group car(){
+        ObjModelImporter importes = new ObjModelImporter();
+        try {
+            importes.read(this.getClass().getResource("/vehicleModels/NormalCar2.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViewss = importes.getImport();
+
+        Group group3 = new Group();
+
+
+        group3.getChildren().addAll(meshViewss);
+        group3.setScaleX(8);
+        group3.setScaleY(8);
+        group3.setScaleZ(25);
+
+        //group.setTranslateY(1000);
+        group3.setTranslateZ(-10);
+        group3.setTranslateY(0);
+        group3.setTranslateX(10);
+        group3.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        cars = group3;
+        cars.setTranslateY(-100);
+        return group3;
+    }
+
+    private void initializePathTransition(Pane tempPane, List<Vehicle3D> collidableVehicles) {
+        tempPane.getChildren().addAll(path,cars);
+        if (path != null && cars != null) {
+            pathTransition = new PathTransition(Duration.millis(seconds*1000), path, cars);
             pathTransition.setInterpolator(Interpolator.LINEAR);
             pathTransition.setCycleCount(1);
 
             //Car Rotation Code
             pathTransition.currentTimeProperty().addListener((obs, old, current) -> {
-                double xPosition = carShape.getLayoutX() + carShape.getTranslateX();
-                double yPosition = carShape.getLayoutY() + carShape.getTranslateY();
+                double xPosition = cars.getLayoutX() + cars.getTranslateX();
+                double yPosition = cars.getLayoutY() + cars.getTranslateY();
                 double[] currentSegment = findClosestSegmentBasedOnPosition(xPosition, yPosition, temp);
                 if (currentSegment != null) {
                     double angle = calculateAngle(currentSegment[0], currentSegment[1], currentSegment[2], currentSegment[3]);
-                    carShape.setRotate(angle);
+                    cars.setRotate(-angle);
                 }
             });
 
             pathTransition.setOnFinished(event -> {
-                tempPane.getChildren().removeAll(path,carShape);
+                tempPane.getChildren().removeAll(path,cars);
                 collidableVehicles.remove(this);
             });
         }
