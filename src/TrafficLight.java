@@ -1,5 +1,6 @@
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -10,40 +11,43 @@ import javafx.scene.shape.Rectangle;
  * This class creates a traffic light with three circles and a rectangle.
  * Added methds to set the color of the circles and get the pane of which the traffic light is created.
  */
-public class TrafficLightCreation {
+public class TrafficLight {
 
     public enum LightColor {
         RED, YELLOW, GREEN, GREENLEFT, GREENRIGHT
     }
 
-    private final Pane pane;
-    private final Rectangle rectangle;
+    private final GridPane pane;
     private final Circle redCircle;
     private final Circle yellowCircle;
     private final Circle greenCircle;
     private final ImageView leftTurnArrowImageView;
     private final ImageView rightTurnArrowImageView;
     private LightColor lightColor;
-
+    //Create a pseudo-random ID for the traffic light
+    private final int id = (int) (Math.random() * 1000);
     /**
      * Constructor that creates a traffic light with three circles and a rectangle.
      */
-    public TrafficLightCreation() {
-        pane = new Pane();
-        rectangle = new Rectangle(300, 50, 100, 220);
-        rectangle.setStroke(Color.WHITE);
+    public TrafficLight() {
+        pane = new GridPane();
+        pane.setStyle("-fx-background-color: black;");
+        pane.setMaxSize(20, 50);
 
-        redCircle = new Circle(350, 90, 25);
+        redCircle = new Circle(5);
         redCircle.setFill(null);
         redCircle.setStroke(Color.WHITE);
+        GridPane.setConstraints(redCircle, 0, 2);
 
-        yellowCircle = new Circle(350, 160, 25);
+        yellowCircle = new Circle(5);
         yellowCircle.setFill(null);
         yellowCircle.setStroke(Color.WHITE);
+        GridPane.setConstraints(yellowCircle, 0, 1);
 
-        greenCircle = new Circle(350, 230, 25);
+        greenCircle = new Circle(5);
         greenCircle.setFill(null);
         greenCircle.setStroke(Color.WHITE);
+        GridPane.setConstraints(greenCircle, 0, 0);
 
         leftTurnArrowImageView = new ImageView();
         rightTurnArrowImageView = new ImageView();
@@ -65,7 +69,10 @@ public class TrafficLightCreation {
 
         lightColor = null;
 
-        pane.getChildren().addAll(rectangle, redCircle, yellowCircle, greenCircle);
+
+        pane.getChildren().addAll(redCircle, yellowCircle, greenCircle);
+        pane.setUserData(this);
+        this.setRed();
     }
 
     /**
@@ -162,6 +169,10 @@ public class TrafficLightCreation {
 
     public LightColor getLightColor() {
         return lightColor;
+    }
+
+    public int getId() {
+        return id;
     }
 
 }

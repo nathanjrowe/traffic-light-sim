@@ -189,15 +189,9 @@ public class TrafficScene {
         skyBox2.setTranslateZ(500);*/
 
         //StopLight
-        Pane trafficLight1 = new Pane();
-        TrafficLightCreation trafficLight = new TrafficLightCreation();
-        trafficLight1.getChildren().add(trafficLight.getTrafficLight());
-        trafficLight1.setLayoutY(-300);
-        trafficLight1.setLayoutX(-250);
-        trafficLight1.setTranslateZ(0);
-
-        //Set the traffic light to red
-        trafficLight.setRed();
+        SystemController systemController = new SystemController();
+        //Add lights to the 3D scene
+        systemController.addLights(root3D);
 
         //Ground Material
         PhongMaterial groundMaterial = new PhongMaterial();
@@ -257,7 +251,7 @@ public class TrafficScene {
 
         //Add to root
 
-        root3D.getChildren().addAll(streetScene, trafficLight1, mess, empireStateBuilding(), group1, oceanBox, oceanBox1,
+        root3D.getChildren().addAll(streetScene, mess, empireStateBuilding(), group1, oceanBox, oceanBox1,
                 oceanBoxN);
 
         groundBox.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),

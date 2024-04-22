@@ -14,6 +14,8 @@ public class PedestrianLightCreation {
     private final ImageView redHandImageView;
     private final ImageView walkingImageView;
     private LightColor lightColor;
+    //Random ID for the pedestrian light
+    private final int id = (int) (Math.random() * 1000);
 
     public PedestrianLightCreation() {
         pane = new Pane();
@@ -58,5 +60,9 @@ public class PedestrianLightCreation {
 
     public LightColor getLightColor() {
         return lightColor;
+    }
+
+    public int getId() {
+        return id;
     }
 }

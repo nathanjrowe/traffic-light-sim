@@ -86,6 +86,10 @@ public class Testing extends Application {
                 }
             }
         });
+
+        //Add lights to the map
+        SystemController systemController = new SystemController();
+        systemController.addLights(tempPane);
         root.getChildren().add(tempPane);
     }
 

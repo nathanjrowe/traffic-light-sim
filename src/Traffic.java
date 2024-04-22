@@ -17,9 +17,6 @@ public class Traffic extends Application {
     public void start(Stage primaryStage) {
         Pane pane = new Pane();
 
-        TrafficLightCreation trafficLight = new TrafficLightCreation();
-        pane.getChildren().add(trafficLight.getTrafficLight());
-
         TrafficScene trafficScene = new TrafficScene();
 
         Scene scene = new Scene(pane, 800, 400);
