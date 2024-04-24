@@ -20,6 +20,7 @@ public class Testing extends Application {
     private final Boolean getCoordinates = false;
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private List<Vehicle3D> vehicleCollidables3D = new ArrayList<>();
+    private List<Bus> busCollidables = new ArrayList<>();
     private StackPane root = new StackPane();
     private Pane tempPane = new Pane();
     private AtomicInteger clickCount = new AtomicInteger(0);
@@ -77,6 +78,7 @@ public class Testing extends Application {
                     stopSpawning = false;
                     currentlySpawning = true;
                     addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
+                    addBuses(busCollidables.size(), tempPane, busCollidables);
                 }
                 else {
                     System.out.println("Currently Spawning Bool: " + currentlySpawning);
@@ -102,8 +104,8 @@ public class Testing extends Application {
     }
 
     public void addVehiclesUntilCount(int count, Pane tempPane, List<Vehicle> vehicleCollidables) {
-        System.out.println("Total Vehicles on Map: " + count);
-        System.out.println("Stop Spawning Boolean: " + stopSpawning);
+        //System.out.println("Total Vehicles on Map: " + count);
+        //System.out.println("Stop Spawning Boolean: " + stopSpawning);
         if (count >= 100 || stopSpawning) {
             return;
         }
@@ -111,11 +113,10 @@ public class Testing extends Application {
         if(flag3D == false) {
             Vehicle vehicle = new Vehicle(tempPane, vehicleCollidables);
 
-
             vehicle.startAnimation();
             vehicleCollidables.add(vehicle);
 
-            //Using a recursive method to guarantee that the timeframe actually occurs.
+            //Using a recursive method to guarantee that the pause actually occurs.
             PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(100));
             pause.setOnFinished(event1 -> {
                 addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
@@ -124,7 +125,6 @@ public class Testing extends Application {
         }
         else{
             Vehicle3D vehicle = new Vehicle3D(tempPane, vehicleCollidables3D);
-
 
             vehicle.startAnimation();
             vehicleCollidables3D.add(vehicle);
@@ -136,8 +136,40 @@ public class Testing extends Application {
             });
             pause.play();
         }
+    }
 
+    public void addBuses(int count, Pane tempPane, List<Bus> busCollidables) {
+        System.out.println("Total Buses on Map: " + count);
+        if (count >= 10) {
+            return;
+        }
 
+        if(flag3D == false) {
+            Bus bus = new Bus(tempPane, busCollidables);
+
+            bus.startAnimation();
+            busCollidables.add(bus);
+
+            //Using a recursive method to guarantee that the pause actually occurs.
+            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
+            pause.setOnFinished(event1 -> {
+                addBuses(busCollidables.size(), tempPane, busCollidables);
+            });
+            pause.play();
+        }
+        else{
+//            Bus3D bus = new Bus3D(tempPane, busCollidables);
+//
+//            bus.startAnimation();
+//            busCollidables.add(bus);
+//
+//            //Using a recursive method to guarantee that the pause actually occurs.
+//            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
+//            pause.setOnFinished(event1 -> {
+//                addBuses(busCollidables3D.size(), tempPane, busCollidables);
+//            });
+//            pause.play();
+        }
     }
 
     private void startCollisionTimer() {

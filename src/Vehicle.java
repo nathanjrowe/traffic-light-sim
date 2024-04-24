@@ -286,4 +286,5 @@ public class Vehicle {
     protected boolean returnCollided(){
         return collided;
     }
+
 }
