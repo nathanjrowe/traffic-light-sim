@@ -124,7 +124,7 @@ public class TrafficScene {
         //Add to root pane here. Make any 3d Models as a function that returns a group then add.
         //Commented out some models to keep the load times down when testing
         root3D.getChildren().addAll(streetScene(),runWay(), oceanBlock(), empireStateBuilding(), building2(),car(), trees(),airport(),
-                shoppingMall(), apartment());
+                shoppingMall(), apartment(), airplane());
 
         return root3D;
     }
@@ -232,6 +232,37 @@ public class TrafficScene {
             //streetScene.getChildren().add(tempPane);
         });
         return  spawnTrafficT;
+    }
+
+    /**
+     * Airplane creation, position, scaling
+     * @return group
+     */
+    private Group airplane(){
+        ObjModelImporter importes = new ObjModelImporter();
+        try {
+            importes.read(this.getClass().getResource("/vehicleModels/11803_Airplane_v1_l1.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViewss = importes.getImport();
+        Group group3 = new Group();
+
+
+        group3.getChildren().addAll(meshViewss);
+        group3.setScaleX(.25);
+        group3.setScaleY(.25);
+        group3.setScaleZ(.25);
+
+        //group.setTranslateY(1000);
+        group3.setTranslateZ(4500);
+        group3.setTranslateY(-120);
+        group3.setTranslateX(200);
+        group3.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group3;
     }
 
     /**
