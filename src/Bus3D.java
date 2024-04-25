@@ -13,6 +13,9 @@ import java.util.Random;
 
 import static java.lang.Math.abs;
 
+/**
+ * 3D version of 2D bus.java object
+ */
 public class Bus3D {
 
     private static final double[][] PATHS = {
@@ -30,6 +33,11 @@ public class Bus3D {
     private Group buses = new Group();
     private Bus bus;
 
+    /**
+     * Constructor
+     * @param tempPane pane for placing buses
+     * @param collidableBus collidable for buses
+     */
     public Bus3D(Pane tempPane, List<Bus3D> collidableBus){
         initializeArrays();
         createPath();
@@ -38,6 +46,9 @@ public class Bus3D {
         this.collided = false;
     }
 
+    /**
+     * Create car shape
+     */
     private void initializeCarShape() {
         bus();
         carShape = new Rectangle(8, 50);
@@ -48,6 +59,10 @@ public class Bus3D {
         }
     }
 
+    /**
+     * Creates 3D model for bus object
+     * @return
+     */
     private Group bus(){
         ObjModelImporter importes = new ObjModelImporter();
         try {
@@ -78,6 +93,11 @@ public class Bus3D {
         return group3;
     }
 
+    /**
+     * Initialize path transitions for bus paths
+     * @param tempPane
+     * @param collidableBus
+     */
     private void initializePathTransition(Pane tempPane, List<Bus3D> collidableBus) {
         tempPane.getChildren().addAll(path,buses);
         if (path != null && buses != null) {
@@ -92,30 +112,45 @@ public class Bus3D {
         }
     }
 
+    /**
+     * Starts bus path transition animation
+     */
     protected void startAnimation() {
         if (pathTransition != null) {
             pathTransition.play();
         }
     }
 
+    /**
+     * Stops bus path transition animation
+     */
     protected void stopVehicle() {
         if (pathTransition != null) {
             pathTransition.pause();
         }
     }
 
+    /**
+     * restarts bus path transition animation
+     */
     protected void restartVehicle() {
         if (pathTransition != null) {
             pathTransition.play();
         }
     }
 
+    /**
+     * initialized path array
+     */
     private void initializeArrays(){
         for (double[] array : PATHS){
             startingPaths.add(array);
         }
     }
 
+    /**
+     * Creates paths for buses
+     */
     protected void createPath(){
         Random random = new Random();
         int tempInt = random.nextInt(2);
@@ -139,6 +174,15 @@ public class Bus3D {
         path.setOpacity(0);
     }
 
+    /**
+     * updates object to match segment angle.
+     * makes sure the bus object faces the right direction
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     * @return
+     */
     protected double calculateAngle(double startX, double startY, double endX, double endY) {
         double angle = Math.toDegrees(Math.atan2(endX - startX, endY - startY));
         if(angle < 0){
@@ -147,26 +191,50 @@ public class Bus3D {
         return angle;
     }
 
+    /**
+     * updates bus collided boolean
+     * @param bool
+     */
     protected void setCollided(boolean bool){
         collided = bool;
     }
 
+    /**
+     * return bus path
+     * @return
+     */
     protected Path returnPath(){
         return path;
     }
 
+    /**
+     *
+     * @return seconds
+     */
     protected double returnSeconds(){
         return seconds;
     }
 
+    /**
+     *
+     * @return returns path array
+     */
     protected List<double[]> returnPathArray(){
         return temp;
     }
 
+    /**
+     * return bus object shape
+     * @return
+     */
     protected Shape returnCarShape() {
         return carShape;
     }
 
+    /**
+     * returns bus boolean
+     * @return
+     */
     protected boolean returnCollided(){
         return collided;
     }
