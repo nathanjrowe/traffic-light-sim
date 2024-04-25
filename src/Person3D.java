@@ -11,6 +11,9 @@ import java.util.Random;
 
 import static java.lang.Math.abs;
 
+/**
+ * 3D implementation of pedestrian object
+ */
 public class Person3D {
 
     private static final double[][] PATHS = {
@@ -29,6 +32,11 @@ public class Person3D {
     private PathTransition pathTransition;
     private Shape carShape;
 
+    /**
+     * Constructor
+     * @param tempPane
+     * @param collidablePerson
+     */
     public Person3D(Pane tempPane, List<Person> collidablePerson){
         initializeArrays();
         createPath();
@@ -37,6 +45,9 @@ public class Person3D {
         this.collided = false;
     }
 
+    /**
+     * Initialize 3D pedestrian object
+     */
     private void initializeCarShape() {
         carShape = new Circle(4);
         carShape.setFill(Color.GREEN);
@@ -47,6 +58,11 @@ public class Person3D {
         }
     }
 
+    /**
+     * Initialize path transitions
+     * @param tempPane
+     * @param collidablePerson
+     */
     private void initializePathTransition(Pane tempPane, List<Person> collidablePerson) {
         tempPane.getChildren().addAll(path,carShape);
         if (path != null && carShape != null) {
@@ -61,30 +77,43 @@ public class Person3D {
         }
     }
 
+    /**
+     * Starts 3D pedestrian path transition animation
+     */
     protected void startAnimation() {
         if (pathTransition != null) {
             pathTransition.play();
         }
     }
-
+    /**
+     * Stops 3D pedestrian path transition animation
+     */
     protected void stopVehicle() {
         if (pathTransition != null) {
             pathTransition.pause();
         }
     }
-
+    /**
+     * Restarts 3D pedestrian path transition animation
+     */
     protected void restartVehicle() {
         if (pathTransition != null) {
             pathTransition.play();
         }
     }
 
+    /**
+     * Initialize paths array
+     */
     private void initializeArrays(){
         for (double[] array : PATHS){
             startingPaths.add(array);
         }
     }
 
+    /**
+     * Creates 3D pedestrian paths
+     */
     protected void createPath(){
         Random random = new Random();
         int tempInt = random.nextInt(PATHS.length);
@@ -108,6 +137,15 @@ public class Person3D {
         path.setOpacity(0);
     }
 
+    /**
+     * Updates 3D pedestrian object to face the right direction
+     * by calculating the angles of paths
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     * @return
+     */
     protected double calculateAngle(double startX, double startY, double endX, double endY) {
         double angle = Math.toDegrees(Math.atan2(endX - startX, endY - startY));
         if(angle < 0){
@@ -116,26 +154,50 @@ public class Person3D {
         return angle;
     }
 
+    /**
+     * Updates the 3D pedestrian collided boolean
+     * @param bool
+     */
     protected void setCollided(boolean bool){
         collided = bool;
     }
 
+    /**
+     * Returns the 3D pedestrian path
+     * @return
+     */
     protected Path returnPath(){
         return path;
     }
 
+    /**
+     * returns seconds for path transition
+     * @return
+     */
     protected double returnSeconds(){
         return seconds;
     }
 
+    /**
+     * returns path array
+     * @return
+     */
     protected List<double[]> returnPathArray(){
         return temp;
     }
 
+    /**
+     * returns 3D pedestrian shape
+     * @return
+     */
     protected Shape returnCarShape() {
         return carShape;
     }
 
+    /**
+     * returns 3D pedestrians collided boolean
+     * @return
+     */
     protected boolean returnCollided(){
         return collided;
     }

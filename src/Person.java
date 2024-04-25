@@ -10,7 +10,7 @@ import java.util.Random;
 import static java.lang.Math.abs;
 
 /**
- * Pedestrian class object
+ *  2D Pedestrian class object implementation
  */
 public class Person {
 
