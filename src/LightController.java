@@ -26,13 +26,11 @@ public class LightController {
     private int maxGreen = 80;
     //Enum to control the cycle changes
     private enum direction {NS, EW};
-    
-    //Constructor
-    //Takes a list of coordinates for the lights
-    //lightCoord[0]: location of the light(N, S, E, W)
-    //lightCoord[1]: x coordinate
-    //lightCoord[2]: y coordinate
-    //See SystemController for the list of coordinates
+
+    /**
+     * Constructor for light, See SystemController for the list of coordinates
+     * @param lightCoords Takes a list of coordinates for the lights
+     */
     public LightController(List<Object[]> lightCoords) {
         //Create the traffic lights at the intersection
         for(Object[] coord : lightCoords){
@@ -40,7 +38,13 @@ public class LightController {
         }
     }
 
-    //Create a traffic light
+    /**
+     * Create a traffic light
+     * @param location
+     * @param x position
+     * @param y position
+     * @return pane of trafic light
+     */
     private Pane createTrafficLight(String location, Integer x, Integer y){
         //Create a pane to hold the traffic light
         Pane trafficLight = new Pane();
@@ -56,8 +60,12 @@ public class LightController {
         return trafficLight;
     }
 
-    //Create a pedestrian light
-    //Not implemented
+    /**
+     * Creates a pedestrian light, Not implemented
+     * @param x position
+     * @param y position
+     * @return pane of pedestrian light
+     */
     private Pane createPedestrianLight(double x, double y){
         Pane pedestrianLight = new Pane();
         PedestrianLightCreation pedestrianLightCreation = new PedestrianLightCreation();
@@ -69,8 +77,9 @@ public class LightController {
         return pedestrianLight;
     }
 
-    /*
+    /**
      * Method to add the lights to the root pane
+     * @param root
      */
     public void addLights(Pane root) {
         for(Pane trafficLight : trafficLights.values()){
@@ -81,13 +90,20 @@ public class LightController {
         }
     }
 
-    //Set the maximum green time for the lights
+    /**
+     * //Set the maximum green time for the lights
+     * @param time
+     */
     public void setMaxGreen(int time) {
         this.maxGreen = time;
     }
 
-    //Changes the state for a light at the intersection
     //TODO: Add changes for arrows and pedestrian lights
+    /**
+     * Changes the state for a light at the intersection
+     * @param location
+     * @param color
+     */
     private void changeLightState(String location, String color) {
         Pane trafficLight = trafficLights.get(location);
         //Get the light attached to the pane and change the color
@@ -107,9 +123,11 @@ public class LightController {
         }
     }
 
-    //Animation cycle for the lights
-    //Uses an animation timer to change light colors at the intersection
-    //Counts time in milliseconds
+    /**
+     * Animation cycle for the lights
+     * Uses an animation timer to change light colors at the intersection
+     * Counts time in milliseconds
+     */
     public void startCycle() {
         AnimationTimer timer = new AnimationTimer() {
             private direction dir = direction.NS;
@@ -119,6 +137,14 @@ public class LightController {
             private int pedestrianTime = 0;
             private int pedestrianCycle = 0;
             private Duration lastUpdate = Duration.of(0, ChronoUnit.NANOS);
+
+            /**
+             *
+             * @param now
+             *            The timestamp of the current frame given in nanoseconds. This
+             *            value will be the same for all {@code AnimationTimers} called
+             *            during one frame.
+             */
             @Override
             public void handle(long now) {
                 Duration nowDur = Duration.of(now, ChronoUnit.NANOS);
