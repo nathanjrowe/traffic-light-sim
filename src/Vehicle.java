@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Random;
 import static java.lang.Math.abs;
 
+/**
+ * 2D implementation of vehicle object
+ */
 public class Vehicle {
     private static final double[][] INITIALPATHS = {
             /**Left Side Starting*/
@@ -90,6 +93,11 @@ public class Vehicle {
     private PathTransition pathTransition;
     private Shape carShape;
 
+    /**
+     * Constructor
+     * @param tempPane
+     * @param collidableVehicles
+     */
     public Vehicle(Pane tempPane, List<Vehicle> collidableVehicles) {
         initializeArrays();
         createPath();
@@ -98,6 +106,9 @@ public class Vehicle {
         this.collided = false;
     }
 
+    /**
+     * Creates car object box
+     */
     private void initializeCarShape() {
         carShape = new Rectangle(8, 15);
         //Set initial angle based on the first segment
@@ -107,6 +118,11 @@ public class Vehicle {
         }
     }
 
+    /**
+     * initializes path transition
+     * @param tempPane
+     * @param collidableVehicles
+     */
     private void initializePathTransition(Pane tempPane, List<Vehicle> collidableVehicles) {
         tempPane.getChildren().addAll(path,carShape);
         if (path != null && carShape != null) {
@@ -132,24 +148,34 @@ public class Vehicle {
         }
     }
 
+    /**
+     * Starts 3D vehicle path transition animation
+     */
     protected void startAnimation() {
         if (pathTransition != null) {
             pathTransition.play();
         }
     }
-
+    /**
+     * Stops vehicle path transition animation
+     */
     protected void stopVehicle() {
         if (pathTransition != null) {
             pathTransition.pause();
         }
     }
-
+    /**
+     * Restarts vehicle path transition animation
+     */
     protected void restartVehicle() {
         if (pathTransition != null) {
             pathTransition.play();
         }
     }
 
+    /**
+     * Initializes path array
+     */
     private void initializeArrays(){
         for (double[] array : INITIALPATHS){
             startingPaths.add(array);
@@ -159,6 +185,9 @@ public class Vehicle {
         }
     }
 
+    /**
+     * Creates path
+     */
     protected void createPath(){
         temp = generateRandomPath(allPossiblePaths, startingPaths);
         path = new Path();
@@ -179,11 +208,23 @@ public class Vehicle {
         path.setOpacity(0);
     }
 
+    /**
+     * Connects paths based on segments
+     * @param path1
+     * @param path2
+     * @return
+     */
     private boolean pathConnects(double[] path1, double[] path2) {
         //Path1 endX == Path2 startX && Path1 endY == Path2 startY
         return path1[2] == path2[0] && path1[3] == path2[1];
     }
 
+    /**
+     * Generates path segments and adds to path
+     * @param allPathsList
+     * @param startingPathList
+     * @return list of segments
+     */
     private List<double[]> generateRandomPath(List<double[]> allPathsList, List<double[]> startingPathList) {
         Random random = new Random();
 
@@ -214,6 +255,13 @@ public class Vehicle {
         return path;
     }
 
+    /**
+     * Primary function to go through all segments to find the closest one to vehicle
+     * @param xPosition
+     * @param yPosition
+     * @param segments
+     * @return
+     */
     protected double[] findClosestSegmentBasedOnPosition(double xPosition, double yPosition, List<double[]> segments) {
         //Initialize variables
         double[] closestSegment = null;
@@ -231,6 +279,16 @@ public class Vehicle {
         return closestSegment;
     }
 
+    /**
+     * Helper function to update car angle based on current path segment of vehicle.
+     * @param pointX
+     * @param pointY
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     * @return
+     */
     protected double pointToSegmentDistance(double pointX, double pointY, double startX, double startY, double endX, double endY) {
         double changeX = endX - startX;
         double changeY = endY - startY;
@@ -255,6 +313,14 @@ public class Vehicle {
         return Math.sqrt(changeX * changeX + changeY * changeY);
     }
 
+    /**
+     * Updates vehicle to the right direction based on path segment
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     * @return
+     */
     protected double calculateAngle(double startX, double startY, double endX, double endY) {
         double angle = Math.toDegrees(Math.atan2(endX - startX, endY - startY));
         if(angle < 0){
@@ -263,26 +329,50 @@ public class Vehicle {
         return angle;
     }
 
+    /**
+     * Updates vehicle object collide boolean
+     * @param bool
+     */
     protected void setCollided(boolean bool){
         collided = bool;
     }
 
+    /**
+     * Returns path
+     * @return
+     */
     protected Path returnPath(){
         return path;
     }
 
+    /**
+     * Returns second for animation
+     * @return
+     */
     protected double returnSeconds(){
         return seconds;
     }
 
+    /**
+     * Returns path array
+     * @return
+     */
     protected List<double[]> returnPathArray(){
         return temp;
     }
 
+    /**
+     * Returns car shape box
+     * @return
+     */
     protected Shape returnCarShape() {
         return carShape;
     }
 
+    /**
+     * Returns vehicle collidable boolean
+     * @return
+     */
     protected boolean returnCollided(){
         return collided;
     }
