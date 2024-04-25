@@ -26,6 +26,7 @@ public class Testing extends Application {
     private List<Vehicle3D> vehicleCollidables3D = new ArrayList<>();
     private List<Bus> busCollidables = new ArrayList<>();
     private List<Bus3D> busCollidables3D = new ArrayList<>();
+    //
     private List<Person> personCollidables = new ArrayList<>();
     private List<Person3D> personCollidables3D = new ArrayList<>();
     private StackPane root = new StackPane();
