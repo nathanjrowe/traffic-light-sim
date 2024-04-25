@@ -9,6 +9,9 @@ import java.util.Random;
 
 import static java.lang.Math.abs;
 
+/**
+ * Object class defining buses
+ */
 public class Bus {
 
     private static final double[][] PATHS = {
@@ -24,6 +27,11 @@ public class Bus {
     private PathTransition pathTransition;
     private Shape carShape;
 
+    /**
+     * Constructor for bus
+     * @param tempPane
+     * @param collidableBus
+     */
     public Bus(Pane tempPane, List<Bus> collidableBus){
         initializeArrays();
         createPath();
@@ -32,6 +40,9 @@ public class Bus {
         this.collided = false;
     }
 
+    /**
+     * Creates car shape
+     */
     private void initializeCarShape() {
         carShape = new Rectangle(8, 50);
         //Set initial angle based on the first segment
@@ -41,6 +52,11 @@ public class Bus {
         }
     }
 
+    /**
+     * Runs buses on paths
+     * @param tempPane
+     * @param collidableBus
+     */
     private void initializePathTransition(Pane tempPane, List<Bus> collidableBus) {
         tempPane.getChildren().addAll(path,carShape);
         if (path != null && carShape != null) {
@@ -55,30 +71,45 @@ public class Bus {
         }
     }
 
+    /**
+     * Runs path transition for bus
+     */
     protected void startAnimation() {
         if (pathTransition != null) {
             pathTransition.play();
         }
     }
 
+    /**
+     * Stops vehicle path transition
+     */
     protected void stopVehicle() {
         if (pathTransition != null) {
             pathTransition.pause();
         }
     }
 
+    /**
+     * Restarts bus path transition
+     */
     protected void restartVehicle() {
         if (pathTransition != null) {
             pathTransition.play();
         }
     }
 
+    /**
+     * array of bus paths
+     */
     private void initializeArrays(){
         for (double[] array : PATHS){
             startingPaths.add(array);
         }
     }
 
+    /**
+     * Creates paths for buses to follow
+     */
     protected void createPath(){
         Random random = new Random();
         int tempInt = random.nextInt(2);
@@ -102,6 +133,15 @@ public class Bus {
         path.setOpacity(0);
     }
 
+    /**
+     * Calculates angle
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     * @return
+     */
+
     protected double calculateAngle(double startX, double startY, double endX, double endY) {
         double angle = Math.toDegrees(Math.atan2(endX - startX, endY - startY));
         if(angle < 0){
@@ -110,10 +150,18 @@ public class Bus {
         return angle;
     }
 
+    /**
+     * Sets bus collided to true
+     * @param bool
+     */
     protected void setCollided(boolean bool){
         collided = bool;
     }
 
+    /**
+     * Returns bus path
+     * @return
+     */
     protected Path returnPath(){
         return path;
     }
@@ -122,14 +170,25 @@ public class Bus {
         return seconds;
     }
 
+    /**
+     * Returns bus path array
+     * @return
+     */
     protected List<double[]> returnPathArray(){
         return temp;
     }
 
+    /**
+     * @return returns car shape for collision
+     */
     protected Shape returnCarShape() {
         return carShape;
     }
 
+    /**
+     * Returns buses collided boolean variable
+     * @return
+     */
     protected boolean returnCollided(){
         return collided;
     }
