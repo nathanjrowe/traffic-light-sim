@@ -25,6 +25,7 @@ public class Testing extends Application {
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private List<Vehicle3D> vehicleCollidables3D = new ArrayList<>();
     private List<Bus> busCollidables = new ArrayList<>();
+    private List<Bus3D> busCollidables3D = new ArrayList<>();
     private List<Person> personCollidables = new ArrayList<>();
     private StackPane root = new StackPane();
     private Pane tempPane = new Pane();
@@ -187,17 +188,17 @@ public class Testing extends Application {
             pause.play();
         }
         else{
-//            Bus3D bus = new Bus3D(tempPane, busCollidables);
-//
-//            bus.startAnimation();
-//            busCollidables3D.add(bus);
-//
-//            //Using a recursive method to guarantee that the pause actually occurs.
-//            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
-//            pause.setOnFinished(event1 -> {
-//                addBuses(busCollidables3D.size(), tempPane, busCollidables);
-//            });
-//            pause.play();
+            Bus3D bus = new Bus3D(tempPane, busCollidables);
+
+            bus.startAnimation();
+            busCollidables3D.add(bus);
+
+            //Using a recursive method to guarantee that the pause actually occurs.
+            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
+            pause.setOnFinished(event1 -> {
+                addBuses(busCollidables3D.size(), tempPane, busCollidables);
+            });
+            pause.play();
         }
     }
 
