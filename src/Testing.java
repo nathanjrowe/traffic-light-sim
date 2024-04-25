@@ -144,7 +144,10 @@ public class Testing extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                checkCollisions();
+                //checkCollisions();
+                for(Vehicle v1 : vehicleCollidables){
+                    v1.checkCollision(tempPane);
+                }
             }
         };
         timer.start();

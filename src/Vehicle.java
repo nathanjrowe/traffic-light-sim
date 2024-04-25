@@ -1,4 +1,6 @@
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
+
+import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
 import javafx.scene.Group;
@@ -12,6 +14,9 @@ import java.util.Random;
 import static java.lang.Math.abs;
 
 public class Vehicle {
+
+    //List of CollisionBoxes
+    private final List<CollisionBox> collisionBoxes = new ArrayList<>();
     private static final double[][] INITIALPATHS = {
             /**Left Side Starting*/
             //Straight/Right First Lane, Right Second Lane, Left First Lane, Left Second Lane
@@ -95,6 +100,11 @@ public class Vehicle {
         createPath();
         initializeCarShape();
         initializePathTransition(tempPane, collidableVehicles);
+        for (javafx.scene.Node node : tempPane.getChildren()) {
+            if (node instanceof CollisionBox) {
+                collisionBoxes.add((CollisionBox) node);
+            }
+        }
         this.collided = false;
     }
 
@@ -109,6 +119,10 @@ public class Vehicle {
 
     private void initializePathTransition(Pane tempPane, List<Vehicle> collidableVehicles) {
         tempPane.getChildren().addAll(path,carShape);
+        //Collect CollisionBox objects from the root pane
+        
+        //Print out the number of collision boxes
+        //System.out.println("Number of Collision Boxes: " + collisionBoxes.size());
         if (path != null && carShape != null) {
             pathTransition = new PathTransition(Duration.millis(seconds*1000), path, carShape);
             pathTransition.setInterpolator(Interpolator.LINEAR);
@@ -124,7 +138,6 @@ public class Vehicle {
                     carShape.setRotate(angle);
                 }
             });
-
             pathTransition.setOnFinished(event -> {
                 tempPane.getChildren().removeAll(path,carShape);
                 collidableVehicles.remove(this);
@@ -285,5 +298,42 @@ public class Vehicle {
 
     protected boolean returnCollided(){
         return collided;
+    }
+
+    //Take a root pane to check for collisions
+    protected void checkCollision(Pane root) { 
+        //Check for collisions every frame
+        //Print the bounds of the car
+        //System.out.println(carShape.getBoundsInParent());
+        for (CollisionBox collisionBox : collisionBoxes) {
+            //System.out.println(collisionBox.getBoundsInParent());
+            if (carShape.getBoundsInParent().intersects(collisionBox.getBoundsInParent())) {
+                //System.out.println("Collision Detected 111");
+                if(collisionBox.getState() == CollisionBox.State.STOP) {
+                    collided = true;
+                    stopVehicle();
+                }
+                else {
+                    collided = false;
+                    restartVehicle();
+                }
+            }
+        }
+
+        //Check for collisions with other nodes that are not collision boxes
+        for (javafx.scene.Node node : root.getChildren()) {
+            if (node instanceof CollisionBox) {
+                continue;
+            }
+            
+            /*if (carShape.getBoundsInParent().intersects(node.getBoundsInParent())) {
+                collided = true;
+                stopVehicle();
+            }
+            else {
+                collided = false;
+                restartVehicle();
+            }*/
+        }
     }
 }

@@ -1,5 +1,6 @@
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javafx.animation.AnimationTimer;
@@ -19,6 +20,14 @@ public class LightController {
     //HashMap to store the pedestrian lights
     //Not implemented yet
     private final HashMap<Integer, Pane> pedestrianLights = new HashMap<>();
+    //HashMap to store the collision boxes
+    //Key stores the location of the light(N, S, E, W)
+    private final HashMap<String, List<CollisionBox>> collisionBoxes = new HashMap<>(){{
+        put("N", new ArrayList<>());
+        put("S", new ArrayList<>());
+        put("E", new ArrayList<>());
+        put("W", new ArrayList<>());
+    }};
     //Vars to store the time in seconds for the lights
     private final int cycleTime = 120;
     private final int yellow = 6;
@@ -33,10 +42,14 @@ public class LightController {
     //lightCoord[1]: x coordinate
     //lightCoord[2]: y coordinate
     //See SystemController for the list of coordinates
-    public LightController(List<Object[]> lightCoords) {
+    public LightController(List<Object[]> lightCoords, List<Object[]> collisionCoords) {
         //Create the traffic lights at the intersection
         for(Object[] coord : lightCoords){
             createTrafficLight((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
+        }
+        //Create the collision boxes at the intersection
+        for(Object[] coord : collisionCoords){
+            createCollisionBox((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
         }
     }
 
@@ -54,6 +67,15 @@ public class LightController {
         //Add the light to the hashmap
         trafficLights.put(location, trafficLight);
         return trafficLight;
+    }
+
+    //Create a collision box
+    private CollisionBox createCollisionBox(String location, double x, double y){
+        CollisionBox collisionBox = new CollisionBox(x, y, 2, 2);
+        collisionBox.setState(CollisionBox.State.STOP);
+        //Add collision box to the list of collision boxes for the location
+        collisionBoxes.get(location).add(collisionBox);
+        return collisionBox;
     }
 
     //Create a pedestrian light
@@ -78,6 +100,11 @@ public class LightController {
         }
         for(Pane pedestrianLight : pedestrianLights.values()){
             root.getChildren().add(pedestrianLight);
+        }
+        for(List<CollisionBox> collisionBox : collisionBoxes.values()){
+            for(CollisionBox box : collisionBox){
+                root.getChildren().add(box);
+            }
         }
     }
 
@@ -122,7 +149,7 @@ public class LightController {
             @Override
             public void handle(long now) {
                 Duration nowDur = Duration.of(now, ChronoUnit.NANOS);
-                if (nowDur.minus(lastUpdate).toMillis() >= 1000) {
+                if (nowDur.minus(lastUpdate).toMillis() >= 200) {
                     //Update last update time
                     lastUpdate = nowDur;  
                     //Change the light color for perpendicular lights
@@ -139,10 +166,24 @@ public class LightController {
                         if(dir == direction.NS){
                             changeLightState("N", "green");
                             changeLightState("S", "green");
+                            //Change the state of the collision boxes
+                            for(CollisionBox box : collisionBoxes.get("N")){
+                                box.setState(CollisionBox.State.GO);
+                            }
+                            for(CollisionBox box : collisionBoxes.get("S")){
+                                box.setState(CollisionBox.State.GO);
+                            }
                         }
                         else if(dir == direction.EW){
                             changeLightState("E", "green");
                             changeLightState("W", "green");
+                            //Change the state of the collision boxes
+                            for(CollisionBox box : collisionBoxes.get("E")){
+                                box.setState(CollisionBox.State.GO);
+                            }
+                            for(CollisionBox box : collisionBoxes.get("W")){
+                                box.setState(CollisionBox.State.GO);
+                            }
                         }
                         greenTime--;
                     } else if (yellowTime > 0) {
@@ -159,12 +200,26 @@ public class LightController {
                         if(dir == direction.NS){
                             changeLightState("N", "red");
                             changeLightState("S", "red");
+                            //Change the state of the collision boxes
+                            for(CollisionBox box : collisionBoxes.get("N")){
+                                box.setState(CollisionBox.State.STOP);
+                            }
+                            for(CollisionBox box : collisionBoxes.get("S")){
+                                box.setState(CollisionBox.State.STOP);
+                            }
                             //Transition to the next direction
                             dir = direction.EW;
                         }
                         else if(dir == direction.EW){
                             changeLightState("E", "red");
                             changeLightState("W", "red");
+                            //Change the state of the collision boxes
+                            for(CollisionBox box : collisionBoxes.get("E")){
+                                box.setState(CollisionBox.State.STOP);
+                            }
+                            for(CollisionBox box : collisionBoxes.get("W")){
+                                box.setState(CollisionBox.State.STOP);
+                            }
                             dir = direction.NS;
                         }
                         //Set the green time for the next direction
