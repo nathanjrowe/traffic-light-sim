@@ -18,26 +18,44 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Traffic Scene class renders 3D space and models for 2d implementation of
+ * Traffic Light Controller, Pedestrian Light Controller, Bus Light Controller
+ */
+
 public class TrafficScene {
 
+    /**
+     * Instantiate volatile variables
+     */
+
     private ImageHelper imageHelper = new ImageHelper();
-    private Testing testing = new Testing();
-    private List<Vehicle> vehicleCollidables = new ArrayList<>();
-    private AtomicInteger clickCount = new AtomicInteger(0);
+    private Testing testing = new Testing(); // Call to 2D class for controllers
+    private List<Vehicle> vehicleCollidables = new ArrayList<>(); // List of vehicle objects
+    private AtomicInteger clickCount = new AtomicInteger(0); // TO BE DELETED
     private int counter = 0;
     private SubScene subScene;
     private Pane root = new Pane();
     private Pane menuPane = new Pane();
+
+    // Define window size
     int width = 1200;
     int height = 800;
+
+    /**
+     * Acts as the main function of the GUI scene.
+     * @Param N/A
+     * @return Scene
+     */
     public Scene Traffic(){
 
+        // Create media call to mp3 to generate aesthetic city sounds
         Media backgroundMusic = new Media(new File("./resources/Music/cityTraffic.mp3").toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(backgroundMusic);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         //mediaPlayer.play();
 
-        createSubScene();
+        createSubScene(); // Container for different components of scene
 
         //Root Pane
         root.setPrefHeight(height *1.1);
@@ -58,6 +76,11 @@ public class TrafficScene {
 
         return scene;
     }
+
+    /**
+     *
+     * @return
+     */
     private Pane streetScene(){
         //Root pane for the cars
         Pane streetScene = testing.getRoot();
@@ -79,6 +102,11 @@ public class TrafficScene {
 
         return streetScene;
     }
+
+    /**
+     *
+     * @return
+     */
     private Pane create3DRoot(){
         Pane root3D = new Pane();
 
@@ -99,6 +127,10 @@ public class TrafficScene {
         return root3D;
     }
 
+    /**
+     *
+     * @return
+     */
     private SubScene createSubScene(){
         SubScene subScene = new SubScene(create3DRoot(),width*1.1, height*1.1, true,
                 SceneAntialiasing.BALANCED);
@@ -110,6 +142,11 @@ public class TrafficScene {
         this.subScene = subScene;
         return subScene;
     }
+
+    /**
+     *
+     * @return
+     */
     private PerspectiveCamera mainCamera(){
         //Scene camera (what makes it 3D)
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(true);
@@ -135,6 +172,12 @@ public class TrafficScene {
 
         return  perspectiveCamera;
     }
+
+    /**
+     *
+     * @param tempPane
+     * @return
+     */
     private Pane menuPane(Pane tempPane){
         //Menu
         StackPane menuPane = new StackPane();
@@ -170,6 +213,12 @@ public class TrafficScene {
 
         return menuPane;
     }
+
+    /**
+     *
+     * @param tempPane
+     * @return
+     */
     private Text spawnVehiclesBTN(Pane tempPane){
         Text spawnTrafficT = new Text("Spawn Traffic");
         spawnTrafficT.setFill(Color.WHITE);
@@ -180,6 +229,11 @@ public class TrafficScene {
         });
         return  spawnTrafficT;
     }
+
+    /**
+     *
+     * @return
+     */
     private Group empireStateBuilding(){
         ObjModelImporter importe = new ObjModelImporter();
         try {
@@ -207,6 +261,10 @@ public class TrafficScene {
         return group;
     }
 
+    /**
+     * Grouped 3D tree models creation, placement, scale
+     * @return
+     */
     private Group trees(){
         ObjModelImporter importe = new ObjModelImporter();
         ObjModelImporter importes = new ObjModelImporter();
@@ -347,6 +405,10 @@ public class TrafficScene {
         return group0;
     }
 
+    /**
+     * Airport 3D model creation, placement, scale
+     * @return
+     */
     private Group airport(){
         ObjModelImporter importe = new ObjModelImporter();
         try {
@@ -374,6 +436,10 @@ public class TrafficScene {
         return group;
     }
 
+    /**
+     * Building 3D model creation, placement, scale
+     * @return
+     */
     private Group building2(){
         ObjModelImporter importes = new ObjModelImporter();
         try {
@@ -400,8 +466,12 @@ public class TrafficScene {
                 new Rotate(0, Rotate.Z_AXIS));
         return group3;
     }
-
-    /*private Group water(){
+    /**
+     * Water mesh import, creation, placement, scale
+     * @return
+     */
+    /*
+    private Group water(){
         ObjModelImporter importes = new ObjModelImporter();
         try {
             importes.read(this.getClass().getResource("/water/uploads_files_2723489_POOL.obj"));
@@ -428,6 +498,10 @@ public class TrafficScene {
         return group3;
     }*/
 
+    /**
+     * Apartment building 3D creation placement
+     * @return
+     */
     private Group apartment(){
         ObjModelImporter importes = new ObjModelImporter();
         try {
@@ -454,6 +528,11 @@ public class TrafficScene {
                 new Rotate(0, Rotate.Z_AXIS));
         return group3;
     }
+
+    /**
+     * Shopping mall 3D model creation, placement and scale
+     * @return
+     */
     private Group shoppingMall(){
         ObjModelImporter importes = new ObjModelImporter();
         try {
@@ -481,6 +560,10 @@ public class TrafficScene {
         return group3;
     }
 
+    /**
+     * Cars 3D models grouped creation, placement, scale
+     * @return
+     */
     private Group car(){
         ObjModelImporter importes = new ObjModelImporter();
         try {
@@ -508,6 +591,10 @@ public class TrafficScene {
         return group3;
     }
 
+    /**
+     * Town Home 3D model creation, placement, scale
+     * @return
+     */
     private Group townHome(){
         ObjModelImporter importes = new ObjModelImporter();
         try {
@@ -535,6 +622,10 @@ public class TrafficScene {
         return group3;
     }
 
+    /**
+     * Default ocean mesh and material
+     * @return
+     */
     private Box oceanBlock(){
         Box oceanBox = new Box(width*2,height*10,10);
         oceanBox.setLayoutY(0);
@@ -554,6 +645,10 @@ public class TrafficScene {
         return oceanBox;
     }
 
+    /**
+     * Texture to place for airport model
+     * @return
+     */
     private Box runWay(){
         //Simple runway for airplanes
         Box runWay = new Box(width*1.5,height*10,10);
@@ -574,6 +669,13 @@ public class TrafficScene {
 
         return runWay;
     }
+
+    /**
+     * Creates skybox for scene
+     * @param scene
+     * @param currentTimeT
+     * @return
+     */
     private LinearGradient skyColors(Scene scene, Text currentTimeT){
         //region Sky Colors
         Stop[] stops = new Stop[] { new Stop(0, Color.WHITE), new Stop(1, Color.rgb(150,200,225,1))};
@@ -656,6 +758,9 @@ public class TrafficScene {
 
         final long[] startingTime1 = {System.currentTimeMillis()};
         final long[] startingTime = {System.currentTimeMillis()};
+        /**
+         * Day/Night Cycle
+         */
         AnimationTimer timer = new AnimationTimer() {
             @Override
         public void handle(long l) {
