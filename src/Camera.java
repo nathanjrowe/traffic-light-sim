@@ -81,6 +81,9 @@ public class Camera extends Parent {
     private double mouseDeltaX;
     private double mouseDeltaY;
 
+    /**
+     * initializes camera
+     */
     private void initialize() {
         root.getTransforms().add(affine);
         getChildren().add(root);
@@ -89,6 +92,10 @@ public class Camera extends Parent {
         startUpdateThread();
     }
 
+    /**
+     * handles camera booleans for movement
+     * @param scene
+     */
     public void loadControlsForSubScene(SubScene scene) {
         sceneProperty().addListener(l -> {
             if (getScene() != null) {
@@ -403,6 +410,9 @@ public class Camera extends Parent {
         });
     }
 
+    /**
+     * Sets initial camera values
+     */
     private void initializeCamera() {
         getCamera().setNearClip(0.1);
         getCamera().setFarClip(100000);
@@ -411,6 +421,9 @@ public class Camera extends Parent {
         //root.getChildren().add(getCamera());
     }
 
+    /**
+     * Updates camera on thread
+     */
     private void startUpdateThread() {
         new AnimationTimer() {
             @Override
@@ -423,36 +436,54 @@ public class Camera extends Parent {
      Movement
      */
 
+    /**
+     * movement handling
+     */
     private void moveForward() {
         affine.setTx(getPosition().getX() + moveSpeed * getN().getX());
         affine.setTy(getPosition().getY() + moveSpeed * getN().getY());
         affine.setTz(getPosition().getZ() + moveSpeed * getN().getZ());
     }
 
+    /**
+     * left strafe movement handling
+     */
     private void strafeLeft() {
         affine.setTx(getPosition().getX() + moveSpeed * -getU().getX());
         affine.setTy(getPosition().getY() + moveSpeed * -getU().getY());
         affine.setTz(getPosition().getZ() + moveSpeed * -getU().getZ());
     }
 
+    /**
+     * right strafe movement handling
+     */
     private void strafeRight() {
         affine.setTx(getPosition().getX() + moveSpeed * getU().getX());
         affine.setTy(getPosition().getY() + moveSpeed * getU().getY());
         affine.setTz(getPosition().getZ() + moveSpeed * getU().getZ());
     }
 
+    /**
+     * dorsal movement, moving backwards handling
+     */
     private void moveBack() {
         affine.setTx(getPosition().getX() + moveSpeed * -getN().getX());
         affine.setTy(getPosition().getY() + moveSpeed * -getN().getY());
         affine.setTz(getPosition().getZ() + moveSpeed * -getN().getZ());
     }
 
+    /**
+     * up height movement handling
+     */
     private void moveUp() {
         affine.setTx(getPosition().getX() + moveSpeed * -getV().getX());
         affine.setTy(getPosition().getY() + moveSpeed * -getV().getY());
         affine.setTz(getPosition().getZ() + moveSpeed * -getV().getZ());
     }
 
+    /**
+     * down height movement handling
+     */
     private void moveDown() {
         affine.setTx(getPosition().getX() + moveSpeed * getV().getX());
         affine.setTy(getPosition().getY() + moveSpeed * getV().getY());
@@ -464,10 +495,18 @@ public class Camera extends Parent {
      */
     private final ReadOnlyObjectWrapper<PerspectiveCamera> camera = new ReadOnlyObjectWrapper<>(this, "camera", new PerspectiveCamera(true));
 
+    /**
+     * Gets camera objects
+     * @return
+     */
     public final PerspectiveCamera getCamera() {
         return camera.get();
     }
 
+    /**
+     * get camera objects
+     * @return
+     */
     public ReadOnlyObjectProperty cameraProperty() {
         return camera.getReadOnlyProperty();
     }
