@@ -47,7 +47,6 @@ public class TrafficScene {
 
     /**
      * Acts as the main function of the GUI scene.
-     * @Param N/A
      * @return Scene
      */
     public Scene Traffic(){
@@ -81,8 +80,8 @@ public class TrafficScene {
     }
 
     /**
-     *
-     * @return
+     * sets street scene image
+     * @return pane
      */
     private Pane streetScene(){
         //Root pane for the cars
@@ -107,8 +106,8 @@ public class TrafficScene {
     }
 
     /**
-     *
-     * @return
+     * sets pane objects
+     * @return returns pane of objects
      */
     private Pane create3DRoot(){
         Pane root3D = new Pane();
@@ -131,8 +130,8 @@ public class TrafficScene {
     }
 
     /**
-     *
-     * @return
+     * For layering 2D and 3D streen scene and objects
+     * @return subscene to for layering 2D and 3D street scenes and objects
      */
     private SubScene createSubScene(){
         SubScene subScene = new SubScene(create3DRoot(),width*1.1, height*1.1, true,
@@ -147,8 +146,8 @@ public class TrafficScene {
     }
 
     /**
-     *
-     * @return
+     * Constructs camera for scene
+     * @return camera object
      */
     private PerspectiveCamera mainCamera(){
         //Scene camera (what makes it 3D)
@@ -177,9 +176,9 @@ public class TrafficScene {
     }
 
     /**
-     *
+     * Creates temp menu pane
      * @param tempPane
-     * @return
+     * @return menu
      */
     private Pane menuPane(Pane tempPane){
         //Menu
@@ -218,9 +217,9 @@ public class TrafficScene {
     }
 
     /**
-     *
+     * Creates traffic and adds to scene
      * @param tempPane
-     * @return
+     * @return text of completed spawn traffic
      */
     private Text spawnVehiclesBTN(Pane tempPane){
         Text spawnTrafficT = new Text("Spawn Traffic");
@@ -236,8 +235,8 @@ public class TrafficScene {
     }
 
     /**
-     *
-     * @return
+     * Empire state building creation, position, scaling
+     * @return group
      */
     private Group empireStateBuilding(){
         ObjModelImporter importe = new ObjModelImporter();
