@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Random;
 import static java.lang.Math.abs;
 
+/**
+ * Pedestrian class object
+ */
 public class Person {
 
     private static final double[][] PATHS = {
@@ -27,6 +30,11 @@ public class Person {
     private PathTransition pathTransition;
     private Shape carShape;
 
+    /**
+     * Constructor
+     * @param tempPane
+     * @param collidablePerson
+     */
     public Person(Pane tempPane, List<Person> collidablePerson){
         initializeArrays();
         createPath();
@@ -35,6 +43,9 @@ public class Person {
         this.collided = false;
     }
 
+    /**
+     * Creates person shape
+     */
     private void initializeCarShape() {
         carShape = new Circle(4);
         carShape.setFill(Color.GREEN);
@@ -45,6 +56,11 @@ public class Person {
         }
     }
 
+    /**
+     * Initializes pedestrian path transition
+     * @param tempPane
+     * @param collidablePerson
+     */
     private void initializePathTransition(Pane tempPane, List<Person> collidablePerson) {
         tempPane.getChildren().addAll(path,carShape);
         if (path != null && carShape != null) {
@@ -59,30 +75,45 @@ public class Person {
         }
     }
 
+    /**
+     * Starts pedestrian path transition animation
+     */
     protected void startAnimation() {
         if (pathTransition != null) {
             pathTransition.play();
         }
     }
 
+    /**
+     * Stops pedestrian path transition animation
+     */
     protected void stopVehicle() {
         if (pathTransition != null) {
             pathTransition.pause();
         }
     }
 
+    /**
+     * Restarts pedestrian path transition animation
+     */
     protected void restartVehicle() {
         if (pathTransition != null) {
             pathTransition.play();
         }
     }
 
+    /**
+     * Initialize path transition paths
+     */
     private void initializeArrays(){
         for (double[] array : PATHS){
             startingPaths.add(array);
         }
     }
 
+    /**
+     * Creates paths
+     */
     protected void createPath(){
         Random random = new Random();
         int tempInt = random.nextInt(PATHS.length);
@@ -106,6 +137,15 @@ public class Person {
         path.setOpacity(0);
     }
 
+    /**
+     * Updates object to face the right direction based
+     * on their segments
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     * @return
+     */
     protected double calculateAngle(double startX, double startY, double endX, double endY) {
         double angle = Math.toDegrees(Math.atan2(endX - startX, endY - startY));
         if(angle < 0){
@@ -114,26 +154,50 @@ public class Person {
         return angle;
     }
 
+    /**
+     * Updates pedestrian collider boolean
+     * @param bool
+     */
     protected void setCollided(boolean bool){
         collided = bool;
     }
 
+    /**
+     * Returns pedestrian path
+     * @return
+     */
     protected Path returnPath(){
         return path;
     }
 
+    /**
+     * returns seconds
+     * @return
+     */
     protected double returnSeconds(){
         return seconds;
     }
 
+    /**
+     *
+     *  @return returns path array
+     */
     protected List<double[]> returnPathArray(){
         return temp;
     }
 
+    /**
+     * Returns pedestrian shape
+     * @return
+     */
     protected Shape returnCarShape() {
         return carShape;
     }
 
+    /**
+     * returns pedestrian collider boolean
+     * @return
+     */
     protected boolean returnCollided(){
         return collided;
     }
