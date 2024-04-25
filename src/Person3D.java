@@ -1,8 +1,11 @@
+import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
+import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -31,13 +34,16 @@ public class Person3D {
     private Boolean collided;
     private PathTransition pathTransition;
     private Shape carShape;
+    private Group people = new Group();
 
     /**
      * Constructor
      * @param tempPane
      * @param collidablePerson
      */
-    public Person3D(Pane tempPane, List<Person> collidablePerson){
+
+    public Person3D(Pane tempPane, List<Person3D> collidablePerson){
+        person();
         initializeArrays();
         createPath();
         initializeCarShape();
@@ -54,24 +60,54 @@ public class Person3D {
         //Set initial angle based on the first segment
         if (!temp.isEmpty()) {
             double[] firstSegment = temp.get(0);
-            carShape.setRotate(calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
+            people.setRotate(-calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
         }
     }
 
+
+    private Group person(){
+        ObjModelImporter importes = new ObjModelImporter();
+        try {
+            importes.read(this.getClass().getResource("/People/Male_Casual.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViewss = importes.getImport();
+
+        Group group3 = new Group();
+
+
+        group3.getChildren().addAll(meshViewss);
+        group3.setScaleX(4);
+        group3.setScaleY(4);
+        group3.setScaleZ(10);
+
+        //group.setTranslateY(1000);
+        group3.setTranslateZ(-5);
+        group3.setTranslateY(0);
+        group3.setTranslateX(10);
+        group3.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        people = group3;
+        people.setTranslateY(-100);
+        return group3;
+    }
     /**
      * Initialize path transitions
      * @param tempPane
      * @param collidablePerson
      */
-    private void initializePathTransition(Pane tempPane, List<Person> collidablePerson) {
-        tempPane.getChildren().addAll(path,carShape);
-        if (path != null && carShape != null) {
-            pathTransition = new PathTransition(Duration.millis(seconds*1000), path, carShape);
+    private void initializePathTransition(Pane tempPane, List<Person3D> collidablePerson) {
+        tempPane.getChildren().addAll(path,people);
+        if (path != null && people != null) {
+            pathTransition = new PathTransition(Duration.millis(seconds*1000), path, people);
             pathTransition.setInterpolator(Interpolator.LINEAR);
             pathTransition.setCycleCount(1);
 
             pathTransition.setOnFinished(event -> {
-                tempPane.getChildren().removeAll(path,carShape);
+                tempPane.getChildren().removeAll(path,people);
                 collidablePerson.remove(this);
             });
         }

@@ -55,7 +55,7 @@ public class Bus3D {
         //Set initial angle based on the first segment
         if (!temp.isEmpty()) {
             double[] firstSegment = temp.get(0);
-            carShape.setRotate(calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
+            buses.setRotate(-calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
         }
     }
 
@@ -86,7 +86,7 @@ public class Bus3D {
         group3.setTranslateZ(-45);
         group3.setTranslateY(0);
         group3.setTranslateX(10);
-        group3.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+        group3.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(-90, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
         buses = group3;
         buses.setTranslateY(-100);

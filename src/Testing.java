@@ -230,7 +230,7 @@ public class Testing extends Application {
             pause.play();
         }
         else{
-            Person3D person = new Person3D(tempPane, personCollidables);
+            Person3D person = new Person3D(tempPane, personCollidables3D);
 
             person.startAnimation();
             personCollidables3D.add(person);
