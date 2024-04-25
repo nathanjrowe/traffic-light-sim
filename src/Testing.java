@@ -21,6 +21,7 @@ public class Testing extends Application {
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private List<Vehicle3D> vehicleCollidables3D = new ArrayList<>();
     private List<Bus> busCollidables = new ArrayList<>();
+    private List<Person> personCollidables = new ArrayList<>();
     private StackPane root = new StackPane();
     private Pane tempPane = new Pane();
     private AtomicInteger clickCount = new AtomicInteger(0);
@@ -79,6 +80,7 @@ public class Testing extends Application {
                     currentlySpawning = true;
                     addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
                     addBuses(busCollidables.size(), tempPane, busCollidables);
+                    addPeople(personCollidables.size(), tempPane, personCollidables);
                 }
                 else {
                     System.out.println("Currently Spawning Bool: " + currentlySpawning);
@@ -161,12 +163,46 @@ public class Testing extends Application {
 //            Bus3D bus = new Bus3D(tempPane, busCollidables);
 //
 //            bus.startAnimation();
-//            busCollidables.add(bus);
+//            busCollidables3D.add(bus);
 //
 //            //Using a recursive method to guarantee that the pause actually occurs.
 //            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
 //            pause.setOnFinished(event1 -> {
 //                addBuses(busCollidables3D.size(), tempPane, busCollidables);
+//            });
+//            pause.play();
+        }
+    }
+
+    public void addPeople(int count, Pane tempPane, List<Person> personCollidables) {
+        System.out.println("Total Buses on Map: " + count);
+        if (count >= 50) {
+            return;
+        }
+
+        if(flag3D == false) {
+            Person person = new Person(tempPane, personCollidables);
+
+            person.startAnimation();
+            personCollidables.add(person);
+
+            //Using a recursive method to guarantee that the pause actually occurs.
+            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(300));
+            pause.setOnFinished(event1 -> {
+                addPeople(personCollidables.size(), tempPane, personCollidables);
+            });
+            pause.play();
+        }
+        else{
+//            Person3D person = new Person3D(tempPane, personCollidables);
+//
+//            person.startAnimation();
+//            personCollidables3D.add(person);
+//
+//            //Using a recursive method to guarantee that the pause actually occurs.
+//            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
+//            pause.setOnFinished(event1 -> {
+//                addPeople(personCollidables3D.size(), tempPane, personCollidables);
 //            });
 //            pause.play();
         }
