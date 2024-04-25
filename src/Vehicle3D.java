@@ -113,8 +113,18 @@ public class Vehicle3D {
 
     private Group car(){
         ObjModelImporter importes = new ObjModelImporter();
+        String[] vehicles = new String[]{
+                "/vehicleModels/NormalCar1.obj",
+                "/vehicleModels/NormalCar2.obj",
+                "/vehicleModels/SportsCar.obj",
+                "/vehicleModels/SportsCar2.obj",
+                "/vehicleModels/SUV.obj",
+                "/vehicleModels/Taxi.obj",
+                "/vehicleModels/Cop.obj"};
+        Random random = new Random();
+
         try {
-            importes.read(this.getClass().getResource("/vehicleModels/NormalCar2.obj"));
+            importes.read(this.getClass().getResource(vehicles[random.nextInt(7)]));
         }
         catch (Exception e) {
             e.printStackTrace();
