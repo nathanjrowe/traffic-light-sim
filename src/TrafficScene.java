@@ -236,7 +236,7 @@ public class TrafficScene {
 
     /**
      * Airplane creation, position, scaling
-     * @return group
+     * @return groups
      */
     private Group airplane(){
         ObjModelImporter importes = new ObjModelImporter();
