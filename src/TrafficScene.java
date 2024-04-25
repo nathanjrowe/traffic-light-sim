@@ -33,6 +33,7 @@ public class TrafficScene {
     private Testing testing = new Testing();
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private List<Bus3D> busCollidables3D = new ArrayList<>();
+    private List<Person> personCollidables = new ArrayList<>();
     private AtomicInteger clickCount = new AtomicInteger(0);
     private int counter = 0;
     private SubScene subScene;
@@ -227,6 +228,7 @@ public class TrafficScene {
         spawnTrafficT.setOnMouseClicked(event -> {
             testing.addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
             testing.addBuses3D(busCollidables3D.size(), tempPane, busCollidables3D);
+            testing.addPeople(personCollidables.size(), tempPane, personCollidables);
             //streetScene.getChildren().add(tempPane);
         });
         return  spawnTrafficT;

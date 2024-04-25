@@ -27,6 +27,7 @@ public class Testing extends Application {
     private List<Bus> busCollidables = new ArrayList<>();
     private List<Bus3D> busCollidables3D = new ArrayList<>();
     private List<Person> personCollidables = new ArrayList<>();
+    private List<Person3D> personCollidables3D = new ArrayList<>();
     private StackPane root = new StackPane();
     private Pane tempPane = new Pane();
     private AtomicInteger clickCount = new AtomicInteger(0);
@@ -228,17 +229,17 @@ public class Testing extends Application {
             pause.play();
         }
         else{
-//            Person3D person = new Person3D(tempPane, personCollidables);
-//
-//            person.startAnimation();
-//            personCollidables3D.add(person);
-//
-//            //Using a recursive method to guarantee that the pause actually occurs.
-//            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
-//            pause.setOnFinished(event1 -> {
-//                addPeople(personCollidables3D.size(), tempPane, personCollidables);
-//            });
-//            pause.play();
+            Person3D person = new Person3D(tempPane, personCollidables);
+
+            person.startAnimation();
+            personCollidables3D.add(person);
+
+            //Using a recursive method to guarantee that the pause actually occurs.
+            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
+            pause.setOnFinished(event1 -> {
+                addPeople(personCollidables3D.size(), tempPane, personCollidables);
+            });
+            pause.play();
         }
     }
 
