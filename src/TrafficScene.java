@@ -30,9 +30,10 @@ public class TrafficScene {
      */
 
     private ImageHelper imageHelper = new ImageHelper();
-    private Testing testing = new Testing(); // Call to 2D class for controllers
-    private List<Vehicle> vehicleCollidables = new ArrayList<>(); // List of vehicle objects
-    private AtomicInteger clickCount = new AtomicInteger(0); // TO BE DELETED
+    private Testing testing = new Testing();
+    private List<Vehicle> vehicleCollidables = new ArrayList<>();
+    private List<Bus> busCollidables = new ArrayList<>();
+    private AtomicInteger clickCount = new AtomicInteger(0);
     private int counter = 0;
     private SubScene subScene;
     private Pane root = new Pane();
@@ -225,6 +226,7 @@ public class TrafficScene {
 
         spawnTrafficT.setOnMouseClicked(event -> {
             testing.addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
+            testing.addBuses(busCollidables.size(), tempPane, busCollidables);
             //streetScene.getChildren().add(tempPane);
         });
         return  spawnTrafficT;
