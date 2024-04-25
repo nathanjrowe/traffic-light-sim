@@ -22,9 +22,16 @@ import javafx.scene.layout.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+/**
+ * class loads images
+ */
 public class ImageHelper {
 
     private static boolean imagesLoaded;
+
+    /**
+     * Main get image function
+     */
     public ImageHelper(){
         try{
             getImage("./images/menuBackground.png");
@@ -35,10 +42,19 @@ public class ImageHelper {
         }
     }
 
+    /**
+     *
+     * @return returns loaded images
+     */
     public boolean getImagesLoaded(){
         return imagesLoaded;
     }
 
+    /**
+     *
+     * @param imageLocation
+     * @return background image and sets it
+     */
     public Background getBackgroundImage(String imageLocation){
         Image buttonBack = null;
         try {
@@ -52,6 +68,11 @@ public class ImageHelper {
         return  buttonbackground;
     }
 
+    /**
+     * gets image from string
+     * @param imageLocation
+     * @return image from string
+     */
     public Image getImage(String imageLocation){
         Image image = null;
         try {
