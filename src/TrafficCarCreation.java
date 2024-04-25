@@ -4,10 +4,16 @@ import javafx.scene.image.ImageView;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+/**
+ * Creates car images for 2D scene
+ */
 public class TrafficCarCreation {
 
     private final ImageView imageView;
 
+    /**
+     * Main function to get file
+     */
     public TrafficCarCreation() {
 
         //new Image(new FileInputStream("/car.png"));
@@ -22,6 +28,10 @@ public class TrafficCarCreation {
 
     }
 
+    /**
+     * return the fetched image object
+     * @return
+     */
     public ImageView getTrafficCar() {
         return imageView;
     }
