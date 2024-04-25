@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * This class renders 2D space and images for implementation of
+ * Traffic Light Controller, Pedestrian Light Controller, Bus Light Controller
+ */
 public class Testing extends Application {
     private final Boolean DEBUG = false;
     private final Boolean getCoordinates = false;
@@ -33,6 +37,13 @@ public class Testing extends Application {
         launch(args);
     }
 
+    /**
+     *
+     * @param primaryStage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     */
     @Override
     public void start(Stage primaryStage) {
         startCollisionTimer();
@@ -46,6 +57,10 @@ public class Testing extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Creates base view of TransitFlow simulation,
+     * generating the default images and linking objects to scene
+     */
     public void createRoot(AtomicInteger clickCount){
         ImageHelper imageHelper = new ImageHelper();
         Image map;
@@ -105,6 +120,12 @@ public class Testing extends Application {
         root.getChildren().add(tempPane);
     }
 
+    /**
+     * Generates and adds cars to main scene in pane using count as an upper bound
+     * @param count amount of vehicles in scene
+     * @param tempPane create new temporary pane to place vehicles
+     * @param vehicleCollidables vehicle object list to act on
+     */
     public void addVehiclesUntilCount(int count, Pane tempPane, List<Vehicle> vehicleCollidables) {
         //System.out.println("Total Vehicles on Map: " + count);
         //System.out.println("Stop Spawning Boolean: " + stopSpawning);
@@ -140,6 +161,12 @@ public class Testing extends Application {
         }
     }
 
+    /**
+     * Generates and adds buses to main scene in pane using count as an upper bound
+     * @param count upper bound on bus objects
+     * @param tempPane pane to place bus objects
+     * @param busCollidables bus objects themselves
+     */
     public void addBuses(int count, Pane tempPane, List<Bus> busCollidables) {
         System.out.println("Total Buses on Map: " + count);
         if (count >= 10) {
@@ -174,6 +201,12 @@ public class Testing extends Application {
         }
     }
 
+    /**
+     * Generates and adds pedestrians to main scene in pane using count as an upper bound
+     * @param count upper bound on pedestrian objects
+     * @param tempPane pane to place pedestrian objects
+     * @param personCollidables pedestrian objects themselves
+     */
     public void addPeople(int count, Pane tempPane, List<Person> personCollidables) {
         System.out.println("Total Buses on Map: " + count);
         if (count >= 50) {
@@ -208,6 +241,10 @@ public class Testing extends Application {
         }
     }
 
+    /**
+     * Animation timer to check for collisions
+     * (animation timers are a separate thread)
+     */
     private void startCollisionTimer() {
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -218,6 +255,9 @@ public class Testing extends Application {
         timer.start();
     }
 
+    /**
+     * Checks for all vehicle collisions
+     */
     private void checkCollisions() {
         for (int i = 0; i < vehicleCollidables.size(); i++) {
             for (int j = i + 1; j < vehicleCollidables.size(); j++) {
@@ -249,6 +289,11 @@ public class Testing extends Application {
         }
     }
 
+    /**
+     * Check for each individual collision
+     * @param src
+     * @param other
+     */
     private void checkCollision(Vehicle src, Vehicle other){
         if(Shape.intersect(src.returnCarShape(), other.returnCarShape()).getBoundsInLocal().getWidth() > -1){
             System.out.println("Collision Detected");
@@ -257,6 +302,13 @@ public class Testing extends Application {
         }
     }
 
+    /**
+     * Scales the street image for the pane
+     * @param imageView
+     * @param maxWidth
+     * @param maxHeight
+     * @return
+     */
     public Pane resizeImage(ImageView imageView, double maxWidth, double maxHeight) {
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(maxWidth);
