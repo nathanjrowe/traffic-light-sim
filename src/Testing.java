@@ -174,32 +174,32 @@ public class Testing extends Application {
             return;
         }
 
-        if(flag3D == false) {
-            Bus bus = new Bus(tempPane, busCollidables);
+        Bus bus = new Bus(tempPane, busCollidables);
 
-            bus.startAnimation();
-            busCollidables.add(bus);
+        bus.startAnimation();
+        busCollidables.add(bus);
 
-            //Using a recursive method to guarantee that the pause actually occurs.
-            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
-            pause.setOnFinished(event1 -> {
-                addBuses(busCollidables.size(), tempPane, busCollidables);
-            });
-            pause.play();
-        }
-        else{
-            Bus3D bus = new Bus3D(tempPane, busCollidables);
+        //Using a recursive method to guarantee that the pause actually occurs.
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
+        pause.setOnFinished(event1 -> {
+            addBuses(busCollidables.size(), tempPane, busCollidables);
+        });
+        pause.play();
+    }
 
-            bus.startAnimation();
-            busCollidables3D.add(bus);
+    public void addBuses3D(int count, Pane tempPane, List<Bus3D> busCollidables) {
+        System.out.println("Total Buses on Map: " + count);
+        Bus3D bus = new Bus3D(tempPane, busCollidables3D);
 
-            //Using a recursive method to guarantee that the pause actually occurs.
-            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
-            pause.setOnFinished(event1 -> {
-                addBuses(busCollidables3D.size(), tempPane, busCollidables);
-            });
-            pause.play();
-        }
+        bus.startAnimation();
+        busCollidables3D.add(bus);
+
+        //Using a recursive method to guarantee that the pause actually occurs.
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
+        pause.setOnFinished(event1 -> {
+            addBuses3D(busCollidables3D.size(), tempPane, busCollidables3D);
+        });
+        pause.play();
     }
 
     /**

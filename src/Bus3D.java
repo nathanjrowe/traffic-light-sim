@@ -28,8 +28,9 @@ public class Bus3D {
     private PathTransition pathTransition;
     private Shape carShape;
     private Group buses = new Group();
+    private Bus bus;
 
-    public Bus3D(Pane tempPane, List<Bus> collidableBus){
+    public Bus3D(Pane tempPane, List<Bus3D> collidableBus){
         initializeArrays();
         createPath();
         initializeCarShape();
@@ -77,7 +78,7 @@ public class Bus3D {
         return group3;
     }
 
-    private void initializePathTransition(Pane tempPane, List<Bus> collidableBus) {
+    private void initializePathTransition(Pane tempPane, List<Bus3D> collidableBus) {
         tempPane.getChildren().addAll(path,buses);
         if (path != null && buses != null) {
             pathTransition = new PathTransition(Duration.millis(seconds*1000), path, buses);
