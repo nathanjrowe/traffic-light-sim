@@ -131,6 +131,10 @@ public class TrafficLight {
         }
     }
 
+    /**
+     * Updates traffic light image to reflect
+     * green left turn signal
+     */
     public void setGreenLeftTurnArrow(){
         redCircle.setFill(null);
         yellowCircle.setFill(null);
@@ -149,7 +153,10 @@ public class TrafficLight {
 
         lightColor = LightColor.GREENLEFT;
     }
-
+    /**
+     * Updates traffic light image to reflect
+     * right green turn signal
+     */
     public void setGreenRightTurnArrow(){
         redCircle.setFill(null);
         yellowCircle.setFill(null);
