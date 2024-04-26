@@ -28,11 +28,17 @@ public class LightController {
         put("E", new ArrayList<>());
         put("W", new ArrayList<>());
     }};
+    private CollisionBox intersectionBox = null;
+    //Store a list of vehicles in the intersection
+    private List<Vehicle> vehicles = new ArrayList<>();
     //Vars to store the time in seconds for the lights
     private final int cycleTime = 120;
     private final int yellow = 6;
     private int minGreen = 15;
-    private int maxGreen = 80;
+    private int greenTime = minGreen;
+    private int maxGreen = 30;
+    private int vehicleCount = 0;
+    private Vehicle currentVehicle = null;
     //Enum to control the cycle changes
     private enum direction {NS, EW};
     
@@ -70,12 +76,16 @@ public class LightController {
     }
 
     //Create a collision box
-    private CollisionBox createCollisionBox(String location, double x, double y){
-        CollisionBox collisionBox = new CollisionBox(x, y, 2, 2);
+    protected void createCollisionBox(String location, double x, double y){
+        CollisionBox collisionBox = new CollisionBox(x, y, 6, 6, this);
         collisionBox.setState(CollisionBox.State.STOP);
         //Add collision box to the list of collision boxes for the location
         collisionBoxes.get(location).add(collisionBox);
-        return collisionBox;
+    }
+
+    //Create the intersection box
+    protected void createIntersectionBox(double x, double y, int width, int height){
+        intersectionBox = new CollisionBox(x, y, width, height, this);
     }
 
     //Create a pedestrian light
@@ -106,11 +116,46 @@ public class LightController {
                 root.getChildren().add(box);
             }
         }
+        if(intersectionBox != null) {
+            root.getChildren().add(intersectionBox);
+        }
     }
 
+    public List<CollisionBox> getCollisionBoxes(){
+        List<CollisionBox> boxes = new ArrayList<>();
+        for(List<CollisionBox> collisionBox : collisionBoxes.values()){
+            boxes.addAll(collisionBox);
+        }
+        return boxes;
+    }
     //Set the maximum green time for the lights
     public void setMaxGreen(int time) {
         this.maxGreen = time;
+    }
+
+    //Increment the vehicle count if a vehicle passes through the intersection box
+    public void incrementVehicleCount(List<Vehicle> allVehicles) {
+        if(intersectionBox != null) {
+            for (Vehicle vehicle : allVehicles) {
+                if (intersectionBox.getBoundsInParent().intersects(vehicle.getBoundsInGrandparent(vehicle.returnCarShape()))) {
+                    if(!vehicles.contains(vehicle)) {
+                        //Increment the green time up to the max green time
+                        //Only increment time if there are lights in the green state
+                        if(greenTime < maxGreen) {
+                            if(getLightState("N") == TrafficLight.LightColor.GREEN ||
+                             getLightState("S") == TrafficLight.LightColor.GREEN ||
+                            getLightState("E") == TrafficLight.LightColor.GREEN || 
+                            getLightState("W") == TrafficLight.LightColor.GREEN) {
+                                greenTime++;
+                            }
+                        }
+                        vehicleCount++;
+                        System.out.println("Vehicle Count: " + vehicleCount);
+                        vehicles.add(vehicle);
+                    }
+                }
+            }
+        }
     }
 
     //Changes the state for a light at the intersection
@@ -133,6 +178,13 @@ public class LightController {
                 break;
         }
     }
+    //Get the light state
+    private TrafficLight.LightColor getLightState(String location) {
+        Pane trafficLight = trafficLights.get(location);
+        //Get the light attached to the pane and change the color
+        TrafficLight trafficLightData = (TrafficLight) trafficLight.getUserData();
+        return trafficLightData.getLightColor();
+    }
 
     //Animation cycle for the lights
     //Uses an animation timer to change light colors at the intersection
@@ -141,7 +193,6 @@ public class LightController {
         AnimationTimer timer = new AnimationTimer() {
             private direction dir = direction.NS;
             private int time = cycleTime;
-            private int greenTime = minGreen;
             private int yellowTime = yellow;
             private int pedestrianTime = 0;
             private int pedestrianCycle = 0;
@@ -149,7 +200,7 @@ public class LightController {
             @Override
             public void handle(long now) {
                 Duration nowDur = Duration.of(now, ChronoUnit.NANOS);
-                if (nowDur.minus(lastUpdate).toMillis() >= 200) {
+                if (nowDur.minus(lastUpdate).toMillis() >= 150) {
                     //Update last update time
                     lastUpdate = nowDur;  
                     //Change the light color for perpendicular lights
@@ -159,6 +210,12 @@ public class LightController {
                        
                         //Reset the time
                         time = cycleTime;
+                        //Clean up the vehicle list
+                        for (Vehicle vehicle : vehicles) {
+                        if (!intersectionBox.getBoundsInParent().intersects(vehicle.getBoundsInGrandparent(vehicle.returnCarShape()))) {
+                            vehicles.remove(vehicle);
+                        }
+                    }
                         
                     }
                     //Change the light color for the current direction

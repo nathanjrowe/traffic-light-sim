@@ -1,6 +1,7 @@
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,13 +21,14 @@ public class Testing extends Application {
     private final Boolean getCoordinates = false;
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private List<Vehicle3D> vehicleCollidables3D = new ArrayList<>();
+    private List<CollisionBox> collisionBoxes = new ArrayList<>();
     private StackPane root = new StackPane();
     private Pane tempPane = new Pane();
     private AtomicInteger clickCount = new AtomicInteger(0);
     private boolean stopSpawning = false;
     private boolean currentlySpawning = false;
     private boolean flag3D = false;
-
+    private SystemController systemController;
     public static void main(String[] args) {
         launch(args);
     }
@@ -96,9 +98,11 @@ public class Testing extends Application {
         });
 
         //Add lights to the map
-        SystemController systemController = new SystemController();
+        systemController = new SystemController();
         systemController.addLights(tempPane);
         root.getChildren().add(tempPane);
+        //Add collision boxes to list
+        collisionBoxes = systemController.getCollisionBoxes();
     }
 
     public void addVehiclesUntilCount(int count, Pane tempPane, List<Vehicle> vehicleCollidables) {
@@ -109,7 +113,7 @@ public class Testing extends Application {
         }
 
         if(flag3D == false) {
-            Vehicle vehicle = new Vehicle(tempPane, vehicleCollidables);
+            Vehicle vehicle = new Vehicle(tempPane, vehicleCollidables, collisionBoxes);
 
 
             vehicle.startAnimation();
@@ -146,7 +150,8 @@ public class Testing extends Application {
             public void handle(long now) {
                 //checkCollisions();
                 for(Vehicle v1 : vehicleCollidables){
-                    v1.checkCollision(tempPane);
+                    v1.checkCollision(vehicleCollidables);
+                    systemController.checkVehicleCrossing(vehicleCollidables);
                 }
             }
         };

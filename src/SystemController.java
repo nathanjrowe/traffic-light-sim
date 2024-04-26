@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javafx.scene.layout.Pane;
 
@@ -85,9 +86,9 @@ public class SystemController {
             add(new Object[]{"N", 661, 469});
             add(new Object[]{"S", 602, 330});
             add(new Object[]{"S", 622, 330});
-            add(new Object[]{"E", 570, 411});
-            add(new Object[]{"E", 570, 431});
-            add(new Object[]{"E", 570, 451});
+            add(new Object[]{"E", 570, 410});
+            add(new Object[]{"E", 570, 425});
+            add(new Object[]{"E", 570, 445});
             add(new Object[]{"W", 682, 355});
             add(new Object[]{"W", 682, 375});
             add(new Object[]{"W", 682, 395});
@@ -118,6 +119,7 @@ public class SystemController {
     //Constructor
     public SystemController() {
         spawnLights();
+        intersectCollisionBoxes();
     }
 
     //Create the lights for each intersection
@@ -135,5 +137,31 @@ public class SystemController {
                 lightController.startCycle();
             }
         }
+    }
+
+    private void intersectCollisionBoxes() {
+        //Create a collision box based on the key of the light controller
+        lightControllers.get(1).createIntersectionBox(265, 107, 60, 30);
+        lightControllers.get(2).createIntersectionBox(603, 107, 60, 30);
+        lightControllers.get(3).createIntersectionBox(263, 358, 60, 90);
+        lightControllers.get(4).createIntersectionBox(603, 358, 60, 90);
+        lightControllers.get(5).createIntersectionBox(262, 652, 60, 30);
+        lightControllers.get(6).createIntersectionBox(601, 652, 60, 30);
+    }
+
+    //Check for collisions at intersections
+    public void checkVehicleCrossing(List<Vehicle> vehicles) {
+        for (LightController lightController : lightControllers.values()) {
+            lightController.incrementVehicleCount(vehicles);
+        }
+    }
+
+    //Get the light collision boxes
+    public ArrayList<CollisionBox> getCollisionBoxes() {
+        ArrayList<CollisionBox> collisionBoxes = new ArrayList<>();
+        for (LightController lightController : lightControllers.values()) {
+            collisionBoxes.addAll(lightController.getCollisionBoxes());
+        }
+        return collisionBoxes;
     }
 }
