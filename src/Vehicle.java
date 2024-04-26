@@ -1,7 +1,10 @@
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
+
+import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
@@ -10,11 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import static java.lang.Math.abs;
+import javafx.geometry.Bounds;
 
-/**
- * 2D implementation of vehicle object
- */
-public class Vehicle {
+public class Vehicle extends Node{
+
+    //List of CollisionBoxes
+    private final List<CollisionBox> collisionBoxes = new ArrayList<>();
     private static final double[][] INITIALPATHS = {
             /**Left Side Starting*/
             //Straight/Right First Lane, Right Second Lane, Left First Lane, Left Second Lane
@@ -90,19 +94,25 @@ public class Vehicle {
     private List<double[]> temp;
     private Path path;
     private Boolean collided;
+    private Boolean stoppedAtLight = false;
     private PathTransition pathTransition;
     private Shape carShape;
+    private Shape frontSensor;
+    private Pane carGroup;
+    private CollisionBox collidedBox = null;
+    private Vehicle collidedVehicle = null;
 
     /**
      * Constructor
      * @param tempPane
      * @param collidableVehicles
      */
-    public Vehicle(Pane tempPane, List<Vehicle> collidableVehicles) {
+    public Vehicle(Pane tempPane, List<Vehicle> collidableVehicles, List<CollisionBox> collisionBoxes) {
         initializeArrays();
         createPath();
         initializeCarShape();
         initializePathTransition(tempPane, collidableVehicles);
+        this.collisionBoxes.addAll(collisionBoxes);
         this.collided = false;
     }
 
@@ -110,11 +120,17 @@ public class Vehicle {
      * Creates car object box
      */
     private void initializeCarShape() {
+        //Create the car shape
         carShape = new Rectangle(8, 15);
+        frontSensor = new Rectangle(8, 8);
+        frontSensor.setTranslateY(15);
+        carGroup = new Pane();
+        carGroup.getChildren().addAll(carShape, frontSensor);
+        frontSensor.setFill(javafx.scene.paint.Color.TRANSPARENT);
         //Set initial angle based on the first segment
         if (!temp.isEmpty()) {
             double[] firstSegment = temp.get(0);
-            carShape.setRotate(calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
+            carGroup.setRotate(calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
         }
     }
 
@@ -124,25 +140,28 @@ public class Vehicle {
      * @param collidableVehicles
      */
     private void initializePathTransition(Pane tempPane, List<Vehicle> collidableVehicles) {
-        tempPane.getChildren().addAll(path,carShape);
+        tempPane.getChildren().addAll(path, carGroup);
+        //Collect CollisionBox objects from the root pane
+        
+        //Print out the number of collision boxes
+        //System.out.println("Number of Collision Boxes: " + collisionBoxes.size());
         if (path != null && carShape != null) {
-            pathTransition = new PathTransition(Duration.millis(seconds*1000), path, carShape);
+            pathTransition = new PathTransition(Duration.millis(seconds*1000), path, carGroup);
             pathTransition.setInterpolator(Interpolator.LINEAR);
             pathTransition.setCycleCount(1);
 
             //Car Rotation Code
             pathTransition.currentTimeProperty().addListener((obs, old, current) -> {
-                double xPosition = carShape.getLayoutX() + carShape.getTranslateX();
-                double yPosition = carShape.getLayoutY() + carShape.getTranslateY();
+                double xPosition = carGroup.getLayoutX() + carGroup.getTranslateX();
+                double yPosition = carGroup.getLayoutY() + carGroup.getTranslateY();
                 double[] currentSegment = findClosestSegmentBasedOnPosition(xPosition, yPosition, temp);
                 if (currentSegment != null) {
                     double angle = calculateAngle(currentSegment[0], currentSegment[1], currentSegment[2], currentSegment[3]);
-                    carShape.setRotate(angle);
+                    carGroup.setRotate(-angle);
                 }
             });
-
             pathTransition.setOnFinished(event -> {
-                tempPane.getChildren().removeAll(path,carShape);
+                tempPane.getChildren().removeAll(path, carGroup);
                 collidableVehicles.remove(this);
             });
         }
@@ -169,6 +188,7 @@ public class Vehicle {
      */
     protected void restartVehicle() {
         if (pathTransition != null) {
+            //Resume after delay
             pathTransition.play();
         }
     }
@@ -377,4 +397,67 @@ public class Vehicle {
         return collided;
     }
 
+    protected boolean returnStoppedAtLight() {
+        return stoppedAtLight;
+    }
+
+    protected Bounds getBoundsInGrandparent(Node node) {
+        Bounds nodeInParent = node.localToParent(node.getBoundsInLocal());
+        return node.getParent().localToParent(nodeInParent);
+    }
+    //Take a root pane to check for collisions
+    protected void checkCollision(List<Vehicle> vehicles) {
+        //Get the bounds of the front sensor
+        Bounds frontBoundsInGrandParent = getBoundsInGrandparent(frontSensor);
+        //Check for collisions every frame
+        //Print the bounds of the car
+        if(collidedBox != null) {
+            if(collidedBox.getState() != CollisionBox.State.STOP) {
+                this.collided = false;
+                this.stoppedAtLight = false;
+                this.restartVehicle();
+                this.collidedBox = null;
+            }
+        }
+        for (CollisionBox collisionBox : collisionBoxes) {
+            //System.out.println(collisionBox.getBoundsInParent());
+            if (frontBoundsInGrandParent.intersects(collisionBox.getBoundsInParent())) {
+                this.collidedBox = collisionBox;
+                if(collisionBox.getState() == CollisionBox.State.STOP) {
+                    this.collided = true;
+                    this.stoppedAtLight = true;
+                    this.stopVehicle();
+                }
+                break;
+            }
+        }
+
+        //Check for collisions with other vehicles
+        if(collidedVehicle != null) {
+            Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(collidedVehicle.returnCarShape());
+            if (!frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent)) {
+                collidedVehicle = null;
+                collided = false;
+                stoppedAtLight = false;
+                restartVehicle();
+            }
+        }
+        else {
+        for (Vehicle vehicle : vehicles) {
+            if (vehicle != this) {
+                Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(vehicle.returnCarShape());
+                    if (frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent)) {
+                        collidedVehicle = vehicle;
+                        if(vehicle.returnStoppedAtLight()) {
+                            collided = true;
+                            stoppedAtLight = true;
+                            stopVehicle();
+                        }
+                        //End the loop
+                        break;
+                    }
+            }
+        }
+    }
+    }
 }
