@@ -1,5 +1,8 @@
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
+import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
+import javafx.animation.Interpolator;
+import javafx.animation.PathTransition;
 import javafx.geometry.Insets;
 import javafx.scene.*;
 import javafx.scene.image.Image;
@@ -12,8 +15,10 @@ import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
+import javafx.util.Duration;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -124,10 +129,55 @@ public class TrafficScene {
         //Add to root pane here. Make any 3d Models as a function that returns a group then add.
         //Commented out some models to keep the load times down when testing
         root3D.getChildren().addAll(streetScene(),runWay(), oceanBlock(), empireStateBuilding(), building2(),car(), trees(),airport(),
-                shoppingMall(), apartment(), airplane());
+                shoppingMall(), apartment());
+
+        Group joeGroup = joe();
+        Path path1 = createJoePath();
+        root3D.getChildren().addAll(joeGroup, path1);
+        PathTransition pathTransition1 = createPathTransition(joeGroup, path1);
+        pathTransition1.play();
+
+        Group airplaneGroup = airplane();
+        Path path2 = createAirplanePath();
+        root3D.getChildren().addAll(airplaneGroup, path2);
+        PathTransition pathTransition2 = createPathTransition(airplaneGroup, path2);
+        pathTransition2.play();
 
         return root3D;
     }
+
+    private Path createAirplanePath() {
+        Path path = new Path();
+        path.getElements().add(new MoveTo(-3500, -1000));
+        path.getElements().add(new LineTo(-1500, -50));
+        path.getElements().add(new LineTo(1500, -50));
+        path.getElements().add(new LineTo(3500, -1000));
+        return path;
+    }
+
+    private Path createJoePath() {
+        Path path = new Path();
+        path.getElements().add(new MoveTo(-4500, -1300));
+        path.getElements().add(new LineTo(-2500, -350));
+        path.getElements().add(new LineTo(500, -350));
+        path.getElements().add(new LineTo(2500, -1300));
+        return path;
+    }
+
+    private PathTransition createPathTransition(Group group, Path path) {
+        PathTransition pathTransition = new PathTransition(Duration.seconds(5), path, group);
+        pathTransition.setInterpolator(Interpolator.LINEAR);
+        pathTransition.setCycleCount(PathTransition.INDEFINITE);
+        return pathTransition;
+    }
+
+    private ImageView createFollowingImage(String imagePath) {
+        InputStream is = getClass().getResourceAsStream(imagePath);
+        Image image = new Image(is);
+        ImageView imageView = new ImageView(image);
+        return imageView;
+    }
+
 
     /**
      * For layering 2D and 3D streen scene and objects
@@ -262,6 +312,24 @@ public class TrafficScene {
         group3.setTranslateX(200);
         group3.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
+
+        return group3;
+    }
+
+    private Group joe() {
+        Group group3 = new Group();
+        group3.setTranslateZ(4500);
+        group3.setTranslateY(-120);
+        group3.setTranslateX(200);
+        group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+
+        ImageView imageView = createFollowingImage("joe.png");
+        imageView.setScaleX(5);
+        imageView.setScaleY(5);
+
+        group3.getChildren().add(imageView);
+
         return group3;
     }
 

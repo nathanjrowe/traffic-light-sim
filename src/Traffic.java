@@ -22,9 +22,9 @@ public class Traffic extends Application {
         Scene scene = new Scene(pane, 800, 400);
         scene.setFill(Color.GRAY);
 
-
         primaryStage.setTitle("Traffic Light");
         primaryStage.setScene(trafficScene.Traffic());
+
         primaryStage.show();
     }
 }
