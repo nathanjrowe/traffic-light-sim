@@ -3,8 +3,11 @@ import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
+import javafx.beans.binding.When;
 import javafx.geometry.Insets;
 import javafx.scene.*;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -44,7 +47,9 @@ public class TrafficScene {
     private int counter = 0;
     private SubScene subScene;
     private Pane root = new Pane();
+    private Pane root3D = new Pane();
     private Pane menuPane = new Pane();
+    Text currentTimeT = new Text("Current Sim Time: 10:40 AM");
 
     // Define window size
     int width = 1200;
@@ -62,6 +67,7 @@ public class TrafficScene {
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         //mediaPlayer.play();
 
+        testing.startCollisionTimer();
         createSubScene(); // Container for different components of scene
 
         //Root Pane
@@ -79,7 +85,7 @@ public class TrafficScene {
 
 
         //Set the scene background color
-        //scene.setFill(skyColors(scene, currentTimeT));
+        scene.setFill(skyColors(scene));
 
         return scene;
     }
@@ -115,12 +121,12 @@ public class TrafficScene {
      * @return returns pane of objects
      */
     private Pane create3DRoot(){
-        Pane root3D = new Pane();
+        root3D = new Pane();
 
         //StopLight
         SystemController systemController = new SystemController();
         //Add lights to the 3D scene
-        systemController.addLights(root3D);
+        //systemController.addLights(root3D);
 
         //Flag to denote if the scene is 3D or not
         testing.set3DFlag();
@@ -128,8 +134,8 @@ public class TrafficScene {
 
         //Add to root pane here. Make any 3d Models as a function that returns a group then add.
         //Commented out some models to keep the load times down when testing
-        root3D.getChildren().addAll(streetScene(),runWay(), oceanBlock(), empireStateBuilding(), building2(),car(), trees(),airport(),
-                shoppingMall(), apartment());
+        root3D.getChildren().addAll(streetScene());//,runWay(), oceanBlock(), empireStateBuilding(),townHome(), building2(),car(), trees(),airport(),
+                //shoppingMall(), apartment());
 
         Group joeGroup = joe();
         Path path1 = createJoePath();
@@ -263,7 +269,7 @@ public class TrafficScene {
         Pane buttonPane = new Pane();
 
         //Current Simulation Time
-        Text currentTimeT = new Text("Current Sim Time: 10:40 AM");
+        currentTimeT = new Text("Current Sim Time: 10:40 AM");
         currentTimeT.setFill(Color.WHITE);
 
         Text currentTrafficT = new Text("Traffic: Moderate");
@@ -738,15 +744,15 @@ public class TrafficScene {
 
 
         group3.getChildren().addAll(meshViewss);
-        group3.setScaleX(10);
-        group3.setScaleY(10);
-        group3.setScaleZ(10);
+        group3.setScaleX(.15);
+        group3.setScaleY(.15);
+        group3.setScaleZ(.15);
 
         //group.setTranslateY(1000);
         group3.setTranslateZ(800);
-        group3.setTranslateY(50);
+        group3.setTranslateY(40);
         group3.setTranslateX(-2000);
-        group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+        group3.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
         return group3;
     }
@@ -802,12 +808,11 @@ public class TrafficScene {
     /**
      * Creates skybox for scene
      * @param scene
-     * @param currentTimeT
      * @return
      */
-    private LinearGradient skyColors(Scene scene, Text currentTimeT){
+    private LinearGradient skyColors(Scene scene){
         //region Sky Colors
-        Stop[] stops = new Stop[] { new Stop(0, Color.WHITE), new Stop(1, Color.rgb(150,200,225,1))};
+       /* Stop[] stops = new Stop[] { new Stop(0, Color.WHITE), new Stop(1, Color.rgb(150,200,225,1))};
         LinearGradient lg1 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops);
 
         Stop[] stops1 = new Stop[] { new Stop(0, Color.rgb(50,50,75)),
@@ -883,31 +888,124 @@ public class TrafficScene {
                 CycleMethod.NO_CYCLE, stops12);
         BackgroundFill backgroundFill12 = new BackgroundFill(lg13,new CornerRadii(1),new Insets(0));
         //endregion
+*/
+
+        final int[] red = {75};
+        final int[] green = {160};
+        final int[] blue = {254};
+        final int[] white = {254};
+
+        final boolean[] redFlag = {true};
+        final boolean[] greenFlag = {true};
+        final boolean[] blueFlag = {true};
+
+        //White to blue
+        //rgba(255, 230, 229, 1.0)
+
+        //Blue transition
+        //rgba(76, 138, 255, 1.0)
+        //rgba(1, 8, 24, 1.0)
 
 
         final long[] startingTime1 = {System.currentTimeMillis()};
         final long[] startingTime = {System.currentTimeMillis()};
+        final Stop[][] stops12 = {new Stop[]{}};
+        final LinearGradient[] lg1 = {new LinearGradient(1, 1, 1, 0, true,
+                CycleMethod.NO_CYCLE, stops12[0])};
+
+
+      /*  Light.Distant sunLight = new Light.Distant(-135.0, 500, Color.RED);
+        Lighting lighting = new Lighting(sunLight);
+
+        lighting.setSurfaceScale(5.0);*/
+
+        PointLight sunLight = new PointLight(Color.WHITE);
+        //sunLight.setFalloff(10);
+
+        sunLight.setScaleX(5000);
+        sunLight.setScaleY(5000);
+        sunLight.setScaleZ(5000);
+        sunLight.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+
+        Path path = new Path();
+        path.getElements().add(new MoveTo(6000, 0));
+        path.getElements().add(new LineTo(3000, -4000));
+        path.getElements().add(new LineTo(-3000, -4000));
+        path.getElements().add(new LineTo(-6000, 0));
+        path.getElements().add(new LineTo(-3000, 4000));
+        path.getElements().add(new LineTo(3000, 4000));
+        path.getElements().add(new LineTo(6000, 0));
+
+
+        Group lightGroup = new Group(sunLight);
+        Sphere sphere = new Sphere(150);
+        lightGroup.getChildren().add(sphere);
+        lightGroup.setTranslateX(-2000);
+        lightGroup.setTranslateY(-4000);
+        lightGroup.setTranslateZ(500);
+
+        root3D.getChildren().addAll(lightGroup, path);
+
+        PathTransition pathTransition2 = createPathTransition(lightGroup, path);
+        pathTransition2.setDuration(Duration.seconds(8.25));
+        pathTransition2.play();
+
         /**
          * Day/Night Cycle
          */
         AnimationTimer timer = new AnimationTimer() {
             @Override
         public void handle(long l) {
-            if ((l - startingTime1[0]) / 1000000 > 5000) {
-                switch (counter){
-                    case 0: scene.setFill(lg2); currentTimeT.textProperty().set("Current Sim Time: 5:00am"); counter++; break;
-                    case 1: scene.setFill(lg3); currentTimeT.textProperty().set("Current Sim Time: 7:00 AM"); counter++;break;
-                    case 2: scene.setFill(lg4); currentTimeT.textProperty().set("Current Sim Time: 9:00 AM");counter++;break;
-                    case 3: scene.setFill(lg5); currentTimeT.textProperty().set("Current Sim Time: 11:00 AM");counter++;break;
-                    case 4: scene.setFill(lg6); currentTimeT.textProperty().set("Current Sim Time: 1:00 PM");counter++;break;
-                    case 5: scene.setFill(lg7); currentTimeT.textProperty().set("Current Sim Time: 3:00 PM");counter++;break;
-                    case 6: scene.setFill(lg8); currentTimeT.textProperty().set("Current Sim Time: 5:00 PM");counter++;break;
-                    case 7: scene.setFill(lg9); currentTimeT.textProperty().set("Current Sim Time: 7:00 PM");counter++;break;
-                    case 8: scene.setFill(lg10); currentTimeT.textProperty().set("Current Sim Time: 9:00 PM");counter++;break;
-                    case 9: scene.setFill(lg11); currentTimeT.textProperty().set("Current Sim Time: 11:00 PM");counter++;break;
-                    case 10: scene.setFill(lg12); currentTimeT.textProperty().set("Current Sim Time: 1:00 AM");counter++;break;
-                    case 11: scene.setFill(lg13); currentTimeT.textProperty().set("Current Time: 3:00am"); counter = 0;break;
+            if ((l - startingTime1[0]) / 1000000 > 50) {
+                if(red[0] > 1 && red[0] <= 100 && redFlag[0] == true){
+                   red[0]--;
+                   if(green[0] >= 2) {
+                       green[0] -= 2;
+                   }
+                   blue[0]-= 3;
+                   white[0] -= 3;
                 }
+                else {
+                    if(red[0] >= 1 && red[0] <= 76) {
+                        redFlag[0] = false;
+                        red[0]++;
+                        green[0]+= 2;
+                        if (blue[0] < 254) {
+                            blue[0]+=3;
+                            white[0] +=3;
+                        }
+
+                    }
+                    else {
+                        redFlag[0] = true;
+
+                        System.out.println("True red" + red[0] + " green" + green[0] + " blue" + blue[0]);
+                    }
+                }
+
+
+
+                stops12[0] = new Stop[] { new Stop(0,Color.rgb(red[0], green[0],blue[0],1)),
+                        new Stop(1, Color.rgb(white[0],white[0],white[0]))};
+                lg1[0] = new LinearGradient(1, 1, 1, 0, true,
+                        CycleMethod.NO_CYCLE, stops12[0]);
+
+                switch (counter){
+                    case 0: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 5:00am"); counter++; break;
+                    case 1: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 7:00 AM"); counter++;break;
+                    case 2: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 9:00 AM");counter++;break;
+                    case 3: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 11:00 AM");counter++;break;
+                    case 4: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 1:00 PM");counter++;break;
+                    case 5: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 3:00 PM");counter++;break;
+                    case 6: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 5:00 PM");counter++;break;
+                    case 7: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 7:00 PM");counter++;break;
+                    case 8: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 9:00 PM");counter++;break;
+                    case 9: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 11:00 PM");counter++;break;
+                    case 10: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 1:00 AM");counter++;break;
+                    case 11: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Time: 3:00am"); counter = 0;break;
+                }
+
 
                 startingTime1[0] = l;
             }
@@ -915,6 +1013,6 @@ public class TrafficScene {
         };
         timer.handle(5000);
         timer.start();
-        return lg1;
+        return lg1[0];
     }
 }

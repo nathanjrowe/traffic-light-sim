@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
+import javafx.scene.transform.Rotate;
 
 /*
  * -------------------------------------
@@ -30,7 +31,7 @@ public class LightController {
     }};
     private CollisionBox intersectionBox = null;
     //Store a list of vehicles in the intersection
-    private List<Vehicle> vehicles = new ArrayList<>();
+    private List<Vehicle3D> vehicles = new ArrayList<>();
     //Vars to store the time in seconds for the lights
     private final int cycleTime = 120;
     private final int yellow = 6;
@@ -118,6 +119,21 @@ public class LightController {
     public void addLights(Pane root) {
         for(Pane trafficLight : trafficLights.values()){
             root.getChildren().add(trafficLight);
+
+       /*     Pane trafficlightLeftSide = new Pane(trafficLight);
+
+            root.getChildren().add(trafficlightLeftSide);
+            //Light scale and position 3D
+            trafficlightLeftSide.setTranslateZ(-150);
+            trafficlightLeftSide.setScaleY(1.25);
+            trafficlightLeftSide.setScaleX(1.25);*/
+
+            trafficLight.setTranslateZ(-150);
+            trafficLight.setScaleY(1.25);
+            trafficLight.setScaleX(1.25);
+            //Light rotations 3D
+            trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
+                    new Rotate(0, Rotate.Z_AXIS));
         }
         for(Pane pedestrianLight : pedestrianLights.values()){
             root.getChildren().add(pedestrianLight);
@@ -145,9 +161,9 @@ public class LightController {
     }
 
     //Increment the vehicle count if a vehicle passes through the intersection box
-    public void incrementVehicleCount(List<Vehicle> allVehicles) {
+    public void incrementVehicleCount(List<Vehicle3D> allVehicles) {
         if(intersectionBox != null) {
-            for (Vehicle vehicle : allVehicles) {
+            for (Vehicle3D vehicle : allVehicles) {
                 if (intersectionBox.getBoundsInParent().intersects(vehicle.getBoundsInGrandparent(vehicle.returnCarShape()))) {
                     if(!vehicles.contains(vehicle)) {
                         //Increment the green time up to the max green time
@@ -236,7 +252,7 @@ public class LightController {
                         //Reset the time
                         time = cycleTime;
                         //Clean up the vehicle list
-                        for (Vehicle vehicle : vehicles) {
+                        for (Vehicle3D vehicle : vehicles) {
                         if (!intersectionBox.getBoundsInParent().intersects(vehicle.getBoundsInGrandparent(vehicle.returnCarShape()))) {
                             vehicles.remove(vehicle);
                         }
