@@ -177,7 +177,7 @@ public class LightController {
                             }
                         }
                         vehicleCount++;
-                        System.out.println("Vehicle Count: " + vehicleCount);
+                        //System.out.println("Vehicle Count: " + vehicleCount);
                         vehicles.add(vehicle);
                     }
                 }

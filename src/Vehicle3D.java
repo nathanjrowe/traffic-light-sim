@@ -528,7 +528,6 @@ public class Vehicle3D {
                 break;
             }
         }
-
         //Check for collisions with other vehicles
         if(collidedVehicle != null) {
             //int s = cars.getChildren().indexOf(carShape);

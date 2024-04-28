@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Testing extends Application {
     private final Boolean DEBUG = false;
-    private final Boolean getCoordinates = false;
+    private final Boolean getCoordinates = true;
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private List<Vehicle3D> vehicleCollidables3D = new ArrayList<>();
     private List<CollisionBox> collisionBoxes = new ArrayList<>();
@@ -169,7 +169,7 @@ public class Testing extends Application {
     }
 
     public void addVehicles3D(int count, Pane tempPane, List<Vehicle3D> vehicleCollidables3D) {
-        System.out.println("Vehicles on Map is: " + vehicleCollidables3D.size());
+        //System.out.println("Vehicles on Map is: " + vehicleCollidables3D.size());
         if (count >= 100 || stopSpawning) {
             return;
         }
@@ -187,14 +187,12 @@ public class Testing extends Application {
         pause.play();
     }
 
-    protected void stopVehicles(List<Vehicle3D> vehicles){
-        System.out.println("Stopping all Vehicles");
+    protected void stopVehicles(List<Person3D> people){
+        System.out.println("Stopping all People");
+        System.out.println("Person3D List count: " + people.size());
         stopSpawning = true;
-        for (Vehicle3D vehicle : vehicles){
-            vehicle.stopVehicle();
-        }
-        for (Vehicle3D vehicle : vehicles){
-            vehicle.stopVehicle();
+        for (Person3D person : people){
+            person.stopVehicle();
         }
     }
 
@@ -206,12 +204,12 @@ public class Testing extends Application {
      */
     public void addBuses(int count, Pane tempPane, List<Bus> busCollidables) {
         //System.out.println("Total Buses on Map: " + count);
+        System.out.println("Calling Add Buses 2D");
         if (count >= 10) {
             return;
         }
 
         Bus bus = new Bus(tempPane, busCollidables);
-
         bus.startAnimation();
         busCollidables.add(bus);
 
@@ -225,19 +223,19 @@ public class Testing extends Application {
 
     public void addBuses3D(int count, Pane tempPane, List<Bus3D> busCollidables) {
         //System.out.println("Total Buses on Map: " + count);
-        if (count >= 10) {
+        if (count >= 10 || stopSpawning) {
             return;
         }
 
-        Bus3D bus = new Bus3D(tempPane, busCollidables3D);
+        Bus3D bus = new Bus3D(tempPane, busCollidables);
 
         bus.startAnimation();
-        busCollidables3D.add(bus);
+        busCollidables.add(bus);
 
         //Using a recursive method to guarantee that the pause actually occurs.
         PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
         pause.setOnFinished(event1 -> {
-            addBuses3D(busCollidables3D.size(), tempPane, busCollidables3D);
+            addBuses3D(busCollidables.size(), tempPane, busCollidables);
         });
         pause.play();
     }
@@ -253,33 +251,24 @@ public class Testing extends Application {
         if (count >= 50) {
             return;
         }
+    }
 
-        if(flag3D == false) {
-            Person person = new Person(tempPane, personCollidables);
-
-            person.startAnimation();
-            personCollidables.add(person);
-
-            //Using a recursive method to guarantee that the pause actually occurs.
-            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(300));
-            pause.setOnFinished(event1 -> {
-                addPeople(personCollidables.size(), tempPane, personCollidables);
-            });
-            pause.play();
+    public void addPeople3D(int count, Pane tempPane, List<Person3D> personCollidable) {
+        if (count >= 50 || stopSpawning) {
+            return;
         }
-        else{
-            Person3D person = new Person3D(tempPane, personCollidables3D);
 
-            person.startAnimation();
-            personCollidables3D.add(person);
+        Person3D person = new Person3D(tempPane, personCollidable);
 
-            //Using a recursive method to guarantee that the pause actually occurs.
-            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
-            pause.setOnFinished(event1 -> {
-                addPeople(personCollidables3D.size(), tempPane, personCollidables);
-            });
-            pause.play();
-        }
+        person.startAnimation();
+        personCollidable.add(person);
+
+        //Using a recursive method to guarantee that the pause actually occurs.
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(100));
+        pause.setOnFinished(event1 -> {
+            addPeople3D(personCollidable.size(), tempPane, personCollidable);
+        });
+        pause.play();
     }
 
     /**

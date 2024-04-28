@@ -46,26 +46,23 @@ public class Person3D {
         person();
         initializeArrays();
         createPath();
-        initializeCarShape();
+        person();
         initializePathTransition(tempPane, collidablePerson);
         this.collided = false;
     }
 
-    /**
-     * Initialize 3D pedestrian object
-     */
-    private void initializeCarShape() {
+
+    private Group person(){
         carShape = new Circle(4);
         carShape.setFill(Color.GREEN);
+        carShape.setTranslateX(10);
+        carShape.setTranslateY(7.5);
         //Set initial angle based on the first segment
         if (!temp.isEmpty()) {
             double[] firstSegment = temp.get(0);
             people.setRotate(-calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
         }
-    }
 
-
-    private Group person(){
         ObjModelImporter importes = new ObjModelImporter();
         try {
             importes.read(this.getClass().getResource("/People/Male_Casual.obj"));
@@ -90,7 +87,7 @@ public class Person3D {
         group3.setTranslateX(10);
         group3.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
-        people = group3;
+        people.getChildren().addAll(group3, carShape);
         people.setTranslateY(-100);
         return group3;
     }

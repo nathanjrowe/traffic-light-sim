@@ -45,22 +45,9 @@ public class Bus3D {
     public Bus3D(Pane tempPane, List<Bus3D> collidableBus){
         initializeArrays();
         createPath();
-        initializeCarShape();
+        bus();
         initializePathTransition(tempPane, collidableBus);
         this.collided = false;
-    }
-
-    /**
-     * Create car shape
-     */
-    private void initializeCarShape() {
-        bus();
-        carShape = new Rectangle(8, 50);
-        //Set initial angle based on the first segment
-        if (!temp.isEmpty()) {
-            double[] firstSegment = temp.get(0);
-            buses.setRotate(-calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
-        }
     }
 
     /**
@@ -130,8 +117,21 @@ public class Bus3D {
         group3.setTranslateX(10);
         group3.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(-90, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
-        buses = group3;
+        buses.getChildren().add(group3);
         buses.setTranslateY(-100);
+
+        carShape = new Rectangle(8, 50);
+        carShape.setFill(Color.YELLOW);
+        carShape.setTranslateX(5.5);
+        carShape.setTranslateY(-25);
+
+        //Set initial angle based on the first segment
+        if (!temp.isEmpty()) {
+            double[] firstSegment = temp.get(0);
+            buses.setRotate(-calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
+        }
+
+        buses.getChildren().add(carShape);
         return group3;
     }
 
