@@ -153,7 +153,6 @@ public class Person3D {
     protected void createPath(){
         Random random = new Random();
         int tempInt = random.nextInt(PATHS.length);
-        System.out.println("Choosing Path number: " + tempInt);
         temp.add(startingPaths.get(tempInt));
         path = new Path();
         path.getElements().add(new MoveTo(temp.get(0)[0], temp.get(0)[1]));

@@ -81,7 +81,7 @@ public class Testing extends Application {
         System.out.println("Original Image Width: " + imageW + " Original Image Height: " + imageH);
 
         Pane mapPane = resizeImage(fullMap, 1200, 800);
-        root.getChildren().add(mapPane);
+        //root.getChildren().add(mapPane);
 
         root.setOnMouseClicked(event -> {
             if (getCoordinates) {
@@ -168,6 +168,36 @@ public class Testing extends Application {
         }
     }
 
+    public void addVehicles3D(int count, Pane tempPane, List<Vehicle3D> vehicleCollidables3D) {
+        System.out.println("Vehicles on Map is: " + vehicleCollidables3D.size());
+        if (count >= 100 || stopSpawning) {
+            return;
+        }
+
+        Vehicle3D vehicle = new Vehicle3D(tempPane, vehicleCollidables3D, collisionBoxes);
+
+        vehicle.startAnimation();
+        vehicleCollidables3D.add(vehicle);
+
+        //Using a recursive method to guarantee that the timeframe actually occurs.
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(150));
+        pause.setOnFinished(event1 -> {
+            addVehicles3D(vehicleCollidables3D.size(), tempPane, vehicleCollidables3D);
+        });
+        pause.play();
+    }
+
+    protected void stopVehicles(List<Vehicle3D> vehicles){
+        System.out.println("Stopping all Vehicles");
+        stopSpawning = true;
+        for (Vehicle3D vehicle : vehicles){
+            vehicle.stopVehicle();
+        }
+        for (Vehicle3D vehicle : vehicles){
+            vehicle.stopVehicle();
+        }
+    }
+
     /**
      * Generates and adds buses to main scene in pane using count as an upper bound
      * @param count upper bound on bus objects
@@ -175,7 +205,7 @@ public class Testing extends Application {
      * @param busCollidables bus objects themselves
      */
     public void addBuses(int count, Pane tempPane, List<Bus> busCollidables) {
-        System.out.println("Total Buses on Map: " + count);
+        //System.out.println("Total Buses on Map: " + count);
         if (count >= 10) {
             return;
         }
@@ -194,7 +224,11 @@ public class Testing extends Application {
     }
 
     public void addBuses3D(int count, Pane tempPane, List<Bus3D> busCollidables) {
-        System.out.println("Total Buses on Map: " + count);
+        //System.out.println("Total Buses on Map: " + count);
+        if (count >= 10) {
+            return;
+        }
+
         Bus3D bus = new Bus3D(tempPane, busCollidables3D);
 
         bus.startAnimation();
@@ -215,7 +249,7 @@ public class Testing extends Application {
      * @param personCollidables pedestrian objects themselves
      */
     public void addPeople(int count, Pane tempPane, List<Person> personCollidables) {
-        System.out.println("Total Buses on Map: " + count);
+        //System.out.println("Total Buses on Map: " + count);
         if (count >= 50) {
             return;
         }
@@ -258,7 +292,9 @@ public class Testing extends Application {
             public void handle(long now) {
                 //checkCollisions();
                 if(flag3D){
+                    System.out.println("Vehicle Collidables 3D Size: " + vehicleCollidables3D.size());
                     for(Vehicle3D v1 : vehicleCollidables3D){
+                        System.out.println("Checking Vehicle 3D Collisions");
                         v1.checkCollision(vehicleCollidables3D);
                         systemController.checkVehicleCrossing(vehicleCollidables3D);
                     }
@@ -274,51 +310,17 @@ public class Testing extends Application {
         timer.start();
     }
 
-    /**
-     * Checks for all vehicle collisions
-     */
-    private void checkCollisions() {
-        for (int i = 0; i < vehicleCollidables.size(); i++) {
-            for (int j = i + 1; j < vehicleCollidables.size(); j++) {
-                Vehicle v1 = vehicleCollidables.get(i);
-                Vehicle v2 = vehicleCollidables.get(j);
-                //System.out.println(v2.returnCarShape().getBoundsInParent());
-                if ((Shape.intersect(v1.returnCarShape(), v2.returnCarShape()).getBoundsInParent().getWidth() > 0)
-                        && !v1.returnCollided() && !v2.returnCollided()) {
-                    //System.out.println((Shape.intersect(v1.returnCarShape(), v2.returnCarShape()).getBoundsInParent().getWidth()));
-                    //System.out.println((Shape.intersect(v1.returnCarShape(), v2.returnCarShape()).getBoundsInParent().getHeight()));
-                    v2.setCollided(true);
-                    v2.stopVehicle();
-                } else if ((Shape.intersect(v1.returnCarShape(), v2.returnCarShape()).getBoundsInParent().getWidth() <= 0)
-                        && !v1.returnCollided() && v2.returnCollided()) {
-                    v2.setCollided(false);
-                    v2.restartVehicle();
+    public void startCollisionTimer3D(List<Vehicle3D> vehicleCollidables3D) {
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                for(Vehicle3D v1 : vehicleCollidables3D){
+                    v1.checkCollision(vehicleCollidables3D);
+                    systemController.checkVehicleCrossing(vehicleCollidables3D);
                 }
-//                else {
-//                    if (v1.returnCollided()){
-//                        v1.setCollided(false);
-//                        v1.restartVehicle();
-//                    }
-//                    else if (v2.returnCollided()){
-//                        v2.setCollided(false);
-//                        v2.restartVehicle();
-//                    }
-//                }
             }
-        }
-    }
-
-    /**
-     * Check for each individual collision
-     * @param src
-     * @param other
-     */
-    private void checkCollision(Vehicle src, Vehicle other){
-        if(Shape.intersect(src.returnCarShape(), other.returnCarShape()).getBoundsInLocal().getWidth() > -1){
-            System.out.println("Collision Detected");
-        }else if(Shape.intersect(src.returnCarShape(), other.returnCarShape()).getBoundsInLocal().getWidth() <= 0){
-            //System.out.println("Collision Over");
-        }
+        };
+        timer.start();
     }
 
     /**

@@ -6,6 +6,7 @@ import javafx.animation.PathTransition;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -117,16 +118,30 @@ public class Vehicle extends Node implements Runnable {
     }
 
     /**
+     * Initializes path array
+     */
+    private void initializeArrays(){
+        for (double[] array : INITIALPATHS){
+            startingPaths.add(array);
+        }
+        for (double[] array : RESTOFPATHS){
+            allPossiblePaths.add(array);
+        }
+    }
+
+    /**
      * Creates car object box
      */
     private void initializeCarShape() {
         //Create the car shape
         carShape = new Rectangle(8, 15);
         frontSensor = new Rectangle(8, 8);
+        carShape.setFill(Color.GREEN);
+        frontSensor.setFill(Color.RED);
         frontSensor.setTranslateY(15);
         carGroup = new Pane();
-        carGroup.getChildren().addAll(carShape, frontSensor);
-        frontSensor.setFill(javafx.scene.paint.Color.TRANSPARENT);
+        carGroup.getChildren().addAll(frontSensor, carShape);
+        //frontSensor.setFill(javafx.scene.paint.Color.TRANSPARENT);
         //Set initial angle based on the first segment
         if (!temp.isEmpty()) {
             double[] firstSegment = temp.get(0);
@@ -190,18 +205,6 @@ public class Vehicle extends Node implements Runnable {
         if (pathTransition != null) {
             //Resume after delay
             pathTransition.play();
-        }
-    }
-
-    /**
-     * Initializes path array
-     */
-    private void initializeArrays(){
-        for (double[] array : INITIALPATHS){
-            startingPaths.add(array);
-        }
-        for (double[] array : RESTOFPATHS){
-            allPossiblePaths.add(array);
         }
     }
 
@@ -349,63 +352,6 @@ public class Vehicle extends Node implements Runnable {
         return angle;
     }
 
-    /**
-     * Updates vehicle object collide boolean
-     * @param bool
-     */
-    protected void setCollided(boolean bool){
-        collided = bool;
-    }
-
-    /**
-     * Returns path
-     * @return
-     */
-    protected Path returnPath(){
-        return path;
-    }
-
-    /**
-     * Returns second for animation
-     * @return
-     */
-    protected double returnSeconds(){
-        return seconds;
-    }
-
-    /**
-     * Returns path array
-     * @return
-     */
-    protected List<double[]> returnPathArray(){
-        return temp;
-    }
-
-    /**
-     * Returns car shape box
-     * @return
-     */
-    protected Shape returnCarShape() {
-        return carShape;
-    }
-
-    /**
-     * Returns vehicle collidable boolean
-     * @return
-     */
-    protected boolean returnCollided(){
-        return collided;
-    }
-
-    protected boolean returnStoppedAtLight() {
-        return stoppedAtLight;
-    }
-
-    protected Bounds getBoundsInGrandparent(Node node) {
-        Bounds nodeInParent = node.localToParent(node.getBoundsInLocal());
-        return node.getParent().localToParent(nodeInParent);
-    }
-    //Take a root pane to check for collisions
     protected void checkCollision(List<Vehicle> vehicles) {
         //Get the bounds of the front sensor
         Bounds frontBoundsInGrandParent = getBoundsInGrandparent(frontSensor);
@@ -466,6 +412,64 @@ public class Vehicle extends Node implements Runnable {
             }
         }
     }
+
+    /**
+     * Updates vehicle object collide boolean
+     * @param bool
+     */
+    protected void setCollided(boolean bool){
+        collided = bool;
+    }
+
+    /**
+     * Returns path
+     * @return
+     */
+    protected Path returnPath(){
+        return path;
+    }
+
+    /**
+     * Returns second for animation
+     * @return
+     */
+    protected double returnSeconds(){
+        return seconds;
+    }
+
+    /**
+     * Returns path array
+     * @return
+     */
+    protected List<double[]> returnPathArray(){
+        return temp;
+    }
+
+    /**
+     * Returns car shape box
+     * @return
+     */
+    protected Shape returnCarShape() {
+        return carShape;
+    }
+
+    /**
+     * Returns vehicle collidable boolean
+     * @return
+     */
+    protected boolean returnCollided(){
+        return collided;
+    }
+
+    protected boolean returnStoppedAtLight() {
+        return stoppedAtLight;
+    }
+
+    protected Bounds getBoundsInGrandparent(Node node) {
+        Bounds nodeInParent = node.localToParent(node.getBoundsInLocal());
+        return node.getParent().localToParent(nodeInParent);
+    }
+    //Take a root pane to check for collisions
 
     @Override
     public void run() {

@@ -14,6 +14,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -102,8 +103,8 @@ public class Vehicle3D {
     private Boolean collided;
     private PathTransition pathTransition;
     private Shape carShape;
+    private Shape frontSensor;
     ImageHelper imageHelper = new ImageHelper();
-    private Shape frontSensor = new Rectangle(8,8);
     private Pane carGroup;
     private CollisionBox collidedBox = null;
     private Vehicle3D collidedVehicle = null;
@@ -117,22 +118,21 @@ public class Vehicle3D {
     public Vehicle3D(Pane tempPane, List<Vehicle3D> collidableVehicles, List<CollisionBox> collisionBoxes) {
         initializeArrays();
         createPath();
-        initializeCarShape();
+        car();
         initializePathTransition(tempPane, collidableVehicles);
         this.collided = false;
         this.collisionBoxes.addAll(collisionBoxes);
     }
-    /**
-     * Creates 2D car object box
-     */
-    private void initializeCarShape() {
-        carShape = new Rectangle(15, 8);
-        car();
 
-        //Set initial angle based on the first segment
-        if (!temp.isEmpty()) {
-            double[] firstSegment = temp.get(0);
-            carShape.setRotate(calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
+    /**
+     * Initializes path array
+     */
+    private void initializeArrays(){
+        for (double[] array : INITIALPATHS){
+            startingPaths.add(array);
+        }
+        for (double[] array : RESTOFPATHS){
+            allPossiblePaths.add(array);
         }
     }
 
@@ -141,13 +141,13 @@ public class Vehicle3D {
      * @return
      */
     private Group car(){
+        carShape = new Rectangle(15, 8);
+        frontSensor = new Rectangle(8,8);
+        carShape.setFill(Color.GREEN);
         frontSensor.setFill(Color.RED);
-        frontSensor.setTranslateY(40.5);
-        //frontSensor.setTranslateZ(-15.5);
-        frontSensor.setScaleX(.5);
-        carShape.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
-                new Rotate(0, Rotate.Z_AXIS));
-        //frontSensor.setScaleY(.5);
+        frontSensor.setTranslateX(3.5);
+        frontSensor.setTranslateY(11.5);
+        carShape.setRotate(90);
 
         ObjModelImporter importes = new ObjModelImporter();
         String[] vehicles = new String[]{
@@ -287,22 +287,20 @@ public class Vehicle3D {
 
         group3.getChildren().addAll(meshViewss);
         group3.getChildren().addAll(headLightL, headLightR, tailLightL, tailLightR);
-        group3.setScaleX(8);
-        group3.setScaleY(8);
-        group3.setScaleZ(25);
+        group3.setScaleX(5);
+        group3.setScaleY(5);
+        group3.setScaleZ(18);
 
 
         //group.setTranslateY(1000);
         group3.setTranslateZ(0);
         group3.setTranslateY(0);
-        group3.setTranslateX(10);
+        group3.setTranslateX(7);
         group3.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
 
-        cars.getChildren().addAll(group3, frontSensor, carShape);
+        cars.getChildren().addAll(group3, carShape, frontSensor);
 
-        frontSensor.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
-                new Rotate(0, Rotate.Z_AXIS));
         cars.prefWidth(8);
         cars.setTranslateY(-110);
         return cars;
@@ -337,73 +335,6 @@ public class Vehicle3D {
         }
     }
 
-    protected boolean returnStoppedAtLight() {
-        return stoppedAtLight;
-    }
-
-    protected Bounds getBoundsInGrandparent(Node node) {
-        Bounds nodeInParent = node.localToParent(node.getBoundsInLocal());
-        return node.getParent().localToParent(nodeInParent);
-    }
-
-    //Take a root pane to check for collisions
-    protected void checkCollision(List<Vehicle3D> vehicles) {
-        //Get the bounds of the front sensor
-        Bounds frontBoundsInGrandParent = getBoundsInGrandparent(frontSensor);
-        //Check for collisions every frame
-        //Print the bounds of the car
-        if(collidedBox != null) {
-            if(collidedBox.getState() != CollisionBox.State.STOP) {
-                this.collided = false;
-                this.stoppedAtLight = false;
-                this.restartVehicle();
-                this.collidedBox = null;
-            }
-        }
-        for (CollisionBox collisionBox : collisionBoxes) {
-            //System.out.println(collisionBox.getBoundsInParent());
-            if (frontBoundsInGrandParent.intersects(collisionBox.getBoundsInParent())) {
-                this.collidedBox = collisionBox;
-                if(collisionBox.getState() == CollisionBox.State.STOP) {
-                    this.collided = true;
-                    this.stoppedAtLight = true;
-                    this.stopVehicle();
-                }
-                break;
-            }
-        }
-
-        //Check for collisions with other vehicles
-        if(collidedVehicle != null) {
-            //int s = cars.getChildren().indexOf(carShape);
-            Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(
-                    collidedVehicle.returnCarShape());
-            if (!frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent)) {
-                collidedVehicle = null;
-                collided = false;
-                stoppedAtLight = false;
-                restartVehicle();
-            }
-        }
-        else {
-            for (Vehicle3D vehicle : vehicles) {
-                if (vehicle != this) {
-                    Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(vehicle.returnCarShape());
-                    if (frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent)) {
-                        collidedVehicle = vehicle;
-                        if(vehicle.returnStoppedAtLight()) {
-                            collided = true;
-                            stoppedAtLight = true;
-                            stopVehicle();
-                        }
-                        //End the loop
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
     /**
      * Starts vehicle path transition animation
      */
@@ -428,17 +359,7 @@ public class Vehicle3D {
             pathTransition.play();
         }
     }
-    /**
-     * Initializes path array
-     */
-    private void initializeArrays(){
-        for (double[] array : INITIALPATHS){
-            startingPaths.add(array);
-        }
-        for (double[] array : RESTOFPATHS){
-            allPossiblePaths.add(array);
-        }
-    }
+
     /**
      * Creates path
      */
@@ -461,6 +382,7 @@ public class Vehicle3D {
         seconds = distance / 100;
         path.setOpacity(0);
     }
+
     /**
      * Connects paths based on segments
      * @param path1
@@ -506,6 +428,7 @@ public class Vehicle3D {
         }
         return path;
     }
+
     /**
      * Primary function to go through all segments to find the closest one to vehicle
      * @param xPosition
@@ -577,6 +500,72 @@ public class Vehicle3D {
         }
         return angle;
     }
+
+
+    //Take a root pane to check for collisions
+    protected void checkCollision(List<Vehicle3D> vehicles) {
+        //Get the bounds of the front sensor
+        Bounds frontBoundsInGrandParent = getBoundsInGrandparent(frontSensor);
+        //Check for collisions every frame
+        //Print the bounds of the car
+        if(collidedBox != null) {
+            if(collidedBox.getState() != CollisionBox.State.STOP) {
+                this.collided = false;
+                this.stoppedAtLight = false;
+                this.restartVehicle();
+                this.collidedBox = null;
+            }
+        }
+        for (CollisionBox collisionBox : collisionBoxes) {
+            //System.out.println(collisionBox.getBoundsInParent());
+            if (frontBoundsInGrandParent.intersects(collisionBox.getBoundsInParent())) {
+                this.collidedBox = collisionBox;
+                if(collisionBox.getState() == CollisionBox.State.STOP) {
+                    this.collided = true;
+                    this.stoppedAtLight = true;
+                    this.stopVehicle();
+                }
+                break;
+            }
+        }
+
+        //Check for collisions with other vehicles
+        if(collidedVehicle != null) {
+            //int s = cars.getChildren().indexOf(carShape);
+            Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(
+                    collidedVehicle.returnCarShape());
+            if (!frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent) && stoppedAtLight) {
+                collidedVehicle = null;
+                collided = false;
+                stoppedAtLight = false;
+                restartVehicle();
+            }
+            if (!frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent) && !stoppedAtLight) {
+                collidedVehicle = null;
+                collided = false;
+                restartVehicle();
+            }
+        }
+        else {
+            for (Vehicle3D vehicle : vehicles) {
+                if (vehicle != this) {
+                    Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(vehicle.returnCarShape());
+                    if (frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent)) {
+                        collidedVehicle = vehicle;
+                        if(vehicle.returnStoppedAtLight()) {
+                            collided = true;
+                            stoppedAtLight = true;
+                            stopVehicle();
+                        }
+                        stopVehicle();
+                        collided = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Updates vehicle object collide boolean
      * @param bool
@@ -618,6 +607,15 @@ public class Vehicle3D {
      */
     protected boolean returnCollided(){
         return collided;
+    }
+
+    protected boolean returnStoppedAtLight() {
+        return stoppedAtLight;
+    }
+
+    protected Bounds getBoundsInGrandparent(Node node) {
+        Bounds nodeInParent = node.localToParent(node.getBoundsInLocal());
+        return node.getParent().localToParent(nodeInParent);
     }
     
 }

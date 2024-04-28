@@ -40,6 +40,7 @@ public class TrafficScene {
     private ImageHelper imageHelper = new ImageHelper();
     private Testing testing = new Testing();
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
+    private List<Vehicle3D> vehicleCollidables3D = new ArrayList<>();
     private List<Bus3D> busCollidables3D = new ArrayList<>();
     //
     private List<Person> personCollidables = new ArrayList<>();
@@ -54,6 +55,7 @@ public class TrafficScene {
     // Define window size
     int width = 1200;
     int height = 800;
+    boolean stop = false;
 
     /**
      * Acts as the main function of the GUI scene.
@@ -67,7 +69,7 @@ public class TrafficScene {
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         //mediaPlayer.play();
 
-        testing.startCollisionTimer();
+        testing.startCollisionTimer3D(vehicleCollidables3D);
         createSubScene(); // Container for different components of scene
 
         //Root Pane
@@ -180,10 +182,10 @@ public class TrafficScene {
 
     private Path createJoePath() {
         Path path = new Path();
-        path.getElements().add(new MoveTo(-11500, -3300));
-        path.getElements().add(new LineTo(-2500, -350));
-        path.getElements().add(new LineTo(500, -350));
-        path.getElements().add(new LineTo(9500, -3300));
+        path.getElements().add(new MoveTo(-12500, -3300));
+        path.getElements().add(new LineTo(-3000, -350));
+        path.getElements().add(new LineTo(0, -350));
+        path.getElements().add(new LineTo(9000, -3300));
         return path;
     }
 
@@ -299,10 +301,16 @@ public class TrafficScene {
         spawnTrafficT.setFill(Color.WHITE);
 
         spawnTrafficT.setOnMouseClicked(event -> {
-            testing.addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
-            testing.addBuses3D(busCollidables3D.size(), tempPane, busCollidables3D);
-            testing.addPeople(personCollidables.size(), tempPane, personCollidables);
-            //streetScene.getChildren().add(tempPane);
+            if (!stop) {
+                testing.addVehicles3D(vehicleCollidables3D.size(), tempPane, vehicleCollidables3D);
+                testing.addBuses3D(busCollidables3D.size(), tempPane, busCollidables3D);
+                testing.addPeople(personCollidables.size(), tempPane, personCollidables);
+                //streetScene.getChildren().add(tempPane);
+                stop = true;
+            }
+            else {
+                testing.stopVehicles(vehicleCollidables3D);
+            }
         });
         return  spawnTrafficT;
     }
