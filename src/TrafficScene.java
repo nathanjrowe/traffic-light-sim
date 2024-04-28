@@ -134,8 +134,8 @@ public class TrafficScene {
 
         //Add to root pane here. Make any 3d Models as a function that returns a group then add.
         //Commented out some models to keep the load times down when testing
-        root3D.getChildren().addAll(streetScene(),runWay(), oceanBlock(), empireStateBuilding(),townHome(), building2(),car(), trees(),airport(),
-                shoppingMall(), apartment());
+        root3D.getChildren().addAll(streetScene());//,runWay(), oceanBlock(), empireStateBuilding(),townHome(), building2(),car(), trees(),airport(),
+                //shoppingMall(), apartment());
 
         Group joeGroup = joe();
         Path path1 = createJoePath();
