@@ -148,20 +148,20 @@ public class Testing extends Application {
             vehicleCollidables.add(vehicle);
 
             //Using a recursive method to guarantee that the pause actually occurs.
-            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(100));
+            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(150));
             pause.setOnFinished(event1 -> {
                 addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
             });
             pause.play();
         }
         else{
-            Vehicle3D vehicle = new Vehicle3D(tempPane, vehicleCollidables3D);
+            Vehicle3D vehicle = new Vehicle3D(tempPane, vehicleCollidables3D, collisionBoxes);
 
             vehicle.startAnimation();
             vehicleCollidables3D.add(vehicle);
 
             //Using a recursive method to guarantee that the timeframe actually occurs.
-            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(100));
+            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(150));
             pause.setOnFinished(event1 -> {
                 addVehiclesUntilCount(vehicleCollidables3D.size(), tempPane, vehicleCollidables);
             });
@@ -253,14 +253,22 @@ public class Testing extends Application {
      * Animation timer to check for collisions
      * (animation timers are a separate thread)
      */
-    private void startCollisionTimer() {
+    public void startCollisionTimer() {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 //checkCollisions();
-                for(Vehicle v1 : vehicleCollidables){
-                    v1.checkCollision(vehicleCollidables);
-                    systemController.checkVehicleCrossing(vehicleCollidables);
+                if(flag3D){
+                    for(Vehicle3D v1 : vehicleCollidables3D){
+                        v1.checkCollision(vehicleCollidables3D);
+                        systemController.checkVehicleCrossing(vehicleCollidables3D);
+                    }
+                }
+                else {
+                    for (Vehicle v1 : vehicleCollidables) {
+                        v1.checkCollision(vehicleCollidables);
+                        systemController.checkVehicleCrossing(vehicleCollidables3D);
+                    }
                 }
             }
         };
