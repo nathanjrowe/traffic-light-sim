@@ -129,7 +129,7 @@ public class Bus {
             startY = point[3];
         }
         //This is where you edit the Speed
-        seconds = distance / 200;
+        seconds = distance / 100;
         path.setOpacity(0);
     }
 

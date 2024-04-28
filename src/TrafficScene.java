@@ -137,35 +137,52 @@ public class TrafficScene {
         PathTransition pathTransition1 = createPathTransition(joeGroup, path1);
         pathTransition1.play();
 
-        Group airplaneGroup = airplane();
-        Path path2 = createAirplanePath();
-        root3D.getChildren().addAll(airplaneGroup, path2);
-        PathTransition pathTransition2 = createPathTransition(airplaneGroup, path2);
+        //Airplane 1
+        Group airplaneGroup1 = airplane(1);
+        Path path2 = createAirplanePath1();
+        root3D.getChildren().addAll(airplaneGroup1, path2);
+        PathTransition pathTransition2 = createPathTransition(airplaneGroup1, path2);
         pathTransition2.play();
+
+        //Airplane 2
+        Group airplaneGroup2 = airplane(2);
+        Path path3 = createAirplanePath2();
+        root3D.getChildren().addAll(airplaneGroup2, path3);
+        PathTransition pathTransition3 = createPathTransition(airplaneGroup2, path3);
+        pathTransition3.play();
 
         return root3D;
     }
 
-    private Path createAirplanePath() {
+    private Path createAirplanePath1() {
         Path path = new Path();
-        path.getElements().add(new MoveTo(-3500, -1000));
+        path.getElements().add(new MoveTo(-10500, -3000));
         path.getElements().add(new LineTo(-1500, -50));
         path.getElements().add(new LineTo(1500, -50));
-        path.getElements().add(new LineTo(3500, -1000));
+        path.getElements().add(new LineTo(10500, -3000));
+        return path;
+    }
+
+    private Path createAirplanePath2() {
+        Path path = new Path();
+        path.getElements().add(new MoveTo(10500, -3000));
+        path.getElements().add(new LineTo(1500, -50));
+        path.getElements().add(new LineTo(-1500, -50));
+        path.getElements().add(new LineTo(-10500, -3000));
         return path;
     }
 
     private Path createJoePath() {
         Path path = new Path();
-        path.getElements().add(new MoveTo(-4500, -1300));
+        path.getElements().add(new MoveTo(-11500, -3300));
         path.getElements().add(new LineTo(-2500, -350));
         path.getElements().add(new LineTo(500, -350));
-        path.getElements().add(new LineTo(2500, -1300));
+        path.getElements().add(new LineTo(9500, -3300));
         return path;
     }
 
     private PathTransition createPathTransition(Group group, Path path) {
-        PathTransition pathTransition = new PathTransition(Duration.seconds(5), path, group);
+        PathTransition pathTransition = new PathTransition(Duration.seconds(10), path, group);
         pathTransition.setInterpolator(Interpolator.LINEAR);
         pathTransition.setCycleCount(PathTransition.INDEFINITE);
         return pathTransition;
@@ -288,7 +305,7 @@ public class TrafficScene {
      * Airplane creation, position, scaling
      * @return groups
      */
-    private Group airplane(){
+    private Group airplane(int airplaneNumber){
         ObjModelImporter importes = new ObjModelImporter();
         try {
             importes.read(this.getClass().getResource("/vehicleModels/11803_Airplane_v1_l1.obj"));
@@ -307,11 +324,20 @@ public class TrafficScene {
         group3.setScaleZ(.25);
 
         //group.setTranslateY(1000);
-        group3.setTranslateZ(4500);
-        group3.setTranslateY(-120);
-        group3.setTranslateX(200);
-        group3.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
-                new Rotate(0, Rotate.Z_AXIS));
+        if (airplaneNumber % 2 == 1) {
+            group3.setTranslateZ(4500);
+            group3.setTranslateY(-120);
+            group3.setTranslateX(200);
+            group3.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                    new Rotate(0, Rotate.Z_AXIS));
+        }
+        else {
+            group3.setTranslateZ(4500);
+            group3.setTranslateY(-120);
+            group3.setTranslateX(200);
+            group3.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(180, Rotate.Y_AXIS),
+                    new Rotate(0, Rotate.Z_AXIS));
+        }
 
         return group3;
     }

@@ -15,7 +15,7 @@ import java.util.Random;
 import static java.lang.Math.abs;
 import javafx.geometry.Bounds;
 
-public class Vehicle extends Node{
+public class Vehicle extends Node implements Runnable {
 
     //List of CollisionBoxes
     private final List<CollisionBox> collisionBoxes = new ArrayList<>();
@@ -224,7 +224,7 @@ public class Vehicle extends Node{
             startY = point[3];
         }
         //This is where you edit the Speed
-        seconds = distance / 200;
+        seconds = distance / 100;
         path.setOpacity(0);
     }
 
@@ -435,17 +435,22 @@ public class Vehicle extends Node{
         //Check for collisions with other vehicles
         if(collidedVehicle != null) {
             Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(collidedVehicle.returnCarShape());
-            if (!frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent)) {
+            if (!frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent) && stoppedAtLight) {
                 collidedVehicle = null;
                 collided = false;
                 stoppedAtLight = false;
                 restartVehicle();
             }
+            if (!frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent) && !stoppedAtLight) {
+                collidedVehicle = null;
+                collided = false;
+                restartVehicle();
+            }
         }
         else {
-        for (Vehicle vehicle : vehicles) {
-            if (vehicle != this) {
-                Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(vehicle.returnCarShape());
+            for (Vehicle vehicle : vehicles) {
+                if (vehicle != this) {
+                    Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(vehicle.returnCarShape());
                     if (frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent)) {
                         collidedVehicle = vehicle;
                         if(vehicle.returnStoppedAtLight()) {
@@ -453,11 +458,17 @@ public class Vehicle extends Node{
                             stoppedAtLight = true;
                             stopVehicle();
                         }
-                        //End the loop
+                        stopVehicle();
+                        collided = true;
                         break;
                     }
+                }
             }
         }
     }
+
+    @Override
+    public void run() {
+
     }
 }

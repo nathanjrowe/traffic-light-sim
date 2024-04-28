@@ -143,12 +143,11 @@ public class Testing extends Application {
         if(flag3D == false) {
             Vehicle vehicle = new Vehicle(tempPane, vehicleCollidables, collisionBoxes);
 
-
             vehicle.startAnimation();
             vehicleCollidables.add(vehicle);
 
             //Using a recursive method to guarantee that the pause actually occurs.
-            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(100));
+            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(150));
             pause.setOnFinished(event1 -> {
                 addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
             });
@@ -187,7 +186,7 @@ public class Testing extends Application {
         busCollidables.add(bus);
 
         //Using a recursive method to guarantee that the pause actually occurs.
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(30000));
         pause.setOnFinished(event1 -> {
             addBuses(busCollidables.size(), tempPane, busCollidables);
         });
