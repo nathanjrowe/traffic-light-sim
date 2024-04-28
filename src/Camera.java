@@ -229,7 +229,7 @@ public class Camera extends Parent {
      * @param ui
      */
     public void loadControlsForScene(Scene scene, SubScene subScene , Group ui) {
-        subScene.addEventHandler(KeyEvent.ANY, ke -> {
+        scene.addEventHandler(KeyEvent.ANY, ke -> {
             if (ke.getEventType() == KeyEvent.KEY_PRESSED) {
                 switch (ke.getCode()) {
                 /*    case Q:
@@ -238,16 +238,16 @@ public class Camera extends Parent {
                    case E:
                         down = true;
                         break;*/
-                    case UP:
+                    case W:
                         fwd = true;
                         break;
-                    case DOWN:
+                    case S:
                         back = true;
                         break;
-                    case LEFT:
+                    case A:
                         strafeL = true;
                         break;
-                    case RIGHT:
+                    case D:
                         strafeR = true;
                         break;
                     case SHIFT:
@@ -263,16 +263,16 @@ public class Camera extends Parent {
                     case E:
                         down = false;
                         break;*/
-                    case UP:
+                    case W:
                         fwd = false;
                         break;
-                    case DOWN:
+                    case S:
                         back = false;
                         break;
-                    case LEFT:
+                    case A:
                         strafeL = false;
                         break;
-                    case RIGHT:
+                    case D:
                         strafeR = false;
                         break;
                     case SHIFT:
@@ -361,10 +361,10 @@ public class Camera extends Parent {
             }
         });
 
-        subScene.addEventHandler(ScrollEvent.SCROLL, se -> {
+       subScene.addEventHandler(ScrollEvent.SCROLL, se -> {
 
             if (se.getEventType().equals(ScrollEvent.SCROLL_STARTED)) {
-         /*       double deltaY = se.getDeltaY();
+                double deltaY = se.getDeltaY();
 
                 //Scroll In
                 if(deltaY > 0){
@@ -383,7 +383,7 @@ public class Camera extends Parent {
                     fwd = false;
                     back = false;
                     System.out.println("Is stopped");
-                }*/
+                }
                 //scroll down
             } else if (se.getEventType().equals(ScrollEvent.SCROLL)) {
                 double deltaY = se.getDeltaY();

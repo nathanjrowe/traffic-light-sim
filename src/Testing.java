@@ -253,14 +253,22 @@ public class Testing extends Application {
      * Animation timer to check for collisions
      * (animation timers are a separate thread)
      */
-    private void startCollisionTimer() {
+    public void startCollisionTimer() {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 //checkCollisions();
-                for(Vehicle v1 : vehicleCollidables){
-                    v1.checkCollision(vehicleCollidables);
-                    systemController.checkVehicleCrossing(vehicleCollidables);
+                if(flag3D){
+                    for(Vehicle3D v1 : vehicleCollidables3D){
+                        v1.checkCollision(vehicleCollidables3D);
+                        systemController.checkVehicleCrossing(vehicleCollidables);
+                    }
+                }
+                else {
+                    for (Vehicle v1 : vehicleCollidables) {
+                        v1.checkCollision(vehicleCollidables);
+                        systemController.checkVehicleCrossing(vehicleCollidables);
+                    }
                 }
             }
         };

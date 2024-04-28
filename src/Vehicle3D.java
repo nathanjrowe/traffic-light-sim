@@ -1,8 +1,14 @@
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.PointLight;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -84,6 +90,8 @@ public class Vehicle3D {
             {626,428,1185,428},{412,108,324,108},{412,108,289,108},{412,108,269,108},{626,127,1185,127},{305,108,13,108},
             {626,412,1185,412},{269,677,412,677},{412,677,412,745}
     };
+
+    private final List<CollisionBox> collisionBoxes = new ArrayList<>();
     private List<double[]> allPossiblePaths = new ArrayList<>(); //Does not include Starting Paths
     private int allPathSize;
     private List<double[]> startingPaths = new ArrayList<>();
@@ -94,6 +102,12 @@ public class Vehicle3D {
     private Boolean collided;
     private PathTransition pathTransition;
     private Shape carShape;
+    ImageHelper imageHelper = new ImageHelper();
+    private Shape frontSensor = new Rectangle(8,8);
+    private Pane carGroup;
+    private CollisionBox collidedBox = null;
+    private Vehicle3D collidedVehicle = null;
+    private Boolean stoppedAtLight = false;
     private Group cars = new Group();
     /**
      * Constructor
@@ -111,8 +125,9 @@ public class Vehicle3D {
      * Creates 2D car object box
      */
     private void initializeCarShape() {
-        car();
         carShape = new Rectangle(8, 15);
+        car();
+
         //Set initial angle based on the first segment
         if (!temp.isEmpty()) {
             double[] firstSegment = temp.get(0);
@@ -125,6 +140,9 @@ public class Vehicle3D {
      * @return
      */
     private Group car(){
+        frontSensor.setFill(Color.RED);
+        frontSensor.setTranslateX(-1.5);
+
         ObjModelImporter importes = new ObjModelImporter();
         String[] vehicles = new String[]{
                 "/vehicleModels/NormalCar1.obj",
@@ -136,8 +154,9 @@ public class Vehicle3D {
                 "/vehicleModels/Cop.obj"};
         Random random = new Random();
 
+        String carChoice = vehicles[random.nextInt(7)];
         try {
-            importes.read(this.getClass().getResource(vehicles[random.nextInt(7)]));
+            importes.read(this.getClass().getResource(carChoice));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -145,13 +164,127 @@ public class Vehicle3D {
 
         MeshView[] meshViewss = importes.getImport();
 
+        Sphere headLightL = new Sphere(.15);
+        Sphere headLightR = new Sphere(.15);
+        Sphere tailLightL = new Sphere(.15);
+        Sphere tailLightR = new Sphere(.15);
+
+        PhongMaterial headLightMat = new PhongMaterial();
+        headLightMat.setSelfIlluminationMap(imageHelper.getImage("./images/white.png"));
+
+        PhongMaterial tailLightMat = new PhongMaterial();
+        tailLightMat.setSelfIlluminationMap(imageHelper.getImage("./images/red.png"));
+
+        headLightL.setMaterial(headLightMat);
+        headLightR.setMaterial(headLightMat);
+
+        tailLightL.setMaterial(tailLightMat);
+        tailLightR.setMaterial(tailLightMat);
+
+        if(carChoice.equals("/vehicleModels/NormalCar2.obj")) {
+            headLightL.setTranslateX(-.5);
+            headLightL.setTranslateY(-.4);
+            headLightL.setTranslateZ(-1.5);
+
+            headLightR.setTranslateX(.5);
+            headLightR.setTranslateY(-.4);
+            headLightR.setTranslateZ(-1.5);
+
+            tailLightL.setTranslateX(-.5);
+            tailLightL.setTranslateY(-.4);
+            tailLightL.setTranslateZ(1.45);
+
+            tailLightR.setTranslateX(.5);
+            tailLightR.setTranslateY(-.4);
+            tailLightR.setTranslateZ(1.45);
+        }
+        else if(carChoice.equals("/vehicleModels/NormalCar1.obj")) {
+            headLightL.setTranslateX(-.5);
+            headLightL.setTranslateY(-.4);
+            headLightL.setTranslateZ(-1.95);
+
+            headLightR.setTranslateX(.5);
+            headLightR.setTranslateY(-.4);
+            headLightR.setTranslateZ(-1.95);
+
+            tailLightL.setTranslateX(-.5);
+            tailLightL.setTranslateY(-.4);
+            tailLightL.setTranslateZ(1.9);
+
+            tailLightR.setTranslateX(.5);
+            tailLightR.setTranslateY(-.4);
+            tailLightR.setTranslateZ(1.9);
+        }
+
+        else if(carChoice.equals("/vehicleModels/Taxi.obj") || carChoice.equals("/vehicleModels/SUV.obj")) {
+            headLightL.setTranslateX(-.5);
+            headLightL.setTranslateY(-.4);
+            headLightL.setTranslateZ(-2.1);
+
+            headLightR.setTranslateX(.5);
+            headLightR.setTranslateY(-.4);
+            headLightR.setTranslateZ(-2.1);
+
+            tailLightL.setTranslateX(-.5);
+            tailLightL.setTranslateY(-.4);
+            tailLightL.setTranslateZ(1.9);
+
+            tailLightR.setTranslateX(.5);
+            tailLightR.setTranslateY(-.4);
+            tailLightR.setTranslateZ(1.9);
+        }
+
+        else if(carChoice.equals("/vehicleModels/Cop.obj")) {
+            headLightL.setTranslateX(-.5);
+            headLightL.setTranslateY(-.4);
+            headLightL.setTranslateZ(-1.7);
+
+            headLightR.setTranslateX(.5);
+            headLightR.setTranslateY(-.4);
+            headLightR.setTranslateZ(-1.7);
+
+            tailLightL.setTranslateX(-.5);
+            tailLightL.setTranslateY(-.4);
+            tailLightL.setTranslateZ(1.65);
+
+            tailLightR.setTranslateX(.5);
+            tailLightR.setTranslateY(-.4);
+            tailLightR.setTranslateZ(1.65);
+        }
+
+        else if(carChoice.equals("/vehicleModels/SportsCar2.obj") || carChoice.equals("/vehicleModels/SportsCar.obj")) {
+            headLightL.setTranslateX(-.5);
+            headLightL.setTranslateY(-.4);
+            headLightL.setTranslateZ(-1.75);
+
+            headLightR.setTranslateX(.5);
+            headLightR.setTranslateY(-.4);
+            headLightR.setTranslateZ(-1.75);
+
+            tailLightL.setTranslateX(-.5);
+            tailLightL.setTranslateY(-.4);
+            tailLightL.setTranslateZ(1.75);
+
+            tailLightR.setTranslateX(.5);
+            tailLightR.setTranslateY(-.4);
+            tailLightR.setTranslateZ(1.75);
+
+        }
+
+
         Group group3 = new Group();
 
+        PointLight headLights = new PointLight(Color.WHITE);
+        headLights.setScaleX(.01);
+        headLights.setScaleY(.01);
+        headLights.setScaleZ(.01);
 
         group3.getChildren().addAll(meshViewss);
+        group3.getChildren().addAll(headLightL, headLightR, tailLightL, tailLightR );
         group3.setScaleX(8);
         group3.setScaleY(8);
         group3.setScaleZ(25);
+
 
         //group.setTranslateY(1000);
         group3.setTranslateZ(-10);
@@ -160,8 +293,11 @@ public class Vehicle3D {
         group3.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
         cars = group3;
+
+        cars.prefWidth(8);
+        cars.getChildren().addAll(frontSensor, carShape);
         cars.setTranslateY(-100);
-        return group3;
+        return cars;
     }
     /**
      * initializes path transition
@@ -192,6 +328,76 @@ public class Vehicle3D {
             });
         }
     }
+
+    protected boolean returnStoppedAtLight() {
+        return stoppedAtLight;
+    }
+
+    protected Bounds getBoundsInGrandparent(Node node) {
+        Bounds nodeInParent = node.localToParent(node.getBoundsInLocal());
+        return node.getParent().localToParent(nodeInParent);
+    }
+
+    //Take a root pane to check for collisions
+    protected void checkCollision(List<Vehicle3D> vehicles) {
+        //Get the bounds of the front sensor
+        Bounds frontBoundsInGrandParent = getBoundsInGrandparent(frontSensor);
+        //Check for collisions every frame
+        //Print the bounds of the car
+        if(collidedBox != null) {
+            if(collidedBox.getState() != CollisionBox.State.STOP) {
+                this.collided = false;
+                this.stoppedAtLight = false;
+                this.restartVehicle();
+                this.collidedBox = null;
+            }
+        }
+        for (CollisionBox collisionBox : collisionBoxes) {
+            //System.out.println(collisionBox.getBoundsInParent());
+            if (frontBoundsInGrandParent.intersects(collisionBox.getBoundsInParent())) {
+                this.collidedBox = collisionBox;
+                if(collisionBox.getState() == CollisionBox.State.STOP) {
+                    this.collided = true;
+                    this.stoppedAtLight = true;
+                    this.stopVehicle();
+                }
+                break;
+            }
+        }
+
+        //Check for collisions with other vehicles
+        if(collidedVehicle != null) {
+            int s = cars.getChildren().indexOf(carShape) - 1;
+            Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(
+                    collidedVehicle.cars.getChildren().get(s));
+            if (!frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent)) {
+                collidedVehicle = null;
+                collided = false;
+                stoppedAtLight = false;
+                restartVehicle();
+            }
+        }
+        else {
+            for (Vehicle3D vehicle : vehicles) {
+                if (vehicle != this) {
+                    int s = cars.getChildren().indexOf(carShape) - 1;
+                    Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(
+                            vehicle.cars.getChildren().get(s));
+                    if (frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent)) {
+                        collidedVehicle = vehicle;
+                        if(vehicle.returnStoppedAtLight()) {
+                            collided = true;
+                            stoppedAtLight = true;
+                            stopVehicle();
+                        }
+                        //End the loop
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Starts vehicle path transition animation
      */

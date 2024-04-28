@@ -2,7 +2,10 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
 import javafx.scene.Group;
+import javafx.scene.PointLight;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -32,6 +35,7 @@ public class Bus3D {
     private Shape carShape;
     private Group buses = new Group();
     private Bus bus;
+    private ImageHelper imageHelper = new ImageHelper();
 
     /**
      * Constructor
@@ -73,11 +77,49 @@ public class Bus3D {
         }
 
         MeshView[] meshViewss = importes.getImport();
+        Sphere headLightL = new Sphere(.15);
+        Sphere headLightR = new Sphere(.15);
+        Sphere tailLightL = new Sphere(.15);
+        Sphere tailLightR = new Sphere(.15);
+
+        PhongMaterial headLightMat = new PhongMaterial();
+        headLightMat.setSelfIlluminationMap(imageHelper.getImage("./images/white.png"));
+
+        PhongMaterial tailLightMat = new PhongMaterial();
+        tailLightMat.setSelfIlluminationMap(imageHelper.getImage("./images/red.png"));
+
+        headLightL.setMaterial(headLightMat);
+        headLightR.setMaterial(headLightMat);
+
+        tailLightL.setMaterial(tailLightMat);
+        tailLightR.setMaterial(tailLightMat);
+
+        headLightL.setTranslateX(-3.65);
+        headLightL.setTranslateY(.55);
+        headLightL.setTranslateZ(.75);
+
+        headLightR.setTranslateX(-3.65);
+        headLightR.setTranslateY(.55);
+        headLightR.setTranslateZ(-.75);
+
+        tailLightL.setTranslateX(3.75);
+        tailLightL.setTranslateY(.55);
+        tailLightL.setTranslateZ(.75);
+
+        tailLightR.setTranslateX(3.75);
+        tailLightR.setTranslateY(.55);
+        tailLightR.setTranslateZ(-.75);
 
         Group group3 = new Group();
 
+        PointLight headLights = new PointLight(Color.WHITE);
+        headLights.setScaleX(.01);
+        headLights.setScaleY(.01);
+        headLights.setScaleZ(.01);
 
         group3.getChildren().addAll(meshViewss);
+        group3.getChildren().addAll(headLightL, headLightR, tailLightL, tailLightR );
+
         group3.setScaleX(8);
         group3.setScaleY(8);
         group3.setScaleZ(35);

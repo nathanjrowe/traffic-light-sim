@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
+import javafx.scene.transform.Rotate;
 
 /*
  * -------------------------------------
@@ -118,6 +119,21 @@ public class LightController {
     public void addLights(Pane root) {
         for(Pane trafficLight : trafficLights.values()){
             root.getChildren().add(trafficLight);
+
+       /*     Pane trafficlightLeftSide = new Pane(trafficLight);
+
+            root.getChildren().add(trafficlightLeftSide);
+            //Light scale and position 3D
+            trafficlightLeftSide.setTranslateZ(-150);
+            trafficlightLeftSide.setScaleY(1.25);
+            trafficlightLeftSide.setScaleX(1.25);*/
+
+            trafficLight.setTranslateZ(-150);
+            trafficLight.setScaleY(1.25);
+            trafficLight.setScaleX(1.25);
+            //Light rotations 3D
+            trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
+                    new Rotate(0, Rotate.Z_AXIS));
         }
         for(Pane pedestrianLight : pedestrianLights.values()){
             root.getChildren().add(pedestrianLight);
