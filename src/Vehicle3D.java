@@ -126,7 +126,7 @@ public class Vehicle3D {
      * Creates 2D car object box
      */
     private void initializeCarShape() {
-        carShape = new Rectangle(8, 15);
+        carShape = new Rectangle(15, 8);
         car();
 
         //Set initial angle based on the first segment
@@ -142,7 +142,12 @@ public class Vehicle3D {
      */
     private Group car(){
         frontSensor.setFill(Color.RED);
-        frontSensor.setTranslateY(1.5);
+        frontSensor.setTranslateY(40.5);
+        //frontSensor.setTranslateZ(-15.5);
+        frontSensor.setScaleX(.5);
+        carShape.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        //frontSensor.setScaleY(.5);
 
         ObjModelImporter importes = new ObjModelImporter();
         String[] vehicles = new String[]{
@@ -281,22 +286,25 @@ public class Vehicle3D {
         headLights.setScaleZ(.01);
 
         group3.getChildren().addAll(meshViewss);
-        group3.getChildren().addAll(headLightL, headLightR, tailLightL, tailLightR, frontSensor, carShape);
+        group3.getChildren().addAll(headLightL, headLightR, tailLightL, tailLightR);
         group3.setScaleX(8);
         group3.setScaleY(8);
         group3.setScaleZ(25);
 
 
         //group.setTranslateY(1000);
-        group3.setTranslateZ(-10);
+        group3.setTranslateZ(0);
         group3.setTranslateY(0);
         group3.setTranslateX(10);
         group3.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
-        cars = group3;
 
+        cars.getChildren().addAll(group3, frontSensor, carShape);
+
+        frontSensor.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
         cars.prefWidth(8);
-        cars.setTranslateY(-100);
+        cars.setTranslateY(-110);
         return cars;
     }
     /**
@@ -450,7 +458,7 @@ public class Vehicle3D {
             startY = point[3];
         }
         //This is where you edit the Speed
-        seconds = distance / 200;
+        seconds = distance / 100;
         path.setOpacity(0);
     }
     /**

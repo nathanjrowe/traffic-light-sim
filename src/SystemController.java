@@ -160,7 +160,7 @@ public class SystemController {
     }
 
     //Check for collisions at intersections
-    public void checkVehicleCrossing(List<Vehicle> vehicles) {
+    public void checkVehicleCrossing(List<Vehicle3D> vehicles) {
         for (LightController lightController : lightControllers.values()) {
             lightController.incrementVehicleCount(vehicles);
         }
