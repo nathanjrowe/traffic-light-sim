@@ -114,12 +114,13 @@ public class Vehicle3D {
      * @param tempPane
      * @param collidableVehicles
      */
-    public Vehicle3D(Pane tempPane, List<Vehicle3D> collidableVehicles) {
+    public Vehicle3D(Pane tempPane, List<Vehicle3D> collidableVehicles, List<CollisionBox> collisionBoxes) {
         initializeArrays();
         createPath();
         initializeCarShape();
         initializePathTransition(tempPane, collidableVehicles);
         this.collided = false;
+        this.collisionBoxes.addAll(collisionBoxes);
     }
     /**
      * Creates 2D car object box
@@ -141,7 +142,7 @@ public class Vehicle3D {
      */
     private Group car(){
         frontSensor.setFill(Color.RED);
-        frontSensor.setTranslateX(-1.5);
+        frontSensor.setTranslateY(1.5);
 
         ObjModelImporter importes = new ObjModelImporter();
         String[] vehicles = new String[]{
@@ -280,7 +281,7 @@ public class Vehicle3D {
         headLights.setScaleZ(.01);
 
         group3.getChildren().addAll(meshViewss);
-        group3.getChildren().addAll(headLightL, headLightR, tailLightL, tailLightR );
+        group3.getChildren().addAll(headLightL, headLightR, tailLightL, tailLightR, frontSensor, carShape);
         group3.setScaleX(8);
         group3.setScaleY(8);
         group3.setScaleZ(25);
@@ -295,7 +296,6 @@ public class Vehicle3D {
         cars = group3;
 
         cars.prefWidth(8);
-        cars.getChildren().addAll(frontSensor, carShape);
         cars.setTranslateY(-100);
         return cars;
     }
@@ -367,9 +367,9 @@ public class Vehicle3D {
 
         //Check for collisions with other vehicles
         if(collidedVehicle != null) {
-            int s = cars.getChildren().indexOf(carShape) - 1;
+            //int s = cars.getChildren().indexOf(carShape);
             Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(
-                    collidedVehicle.cars.getChildren().get(s));
+                    collidedVehicle.returnCarShape());
             if (!frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent)) {
                 collidedVehicle = null;
                 collided = false;
@@ -380,9 +380,7 @@ public class Vehicle3D {
         else {
             for (Vehicle3D vehicle : vehicles) {
                 if (vehicle != this) {
-                    int s = cars.getChildren().indexOf(carShape) - 1;
-                    Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(
-                            vehicle.cars.getChildren().get(s));
+                    Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(vehicle.returnCarShape());
                     if (frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent)) {
                         collidedVehicle = vehicle;
                         if(vehicle.returnStoppedAtLight()) {
@@ -613,4 +611,5 @@ public class Vehicle3D {
     protected boolean returnCollided(){
         return collided;
     }
+    
 }

@@ -155,7 +155,7 @@ public class Testing extends Application {
             pause.play();
         }
         else{
-            Vehicle3D vehicle = new Vehicle3D(tempPane, vehicleCollidables3D);
+            Vehicle3D vehicle = new Vehicle3D(tempPane, vehicleCollidables3D, collisionBoxes);
 
             vehicle.startAnimation();
             vehicleCollidables3D.add(vehicle);
