@@ -101,7 +101,7 @@ public class TrafficScene {
         Pane streetScene = testing.getRoot();
         Pane tempPane = new Pane();
 
-        streetScene.getChildren().add(tempPane);
+        streetScene.getChildren().addAll(tempPane, cityMap());
 
         streetScene.setTranslateX(-800);
         streetScene.setTranslateZ(2200);
@@ -136,8 +136,9 @@ public class TrafficScene {
 
         //Add to root pane here. Make any 3d Models as a function that returns a group then add.
         //Commented out some models to keep the load times down when testing
-        root3D.getChildren().addAll(streetScene());//,runWay(), oceanBlock(), empireStateBuilding(),townHome(), building2(),car(), trees(),airport(),
-                //shoppingMall(), apartment());
+        root3D.getChildren().addAll(streetScene(),runWay(), empireStateBuilding(),townHome(), building2(),car(), trees(),airport(),
+                shoppingMall(), apartment(), runWayParking(), runWayParking2(), city(), city1(), city2(), city3(),
+                city4(), city5(), city6(), trees1(), trees2(), trees3());
 
         Group joeGroup = joe();
         Path path1 = createJoePath();
@@ -302,8 +303,8 @@ public class TrafficScene {
 
         spawnTrafficT.setOnMouseClicked(event -> {
             if (!stop) {
-                //testing.addVehicles3D(vehicleCollidables3D.size(), tempPane, vehicleCollidables3D);
-                //testing.addBuses3D(busCollidables3D.size(), tempPane, busCollidables3D);
+                testing.addVehicles3D(vehicleCollidables3D.size(), tempPane, vehicleCollidables3D);
+                testing.addBuses3D(busCollidables3D.size(), tempPane, busCollidables3D);
                 testing.addPeople3D(personCollidablese3D.size(), tempPane, personCollidablese3D);
                 //streetScene.getChildren().add(tempPane);
                 stop = true;
@@ -339,14 +340,14 @@ public class TrafficScene {
 
         //group.setTranslateY(1000);
         if (airplaneNumber % 2 == 1) {
-            group3.setTranslateZ(4500);
+            group3.setTranslateZ(5100);
             group3.setTranslateY(-120);
             group3.setTranslateX(200);
             group3.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
                     new Rotate(0, Rotate.Z_AXIS));
         }
         else {
-            group3.setTranslateZ(4500);
+            group3.setTranslateZ(5800);
             group3.setTranslateY(-120);
             group3.setTranslateX(200);
             group3.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(180, Rotate.Y_AXIS),
@@ -391,14 +392,14 @@ public class TrafficScene {
 
 
         group.getChildren().addAll(meshViews);
-        group.setScaleX(.06);
-        group.setScaleY(.06);
-        group.setScaleZ(.06);
+        group.setScaleX(.05);
+        group.setScaleY(.05);
+        group.setScaleZ(.05);
 
         //group.setTranslateY(1000);
-        group.setTranslateZ(11300);
-        group.setTranslateY(-700);
-        group.setTranslateX(-575);
+        group.setTranslateZ(11500);
+        group.setTranslateY(-580);
+        group.setTranslateX(-650);
         group.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
         return group;
@@ -411,24 +412,202 @@ public class TrafficScene {
     private Group trees(){
         ObjModelImporter importe = new ObjModelImporter();
         ObjModelImporter importes = new ObjModelImporter();
+
+        try {
+            importe.read(this.getClass().getResource("/treesDetailed/Lemon Trees With Fruits.obj"));
+            importes.read(this.getClass().getResource("/treesDetailed/Lemon Trees With Fruits.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViews = importe.getImport();
+        MeshView[] meshViews1 = importes.getImport();
+
+        Group group = new Group();
+
+        Group group0 = new Group();
+
+        Group group1 = new Group();
+
+        group.getChildren().addAll(meshViews);
+        group1.getChildren().addAll(meshViews1);
+
+        group.setScaleX(50);
+        group.setScaleY(50);
+        group.setScaleZ(50);
+
+        group1.setScaleX(50);
+        group1.setScaleY(50);
+        group1.setScaleZ(50);
+
+
+        group1.setTranslateZ(250);
+        group1.setTranslateY(-5);
+        group1.setTranslateX(200);
+
+
+        group.setTranslateZ(250);
+        group.setTranslateY(-5);
+        group.setTranslateX(-500);
+
+
+        //group.setTranslateY(1000);
+        group0.getChildren().addAll(group, group1);//, group2, group3, group4, group5, group6, group7);
+        group0.setTranslateZ(300);
+        group0.setTranslateY(-70);
+        group0.setTranslateX(-505);
+
+        group0.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        group.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        group1.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(-90, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group0;
+    }
+
+    /**
+     * Grouped 3D tree models creation, placement, scale
+     * @return
+     */
+    private Group trees1(){
+        ObjModelImporter importe = new ObjModelImporter();
+        ObjModelImporter importes = new ObjModelImporter();
+
+        try {
+            importe.read(this.getClass().getResource("/treesDetailed/Lemon Trees With Fruits.obj"));
+            importes.read(this.getClass().getResource("/treesDetailed/Lemon Trees With Fruits.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViews = importe.getImport();
+        MeshView[] meshViews1 = importes.getImport();
+
+        Group group = new Group();
+
+        Group group0 = new Group();
+
+        Group group1 = new Group();
+
+        group.getChildren().addAll(meshViews);
+        group1.getChildren().addAll(meshViews1);
+
+        group.setScaleX(50);
+        group.setScaleY(50);
+        group.setScaleZ(50);
+
+        group1.setScaleX(50);
+        group1.setScaleY(50);
+        group1.setScaleZ(50);
+
+
+        group1.setTranslateZ(250);
+        group1.setTranslateY(-5);
+        group1.setTranslateX(200);
+
+
+        group.setTranslateZ(250);
+        group.setTranslateY(-5);
+        group.setTranslateX(-500);
+
+
+        //group.setTranslateY(1000);
+        group0.getChildren().addAll(group, group1);//, group2, group3, group4, group5, group6, group7);
+        group0.setTranslateZ(-200);
+        group0.setTranslateY(-70);
+        group0.setTranslateX(-505);
+
+        group0.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        group.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        group1.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(-90, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group0;
+    }
+    /**
+     * Grouped 3D tree models creation, placement, scale
+     * @return
+     */
+    private Group trees2(){
+        ObjModelImporter importe = new ObjModelImporter();
+        ObjModelImporter importes = new ObjModelImporter();
+
+        try {
+            importe.read(this.getClass().getResource("/treesDetailed/Lemon Trees With Fruits.obj"));
+            importes.read(this.getClass().getResource("/treesDetailed/Lemon Trees With Fruits.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViews = importe.getImport();
+        MeshView[] meshViews1 = importes.getImport();
+
+        Group group = new Group();
+
+        Group group0 = new Group();
+
+        Group group1 = new Group();
+
+        group.getChildren().addAll(meshViews);
+        group1.getChildren().addAll(meshViews1);
+
+        group.setScaleX(50);
+        group.setScaleY(50);
+        group.setScaleZ(50);
+
+        group1.setScaleX(50);
+        group1.setScaleY(50);
+        group1.setScaleZ(50);
+
+
+        group1.setTranslateZ(250);
+        group1.setTranslateY(-5);
+        group1.setTranslateX(200);
+
+
+        group.setTranslateZ(250);
+        group.setTranslateY(-5);
+        group.setTranslateX(-500);
+
+
+        //group.setTranslateY(1000);
+        group0.getChildren().addAll(group, group1);//, group2, group3, group4, group5, group6, group7);
+        group0.setTranslateZ(2075);
+        group0.setTranslateY(-70);
+        group0.setTranslateX(-1905);
+
+        group0.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        group.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        group1.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(-90, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group0;
+    }
+    /**
+     * Grouped 3D tree models creation, placement, scale
+     * @return
+     */
+    private Group trees3(){
+        ObjModelImporter importe = new ObjModelImporter();
+        ObjModelImporter importes = new ObjModelImporter();
         ObjModelImporter importe1 = new ObjModelImporter();
         ObjModelImporter importe2 = new ObjModelImporter();
         ObjModelImporter importe3 = new ObjModelImporter();
         ObjModelImporter importe4 = new ObjModelImporter();
 
-        ObjModelImporter importe5 = new ObjModelImporter();
-        ObjModelImporter importe6 = new ObjModelImporter();
-
         try {
-            importe.read(this.getClass().getResource("/trees/CommonTree_1.obj"));
-            importes.read(this.getClass().getResource("/trees/CommonTree_2.obj"));
-            importe1.read(this.getClass().getResource("/trees/CommonTree_3.obj"));
-            importe2.read(this.getClass().getResource("/trees/CommonTree_4.obj"));
-            importe3.read(this.getClass().getResource("/trees/Bush_1.obj"));
-            importe4.read(this.getClass().getResource("/trees/Bush_2.obj"));
-
-            importe5.read(this.getClass().getResource("/trees/Grass.obj"));
-            importe6.read(this.getClass().getResource("/trees/Grass_2.obj"));
+            importe.read(this.getClass().getResource("/treesDetailed/Lemon Trees With Fruits.obj"));
+            importes.read(this.getClass().getResource("/treesDetailed/Lemon Trees With Fruits.obj"));
+            importe1.read(this.getClass().getResource("/treesDetailed/Lemon Trees With Fruits.obj"));
+            importe2.read(this.getClass().getResource("/treesDetailed/Lemon Trees With Fruits.obj"));
+            importe3.read(this.getClass().getResource("/treesDetailed/Lemon Trees With Fruits.obj"));
+            importe4.read(this.getClass().getResource("/treesDetailed/Lemon Trees With Fruits.obj"));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -440,9 +619,6 @@ public class TrafficScene {
         MeshView[] meshViews3 = importe2.getImport();
         MeshView[] meshViews4 = importe3.getImport();
         MeshView[] meshViews5 = importe4.getImport();
-
-        MeshView[] meshViews6 = importe5.getImport();
-        MeshView[] meshViews7 = importe6.getImport();
 
         Group group = new Group();
 
@@ -458,20 +634,12 @@ public class TrafficScene {
 
         Group group5 = new Group();
 
-        Group group6 = new Group();
-
-        Group group7 = new Group();
-
         group.getChildren().addAll(meshViews);
         group1.getChildren().addAll(meshViews1);
         group2.getChildren().addAll(meshViews2);
         group3.getChildren().addAll(meshViews3);
-
         group4.getChildren().addAll(meshViews4);
         group5.getChildren().addAll(meshViews5);
-
-        group6.getChildren().addAll(meshViews6);
-        group7.getChildren().addAll(meshViews7);
 
         group.setScaleX(50);
         group.setScaleY(50);
@@ -481,6 +649,16 @@ public class TrafficScene {
         group1.setScaleY(50);
         group1.setScaleZ(50);
 
+
+        group1.setTranslateZ(325);
+        group1.setTranslateY(-200);
+        group1.setTranslateX(-500);
+
+
+        group.setTranslateZ(325);
+        group.setTranslateY(-50);
+        group.setTranslateX(-500);
+
         group2.setScaleX(50);
         group2.setScaleY(50);
         group2.setScaleZ(50);
@@ -488,6 +666,16 @@ public class TrafficScene {
         group3.setScaleX(50);
         group3.setScaleY(50);
         group3.setScaleZ(50);
+
+
+        group3.setTranslateZ(325);
+        group3.setTranslateY(-50);
+        group3.setTranslateX(-900);
+
+
+        group2.setTranslateZ(325);
+        group2.setTranslateY(-50);
+        group2.setTranslateX(-400);
 
         group4.setScaleX(50);
         group4.setScaleY(50);
@@ -497,54 +685,38 @@ public class TrafficScene {
         group5.setScaleY(50);
         group5.setScaleZ(50);
 
-        group6.setScaleX(50);
-        group6.setScaleY(50);
-        group6.setScaleZ(50);
+        group5.setTranslateZ(325);
+        group5.setTranslateY(-200);
+        group5.setTranslateX(-1100);
 
-        group7.setScaleX(50);
-        group7.setScaleY(50);
-        group7.setScaleZ(50);
 
-        group1.setTranslateZ(0);
-        group1.setTranslateY(0);
-        group1.setTranslateX(150);
+        group4.setTranslateZ(325);
+        group4.setTranslateY(-200);
+        group4.setTranslateX(-800);
 
-        group2.setTranslateZ(0);
-        group2.setTranslateY(0);
-        group2.setTranslateX(-80);
-
-        group3.setTranslateZ(0);
-        group3.setTranslateY(0);
-        group3.setTranslateX(-300);
-
-        group.setTranslateZ(0);
-        group.setTranslateY(0);
-        group.setTranslateX(-550);
-
-        group4.setTranslateZ(0);
-        group4.setTranslateY(35);
-        group4.setTranslateX(-200);
-
-        group5.setTranslateZ(0);
-        group5.setTranslateY(35);
-        group5.setTranslateX(-400);
-
-        group6.setTranslateZ(-100);
-        group6.setTranslateY(35);
-        group6.setTranslateX(-400);
-
-        group7.setTranslateZ(100);
-        group7.setTranslateY(35);
-        group7.setTranslateX(-400);
 
 
         //group.setTranslateY(1000);
-        group0.getChildren().addAll(group, group1, group2, group3, group4, group5, group6, group7);
-        group0.setTranslateZ(300);
+        group0.getChildren().addAll(group, group1, group2, group3,group4, group5);// group6, group7);
+        group0.setTranslateZ(2075);
         group0.setTranslateY(-70);
-        group0.setTranslateX(-505);
-        group0.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+        group0.setTranslateX(1905);
+
+        group0.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
+        group.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        group1.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(-90, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        group2.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        group3.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(-90, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        group4.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        group5.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(-90, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+
         return group0;
     }
 
@@ -566,13 +738,13 @@ public class TrafficScene {
 
 
         group.getChildren().addAll(meshViews);
-        group.setScaleX(.15);
-        group.setScaleY(.15);
-        group.setScaleZ(.15);
+        group.setScaleX(.125);
+        group.setScaleY(.125);
+        group.setScaleZ(.125);
 
         //group.setTranslateY(1000);
         group.setTranslateZ(3400);
-        group.setTranslateY(1500);
+        group.setTranslateY(1550);
         group.setTranslateX(575);
         group.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(-87.5, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
@@ -597,13 +769,13 @@ public class TrafficScene {
 
 
         group3.getChildren().addAll(meshViewss);
-        group3.setScaleX(.75);
-        group3.setScaleY(.75);
-        group3.setScaleZ(.75);
+        group3.setScaleX(.6);
+        group3.setScaleY(.6);
+        group3.setScaleZ(.55);
 
         //group.setTranslateY(1000);
         group3.setTranslateZ(1250);
-        group3.setTranslateY(120);
+        group3.setTranslateY(200);
         group3.setTranslateX(-2000);
         group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
@@ -660,12 +832,12 @@ public class TrafficScene {
 
         group3.getChildren().addAll(meshViewss);
         group3.setScaleX(1.05);
-        group3.setScaleY(.25);
-        group3.setScaleZ(.25);
+        group3.setScaleY(.15);
+        group3.setScaleZ(.15);
 
         //group.setTranslateY(1000);
-        group3.setTranslateZ(-70);
-        group3.setTranslateY(1200);
+        group3.setTranslateZ(-90);
+        group3.setTranslateY(1375);
         group3.setTranslateX(-2000);
         group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
@@ -690,14 +862,14 @@ public class TrafficScene {
 
 
         group3.getChildren().addAll(meshViewss);
-        group3.setScaleX(.25);
+        group3.setScaleX(.15);
         group3.setScaleY(.15);
         group3.setScaleZ(.15);
 
         //group.setTranslateY(1000);
         group3.setTranslateZ(1250);
         group3.setTranslateY(350);
-        group3.setTranslateX(1000);
+        group3.setTranslateX(1600);
         group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(170, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
         return group3;
@@ -787,28 +959,383 @@ public class TrafficScene {
 
         return oceanBox;
     }
+    private Box cityMap(){
+        Box oceanBox = new Box(width,height,10);
+        oceanBox.setTranslateY(-50);
+        //oceanBox.setLayoutX(500);
+        oceanBox.setTranslateZ(5);
+
+        PhongMaterial oceanMaterial = new PhongMaterial();
+        oceanMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/trafficMap3d.png"));
+        oceanMaterial.setSpecularColor(Color.GRAY);
+        oceanMaterial.setDiffuseMap(imageHelper.getImage("./images/trafficMap3d.png"));
+        oceanMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/trafficMap3dLight.png"));
+        oceanBox.setMaterial(oceanMaterial);
+
+        oceanBox.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+
+        return oceanBox;
+    }
 
     /**
      * Texture to place for airport model
      * @return
      */
-    private Box runWay(){
+    private Group runWay(){
         //Simple runway for airplanes
-        Box runWay = new Box(width*1.5,height*10,10);
+        Box runWay = new Box(width*1.25,height*14,10);
         runWay.setLayoutY(0);
-        runWay.setLayoutX(0);
-        runWay.setTranslateZ(4300);
+        runWay.setTranslateX(-500);
+        runWay.setTranslateZ(5300);
 
 
         PhongMaterial runway = new PhongMaterial();
-        runway.setSelfIlluminationMap(imageHelper.getImage("./images/runway.png"));
         runway.setSpecularColor(Color.GRAY);
         runway.setDiffuseMap(imageHelper.getImage("./images/runway.png"));
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/runwayLight.png"));
         runWay.setMaterial(runway);
 
 
         runWay.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(90, Rotate.Z_AXIS));
+
+        Group runwayBalls = new Group();
+
+        int x = 4000;
+        for(int i = 0; i < 46; i++){
+            Sphere sphere = new Sphere(20);
+            sphere.setLayoutY(0);
+            sphere.setTranslateX(x);
+            sphere.setTranslateZ(5300);
+
+            PhongMaterial runwayBallW = new PhongMaterial();
+            runwayBallW.setSelfIlluminationMap(imageHelper.getImage("./images/white.png"));
+            sphere.setMaterial(runwayBallW);
+
+            runwayBalls.getChildren().add(sphere);
+            x-= 200;
+        }
+
+        x = 4000;
+        for(int i = 0; i < 46; i++){
+            Sphere sphere = new Sphere(20);
+            sphere.setLayoutY(0);
+            sphere.setTranslateX(x);
+            sphere.setTranslateZ(4600);
+
+            PhongMaterial runwayBallW = new PhongMaterial();
+            runwayBallW.setSelfIlluminationMap(imageHelper.getImage("./images/red.png"));
+            sphere.setMaterial(runwayBallW);
+
+            runwayBalls.getChildren().add(sphere);
+            x-= 200;
+        }
+
+        x = 4000;
+        for(int i = 0; i < 46; i++){
+            Sphere sphere = new Sphere(20);
+            sphere.setLayoutY(0);
+            sphere.setTranslateX(x);
+            sphere.setTranslateZ(6000);
+
+            PhongMaterial runwayBallW = new PhongMaterial();
+            runwayBallW.setSelfIlluminationMap(imageHelper.getImage("./images/red.png"));
+            sphere.setMaterial(runwayBallW);
+
+            runwayBalls.getChildren().add(sphere);
+            x-= 200;
+        }
+
+        x = 4400;
+        int y = 4620;
+        for(int j = 0; j< 4; j++) {
+
+            y = 4620;
+            for (int i = 0; i < 20; i++) {
+
+                Sphere sphere = new Sphere(20);
+                sphere.setLayoutY(0);
+                sphere.setTranslateX(x);
+                sphere.setTranslateZ(y);
+
+                PhongMaterial runwayBallW = new PhongMaterial();
+                runwayBallW.setSelfIlluminationMap(imageHelper.getImage("./images/orange.png"));
+                sphere.setMaterial(runwayBallW);
+
+                runwayBalls.getChildren().add(sphere);
+                y += 70;
+            }
+            x += 200;
+
+        }
+
+        x = -5450;
+        for(int j = 0; j< 4; j++) {
+
+            y = 4620;
+            for (int i = 0; i < 20; i++) {
+
+                Sphere sphere = new Sphere(20);
+                sphere.setLayoutY(0);
+                sphere.setTranslateX(x);
+                sphere.setTranslateZ(y);
+
+                PhongMaterial runwayBallW = new PhongMaterial();
+                runwayBallW.setSelfIlluminationMap(imageHelper.getImage("./images/orange.png"));
+                sphere.setMaterial(runwayBallW);
+
+                runwayBalls.getChildren().add(sphere);
+                y += 70;
+            }
+            x -= 200;
+
+        }
+
+        x = 4100;
+        y = 4620;
+        for(int i = 0; i < 20; i++){
+            Sphere sphere = new Sphere(20);
+            sphere.setLayoutY(0);
+            sphere.setTranslateX(x);
+            sphere.setTranslateZ(y);
+
+            PhongMaterial runwayBallW = new PhongMaterial();
+            runwayBallW.setSelfIlluminationMap(imageHelper.getImage("./images/green.png"));
+            sphere.setMaterial(runwayBallW);
+
+            runwayBalls.getChildren().add(sphere);
+            y+= 70;
+        }
+
+        x = -5150;
+        y = 4620;
+        for(int i = 0; i < 20; i++){
+            Sphere sphere = new Sphere(20);
+            sphere.setLayoutY(0);
+            sphere.setTranslateX(x);
+            sphere.setTranslateZ(y);
+
+            PhongMaterial runwayBallW = new PhongMaterial();
+            runwayBallW.setSelfIlluminationMap(imageHelper.getImage("./images/green.png"));
+            sphere.setMaterial(runwayBallW);
+
+            runwayBalls.getChildren().add(sphere);
+            y+= 70;
+        }
+ /*       Sphere sphere = new Sphere(20);
+        sphere.setLayoutY(0);
+        sphere.setTranslateX(-500);
+        sphere.setTranslateZ(5300);
+
+        Sphere sphere1 = new Sphere(20);
+        sphere1.setLayoutY(0);
+        sphere1.setTranslateX(-600);
+        sphere1.setTranslateZ(5300);
+
+        PhongMaterial runwayBallW = new PhongMaterial();
+        runwayBallW.setSelfIlluminationMap(imageHelper.getImage("./images/white.png"));
+        sphere.setMaterial(runwayBallW);
+        sphere1.setMaterial(runwayBallW);*/
+        runWay.setMaterial(runway);
+
+        Group runwayGroup = new Group(runWay, runwayBalls);
+        return runwayGroup;
+    }
+
+    /**
+     * Texture to place for airport model
+     * @return
+     */
+    private Box runWayParking(){
+        //Simple runway for airplanes
+        Box runWay = new Box(width*1,height*2.75,10);
+        runWay.setLayoutY(0);
+        runWay.setLayoutX(-1350);
+        runWay.setTranslateZ(4000);
+
+
+        PhongMaterial runway = new PhongMaterial();
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/parking.png"));
+        runway.setSpecularColor(Color.GRAY);
+        runway.setDiffuseMap(imageHelper.getImage("./images/parking.png"));
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/parkingLight.png"));
+        runWay.setMaterial(runway);
+
+
+        runWay.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(90, Rotate.Z_AXIS));
+
+        return runWay;
+    }
+
+    private Box runWayParking2(){
+        //Simple runway for airplanes
+        Box runWay = new Box(width*1,height*2.75,10);
+        runWay.setLayoutY(0);
+        runWay.setLayoutX(-1350);
+        runWay.setTranslateZ(2800);
+
+
+        PhongMaterial runway = new PhongMaterial();
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/parking.png"));
+        runway.setSpecularColor(Color.GRAY);
+        runway.setDiffuseMap(imageHelper.getImage("./images/parking.png"));
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/parkingLight.png"));
+        runWay.setMaterial(runway);
+
+
+        runWay.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(90, Rotate.Z_AXIS));
+
+        return runWay;
+    }
+
+    private Box city(){
+        //Simple runway for airplanes
+        Box runWay = new Box(width*3,height*3.25,10);
+        runWay.setLayoutY(0);
+        runWay.setLayoutX(-4200);
+        runWay.setTranslateZ(3300);
+
+
+        PhongMaterial runway = new PhongMaterial();
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/newyork.png"));
+        runway.setSpecularColor(Color.GRAY);
+        runway.setDiffuseMap(imageHelper.getImage("./images/newyork.png"));
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/newyorkLight.png"));
+        runWay.setMaterial(runway);
+
+
+        runWay.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+
+        return runWay;
+    }
+
+    private Box city1(){
+        //Simple runway for airplanes
+        Box runWay = new Box(width*3,height*3.25,10);
+        runWay.setLayoutY(0);
+        runWay.setLayoutX(-4200);
+        runWay.setTranslateZ(700);
+
+
+        PhongMaterial runway = new PhongMaterial();
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/city1.png"));
+        runway.setSpecularColor(Color.GRAY);
+        runway.setDiffuseMap(imageHelper.getImage("./images/city1.png"));
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/city1Light.png"));
+        runWay.setMaterial(runway);
+
+
+        runWay.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+
+        return runWay;
+    }
+    private Box city2(){
+        //Simple runway for airplanes
+        Box runWay = new Box(width*3,height*3.25,10);
+        runWay.setLayoutY(0);
+        runWay.setLayoutX(-4200);
+        runWay.setTranslateZ(-1800);
+
+
+        PhongMaterial runway = new PhongMaterial();
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/cirty2.png"));
+        runway.setSpecularColor(Color.GRAY);
+        runway.setDiffuseMap(imageHelper.getImage("./images/cirty2.png"));
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/cirty2Light.png"));
+        runWay.setMaterial(runway);
+
+
+        runWay.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+
+        return runWay;
+    }
+    private Box city3(){
+        //Simple runway for airplanes
+        Box runWay = new Box(width*3,height*3.25,10);
+        runWay.setLayoutY(0);
+        runWay.setLayoutX(-600);
+        runWay.setTranslateZ(-1800);
+
+
+        PhongMaterial runway = new PhongMaterial();
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/cirty2.png"));
+        runway.setSpecularColor(Color.GRAY);
+        runway.setDiffuseMap(imageHelper.getImage("./images/cirty2.png"));
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/cirty2Light.png"));
+        runWay.setMaterial(runway);
+
+
+        runWay.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+
+        return runWay;
+    }
+    private Box city4(){
+        //Simple runway for airplanes
+        Box runWay = new Box(width*3,height*3.25,10);
+        runWay.setLayoutY(0);
+        runWay.setLayoutX(3000);
+        runWay.setTranslateZ(-1800);
+
+
+        PhongMaterial runway = new PhongMaterial();
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/cirty2.png"));
+        runway.setSpecularColor(Color.GRAY);
+        runway.setDiffuseMap(imageHelper.getImage("./images/cirty2.png"));
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/cirty2Light.png"));
+        runWay.setMaterial(runway);
+
+
+        runWay.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+
+        return runWay;
+    }
+    private Box city5(){
+        //Simple runway for airplanes
+        Box runWay = new Box(width*2.3,height*3,10);
+        runWay.setLayoutY(0);
+        runWay.setLayoutX(3400);
+        runWay.setTranslateZ(700);
+
+
+        PhongMaterial runway = new PhongMaterial();
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/city1.png"));
+        runway.setSpecularColor(Color.GRAY);
+        runway.setDiffuseMap(imageHelper.getImage("./images/city1.png"));
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/city1Light.png"));
+        runWay.setMaterial(runway);
+
+
+        runWay.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+
+        return runWay;
+    }
+    private Box city6(){
+        //Simple runway for airplanes
+        Box runWay = new Box(width*2.3,height*3,10);
+        runWay.setLayoutY(0);
+        runWay.setLayoutX(3400);
+        runWay.setTranslateZ(3100);
+
+
+        PhongMaterial runway = new PhongMaterial();
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/city1.png"));
+        runway.setSpecularColor(Color.GRAY);
+        runway.setDiffuseMap(imageHelper.getImage("./images/city1.png"));
+        runway.setSelfIlluminationMap(imageHelper.getImage("./images/city1Light.png"));
+        runWay.setMaterial(runway);
+
+
+        runWay.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
 
         return runWay;
     }
@@ -820,84 +1347,6 @@ public class TrafficScene {
      */
     private LinearGradient skyColors(Scene scene){
         //region Sky Colors
-       /* Stop[] stops = new Stop[] { new Stop(0, Color.WHITE), new Stop(1, Color.rgb(150,200,225,1))};
-        LinearGradient lg1 = new LinearGradient(1, 1, 1, 0, true, CycleMethod.NO_CYCLE, stops);
-
-        Stop[] stops1 = new Stop[] { new Stop(0, Color.rgb(50,50,75)),
-                new Stop(1, Color.rgb(100,100,125,1))};
-        LinearGradient lg2 = new LinearGradient(1, 1, 1, 0, true,
-                CycleMethod.NO_CYCLE, stops1);
-        BackgroundFill backgroundFill1 = new BackgroundFill(lg2,new CornerRadii(1),new Insets(0));
-
-        Stop[] stops2 = new Stop[] { new Stop(0, Color.rgb(25,175,225)),
-                new Stop(1, Color.rgb(25,125,175,1))};
-        LinearGradient lg3 = new LinearGradient(1, 1, 1, 0, true,
-                CycleMethod.NO_CYCLE, stops2);
-        BackgroundFill backgroundFill2 = new BackgroundFill(lg3,new CornerRadii(1),new Insets(0));
-
-        Stop[] stops3 = new Stop[] { new Stop(0, Color.WHITE),
-                new Stop(1, Color.rgb(150,200,225,1))};
-        LinearGradient lg4 = new LinearGradient(1, 1, 1, 0, true,
-                CycleMethod.NO_CYCLE, stops3);
-        BackgroundFill backgroundFill3 = new BackgroundFill(lg4,new CornerRadii(1),new Insets(0));
-
-        Stop[] stops4 = new Stop[] { new Stop(0, Color.rgb(205,190,190)),
-                new Stop(1, Color.rgb(125,150,175,1))};
-        LinearGradient lg5 = new LinearGradient(1, 1, 1, 0, true,
-                CycleMethod.NO_CYCLE, stops4);
-        BackgroundFill backgroundFill4 = new BackgroundFill(lg5,new CornerRadii(1),new Insets(0));
-
-        Stop[] stops5 = new Stop[] { new Stop(0, Color.rgb(125,100,100)),
-                new Stop(1, Color.rgb(225,100,75,1))};
-        LinearGradient lg6 = new LinearGradient(1, 1, 1, 0, true,
-                CycleMethod.NO_CYCLE, stops5);
-        BackgroundFill backgroundFill5 = new BackgroundFill(lg6,new CornerRadii(1),new Insets(0));
-
-        Stop[] stops6 = new Stop[] { new Stop(0, Color.BLACK),
-                new Stop(1,Color.rgb(50,50,75,1))};
-        LinearGradient lg7 = new LinearGradient(1, 1, 1, 0, true,
-                CycleMethod.NO_CYCLE, stops6);
-        BackgroundFill backgroundFill6 = new BackgroundFill(lg7,new CornerRadii(1),new Insets(0));
-
-        Stop[] stops7 = new Stop[] { new Stop(0, Color.BLACK),
-                new Stop(1, Color.rgb(25,25,50,1))};
-        LinearGradient lg8 = new LinearGradient(1, 1, 1, 0, true,
-                CycleMethod.NO_CYCLE, stops7);
-        BackgroundFill backgroundFill7 = new BackgroundFill(lg8,new CornerRadii(1),new Insets(0));
-
-        Stop[] stops8 = new Stop[] { new Stop(0, Color.BLACK),
-                new Stop(1, Color.rgb(25,25,65,1))};
-        LinearGradient lg9 = new LinearGradient(1, 1, 1, 0, true,
-                CycleMethod.NO_CYCLE, stops8);
-        BackgroundFill backgroundFill8 = new BackgroundFill(lg9,new CornerRadii(1),new Insets(0));
-        Background backgroundss8 = new Background(backgroundFill8);
-
-        Stop[] stops9 = new Stop[] { new Stop(0, Color.BLACK),
-                new Stop(1, Color.rgb(25,25,75,1))};
-        LinearGradient lg10 = new LinearGradient(1, 1, 1, 0, true,
-                CycleMethod.NO_CYCLE, stops9);
-        BackgroundFill backgroundFill9 = new BackgroundFill(lg10,new CornerRadii(1),new Insets(0));
-
-        Stop[] stops10 = new Stop[] { new Stop(0, Color.BLACK),
-                new Stop(1, Color.rgb(25,25,65,1))};
-        LinearGradient lg11 = new LinearGradient(1, 1, 1, 0, true,
-                CycleMethod.NO_CYCLE, stops10);
-        BackgroundFill backgroundFill10 = new BackgroundFill(lg11,new CornerRadii(1),new Insets(0));
-
-        Stop[] stops11 = new Stop[] { new Stop(0, Color.BLACK),
-                new Stop(1, Color.rgb(25,25,50,1))};
-        LinearGradient lg12 = new LinearGradient(1, 1, 1, 0, true,
-                CycleMethod.NO_CYCLE, stops11);
-        BackgroundFill backgroundFill11 = new BackgroundFill(lg12,new CornerRadii(1),new Insets(0));
-        Background backgroundss11 = new Background(backgroundFill11);
-
-        Stop[] stops12 = new Stop[] { new Stop(0, Color.BLACK), new Stop(1,Color.rgb(25,25,35,1))};
-        LinearGradient lg13 = new LinearGradient(1, 1, 1, 0, true,
-                CycleMethod.NO_CYCLE, stops12);
-        BackgroundFill backgroundFill12 = new BackgroundFill(lg13,new CornerRadii(1),new Insets(0));
-        //endregion
-*/
-
         final int[] red = {75};
         final int[] green = {160};
         final int[] blue = {254};
@@ -922,40 +1371,76 @@ public class TrafficScene {
                 CycleMethod.NO_CYCLE, stops12[0])};
 
 
-      /*  Light.Distant sunLight = new Light.Distant(-135.0, 500, Color.RED);
-        Lighting lighting = new Lighting(sunLight);
-
-        lighting.setSurfaceScale(5.0);*/
-
-        PointLight sunLight = new PointLight(Color.WHITE);
-        //sunLight.setFalloff(10);
+        PointLight sunLight = new PointLight(Color.rgb(255, 255, 230));
+        PointLight moonLight = new PointLight(Color.rgb(15, 15, 10, .25));
 
         sunLight.setScaleX(5000);
         sunLight.setScaleY(5000);
         sunLight.setScaleZ(5000);
-        sunLight.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
-                new Rotate(0, Rotate.Z_AXIS));
+        sunLight.setTranslateX(-1500);
+        sunLight.setTranslateY(-1000);
+
+        moonLight.setScaleX(5000);
+        moonLight.setScaleY(5000);
+        moonLight.setScaleZ(5000);
+        moonLight.setTranslateX(-1500);
+        moonLight.setTranslateY(-1000);
+        /*sunLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));*/
 
         Path path = new Path();
         path.getElements().add(new MoveTo(6000, 0));
-        path.getElements().add(new LineTo(3000, -4000));
-        path.getElements().add(new LineTo(-3000, -4000));
-        path.getElements().add(new LineTo(-6000, 0));
-        path.getElements().add(new LineTo(-3000, 4000));
-        path.getElements().add(new LineTo(3000, 4000));
+        path.getElements().add(new LineTo(3000, -8000));
+        path.getElements().add(new LineTo(-1000, -10000));
+        path.getElements().add(new LineTo(-5000, -8000));
+        path.getElements().add(new LineTo(-10000, 0));
+        path.getElements().add(new LineTo(-5000, 8000));
+        path.getElements().add(new LineTo(3000, 6000));
         path.getElements().add(new LineTo(6000, 0));
 
+        Path path2 = new Path();
+        path2.getElements().add(new MoveTo(-10000, 0));
+        path2.getElements().add(new LineTo(-5000, 8000));
+        path2.getElements().add(new LineTo(-1000, 8000));
+        path2.getElements().add(new LineTo(6000, 0));
+        path2.getElements().add(new LineTo(-1000, -10000));
+        path2.getElements().add(new LineTo(-3000, -8000));
+        path2.getElements().add(new LineTo(-10000, 0));
 
-        Group lightGroup = new Group(sunLight);
-        Sphere sphere = new Sphere(150);
-        lightGroup.getChildren().add(sphere);
-        lightGroup.setTranslateX(-2000);
-        lightGroup.setTranslateY(-4000);
-        lightGroup.setTranslateZ(500);
 
-        root3D.getChildren().addAll(lightGroup, path);
+        Group sunGroup = new Group(sunLight);
+        Group moonGroup = new Group(moonLight);
+        Sphere sun = new Sphere(150);
 
-        PathTransition pathTransition2 = createPathTransition(lightGroup, path);
+        PhongMaterial sunMaterial = new PhongMaterial();
+        sunMaterial.setDiffuseMap(imageHelper.getImage("./images/sun.png"));
+        sunMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/sun.png"));
+        sun.setMaterial(sunMaterial);
+
+        Sphere moon = new Sphere(150);
+
+        PhongMaterial moonMaterial = new PhongMaterial();
+        moonMaterial.setDiffuseMap(imageHelper.getImage("./images/moon.png"));
+        moonMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/moon.png"));
+        moon.setMaterial(moonMaterial);
+
+        sunGroup.getChildren().addAll(sun);
+        sunGroup.setTranslateX(-2000);
+        sunGroup.setTranslateY(-4000);
+        sunGroup.setTranslateZ(500);
+
+        moonGroup.getChildren().addAll(moon);
+        moonGroup.setTranslateX(-2000);
+        moonGroup.setTranslateY(-4000);
+        moonGroup.setTranslateZ(500);
+
+        root3D.getChildren().addAll(sunGroup, path, moonGroup, path2);
+
+        PathTransition pathTransition = createPathTransition(sunGroup, path);
+        pathTransition.setDuration(Duration.seconds(8.25));
+        pathTransition.play();
+
+        PathTransition pathTransition2 = createPathTransition(moonGroup, path2);
         pathTransition2.setDuration(Duration.seconds(8.25));
         pathTransition2.play();
 
