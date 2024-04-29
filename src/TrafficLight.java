@@ -14,7 +14,9 @@ import javafx.scene.shape.Rectangle;
 public class TrafficLight {
 
     public enum LightColor {
-        RED, YELLOW, GREEN, GREENLEFT, GREENRIGHT
+        RED, YELLOW, GREEN,
+        GREENLEFT,YELLOWLEFT,REDLEFT,
+        GREENRIGHT,YELLOWRIGHT,REDRIGHT
     }
 
     private final GridPane pane;
@@ -23,6 +25,11 @@ public class TrafficLight {
     private final Circle greenCircle;
     private final ImageView leftTurnArrowImageView;
     private final ImageView rightTurnArrowImageView;
+    private final ImageView leftTurnYellowImageView;
+    private final ImageView leftTurnRedImageView;
+    private final ImageView rightTurnYellowImageView;
+    private final ImageView rightTurnRedImageView;
+
     private LightColor lightColor;
     //Create a pseudo-random ID for the traffic light
     private final int id = (int) (Math.random() * 1000);
@@ -51,9 +58,15 @@ public class TrafficLight {
 
         leftTurnArrowImageView = new ImageView();
         rightTurnArrowImageView = new ImageView();
-        ImageHelper imageHelper = new ImageHelper();
-        Image map = imageHelper.getImage("./images/Steady_Green_Arrow-removebg-preview.png");
 
+        leftTurnYellowImageView = new ImageView();
+        leftTurnRedImageView = new ImageView();
+        rightTurnYellowImageView = new ImageView();
+        rightTurnRedImageView = new ImageView();
+
+        ImageHelper imageHelper = new ImageHelper();
+
+        Image map = imageHelper.getImage("./images/Steady_Green_Arrow-removebg-preview.png");
         leftTurnArrowImageView.setImage(map);
         leftTurnArrowImageView.setFitWidth(50); // Match the diameter of the greenCircle
         leftTurnArrowImageView.setFitHeight(50);
@@ -66,6 +79,34 @@ public class TrafficLight {
         rightTurnArrowImageView.setFitHeight(50);
         rightTurnArrowImageView.setX(325); // Position it over the greenCircle
         rightTurnArrowImageView.setY(205);
+
+        map = imageHelper.getImage("./images/left_yellow_arrow.png");
+        leftTurnArrowImageView.setImage(map);
+        leftTurnArrowImageView.setFitWidth(50); // Match the diameter of the greenCircle
+        leftTurnArrowImageView.setFitHeight(50);
+        leftTurnArrowImageView.setX(325); // Position it over the greenCircle
+        leftTurnArrowImageView.setY(205);
+
+        map = imageHelper.getImage("./images/left_red_arrow.png");
+        leftTurnArrowImageView.setImage(map);
+        leftTurnArrowImageView.setFitWidth(50); // Match the diameter of the greenCircle
+        leftTurnArrowImageView.setFitHeight(50);
+        leftTurnArrowImageView.setX(325); // Position it over the greenCircle
+        leftTurnArrowImageView.setY(205);
+
+        map = imageHelper.getImage("./images/right_yellow_arrow.png");
+        leftTurnArrowImageView.setImage(map);
+        leftTurnArrowImageView.setFitWidth(50); // Match the diameter of the greenCircle
+        leftTurnArrowImageView.setFitHeight(50);
+        leftTurnArrowImageView.setX(325); // Position it over the greenCircle
+        leftTurnArrowImageView.setY(205);
+
+        map = imageHelper.getImage("./images/right_red_arrow.png");
+        leftTurnArrowImageView.setImage(map);
+        leftTurnArrowImageView.setFitWidth(50); // Match the diameter of the greenCircle
+        leftTurnArrowImageView.setFitHeight(50);
+        leftTurnArrowImageView.setX(325); // Position it over the greenCircle
+        leftTurnArrowImageView.setY(205);
 
         lightColor = null;
 
@@ -91,11 +132,24 @@ public class TrafficLight {
         yellowCircle.setFill(null);
         greenCircle.setFill(null);
         lightColor = LightColor.RED;
+
         if(pane.getChildren().contains(leftTurnArrowImageView)){
             pane.getChildren().remove(leftTurnArrowImageView);
         }
         if (pane.getChildren().contains(rightTurnArrowImageView)) {
             pane.getChildren().remove(rightTurnArrowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnYellowImageView)) {
+            pane.getChildren().remove(rightTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnRedImageView)) {
+            pane.getChildren().remove(rightTurnRedImageView);
+        }
+        if (pane.getChildren().contains(leftTurnYellowImageView)) {
+            pane.getChildren().remove(leftTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(leftTurnRedImageView)) {
+            pane.getChildren().remove(leftTurnRedImageView);
         }
     }
 
@@ -107,11 +161,24 @@ public class TrafficLight {
         yellowCircle.setFill(Color.YELLOW);
         greenCircle.setFill(null);
         lightColor = LightColor.YELLOW;
+
         if(pane.getChildren().contains(leftTurnArrowImageView)){
             pane.getChildren().remove(leftTurnArrowImageView);
         }
         if (pane.getChildren().contains(rightTurnArrowImageView)) {
             pane.getChildren().remove(rightTurnArrowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnYellowImageView)) {
+            pane.getChildren().remove(rightTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnRedImageView)) {
+            pane.getChildren().remove(rightTurnRedImageView);
+        }
+        if (pane.getChildren().contains(leftTurnYellowImageView)) {
+            pane.getChildren().remove(leftTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(leftTurnRedImageView)) {
+            pane.getChildren().remove(leftTurnRedImageView);
         }
     }
 
@@ -123,14 +190,28 @@ public class TrafficLight {
         yellowCircle.setFill(null);
         greenCircle.setFill(Color.GREEN);
         lightColor = LightColor.GREEN;
+
         if(pane.getChildren().contains(leftTurnArrowImageView)){
             pane.getChildren().remove(leftTurnArrowImageView);
         }
         if (pane.getChildren().contains(rightTurnArrowImageView)) {
             pane.getChildren().remove(rightTurnArrowImageView);
         }
+        if (pane.getChildren().contains(rightTurnYellowImageView)) {
+            pane.getChildren().remove(rightTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnRedImageView)) {
+            pane.getChildren().remove(rightTurnRedImageView);
+        }
+        if (pane.getChildren().contains(leftTurnYellowImageView)) {
+            pane.getChildren().remove(leftTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(leftTurnRedImageView)) {
+            pane.getChildren().remove(leftTurnRedImageView);
+        }
     }
-
+    //============================================================================================
+    //SET LEFT TURN SIGNAL COLORS
     /**
      * Updates traffic light image to reflect
      * green left turn signal
@@ -145,14 +226,89 @@ public class TrafficLight {
             pane.getChildren().add(leftTurnArrowImageView);
         }
 
-
         if (pane.getChildren().contains(rightTurnArrowImageView)) {
             pane.getChildren().remove(rightTurnArrowImageView);
         }
-
-
+        if (pane.getChildren().contains(rightTurnYellowImageView)) {
+            pane.getChildren().remove(rightTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnRedImageView)) {
+            pane.getChildren().remove(rightTurnRedImageView);
+        }
+        if (pane.getChildren().contains(leftTurnYellowImageView)) {
+            pane.getChildren().remove(leftTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(leftTurnRedImageView)) {
+            pane.getChildren().remove(leftTurnRedImageView);
+        }
         lightColor = LightColor.GREENLEFT;
     }
+    /**
+     * Updates traffic light image to reflect
+     * yellow left turn signal
+     */
+    public void setYellowLeftTurnArrow(){
+        redCircle.setFill(null);
+        yellowCircle.setFill(null);
+        greenCircle.setFill(null);
+
+        // Add the ImageView to the pane if it's not already there
+        if (!pane.getChildren().contains(leftTurnYellowImageView)) {
+            pane.getChildren().add(leftTurnYellowImageView);
+        }
+
+        // Make sure there are no other displaying turn signal images
+        if (pane.getChildren().contains(leftTurnArrowImageView)) {
+            pane.getChildren().remove(leftTurnArrowImageView);
+        }
+        if (pane.getChildren().contains(leftTurnRedImageView)) {
+            pane.getChildren().remove(leftTurnRedImageView);
+        }
+        if (pane.getChildren().contains(rightTurnArrowImageView)) {
+            pane.getChildren().remove(rightTurnArrowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnYellowImageView)) {
+            pane.getChildren().remove(rightTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnRedImageView)) {
+            pane.getChildren().remove(rightTurnRedImageView);
+        }
+        lightColor = LightColor.YELLOWLEFT;
+    }
+    /**
+     * Updates traffic light image to reflect
+     * red left turn signal
+     */
+    public void setRedLeftTurnArrow(){
+        redCircle.setFill(null);
+        yellowCircle.setFill(null);
+        greenCircle.setFill(null);
+
+        // Add the ImageView to the pane if it's not already there
+        if (!pane.getChildren().contains(leftTurnRedImageView)) {
+            pane.getChildren().add(leftTurnRedImageView);
+        }
+
+        // Make sure there are no other displaying turn signal images
+        if (pane.getChildren().contains(leftTurnArrowImageView)) {
+            pane.getChildren().remove(leftTurnArrowImageView);
+        }
+        if (pane.getChildren().contains(leftTurnYellowImageView)) {
+            pane.getChildren().remove(leftTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnArrowImageView)) {
+            pane.getChildren().remove(rightTurnArrowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnYellowImageView)) {
+            pane.getChildren().remove(rightTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnRedImageView)) {
+            pane.getChildren().remove(rightTurnRedImageView);
+        }
+        lightColor = LightColor.REDLEFT;
+    }
+    //==================================================================================
+    //SET RIGHT TURN SIGNAL COLORS
     /**
      * Updates traffic light image to reflect
      * right green turn signal
@@ -162,22 +318,107 @@ public class TrafficLight {
         yellowCircle.setFill(null);
         greenCircle.setFill(null);
 
-        if(pane.getChildren().contains(leftTurnArrowImageView)){
-            pane.getChildren().remove(leftTurnArrowImageView);
-        }
-
         // Add the ImageView to the pane if it's not already there
         if (!pane.getChildren().contains(rightTurnArrowImageView)) {
             pane.getChildren().add(rightTurnArrowImageView);
         }
 
+        if(pane.getChildren().contains(leftTurnArrowImageView)){
+            pane.getChildren().remove(leftTurnArrowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnYellowImageView)) {
+            pane.getChildren().remove(rightTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnRedImageView)) {
+            pane.getChildren().remove(rightTurnRedImageView);
+        }
+        if (pane.getChildren().contains(leftTurnYellowImageView)) {
+            pane.getChildren().remove(leftTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(leftTurnRedImageView)) {
+            pane.getChildren().remove(leftTurnRedImageView);
+        }
         lightColor = LightColor.GREENRIGHT;
     }
+    /**
+     * Updates traffic light image to reflect
+     * yellow right turn signal
+     */
+    public void setYellowRightTurnArrow(){
+        redCircle.setFill(null);
+        yellowCircle.setFill(null);
+        greenCircle.setFill(null);
 
+        // Add the ImageView to the pane if it's not already there
+        if (!pane.getChildren().contains(rightTurnYellowImageView)) {
+            pane.getChildren().add(rightTurnYellowImageView);
+        }
+
+        // Make sure there are no other displaying turn signal images
+        if (pane.getChildren().contains(leftTurnArrowImageView)) {
+            pane.getChildren().remove(leftTurnArrowImageView);
+        }
+        if (pane.getChildren().contains(leftTurnYellowImageView)) {
+            pane.getChildren().remove(leftTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(leftTurnRedImageView)) {
+            pane.getChildren().remove(leftTurnRedImageView);
+        }
+        if (pane.getChildren().contains(rightTurnArrowImageView)) {
+            pane.getChildren().remove(rightTurnArrowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnRedImageView)) {
+            pane.getChildren().remove(rightTurnRedImageView);
+        }
+        lightColor = LightColor.YELLOWRIGHT;
+    }
+    /**
+     * Updates traffic light image to reflect
+     * red right turn signal
+     */
+    public void setRedRightTurnArrow(){
+        redCircle.setFill(null);
+        yellowCircle.setFill(null);
+        greenCircle.setFill(null);
+
+        // Add the ImageView to the pane if it's not already there
+        if (!pane.getChildren().contains(rightTurnRedImageView)) {
+            pane.getChildren().add(rightTurnRedImageView);
+        }
+
+        // Make sure there are no other displaying turn signal images
+        if (pane.getChildren().contains(leftTurnArrowImageView)) {
+            pane.getChildren().remove(leftTurnArrowImageView);
+        }
+        if (pane.getChildren().contains(leftTurnYellowImageView)) {
+            pane.getChildren().remove(leftTurnYellowImageView);
+        }
+        if (pane.getChildren().contains(leftTurnRedImageView)) {
+            pane.getChildren().remove(leftTurnRedImageView);
+        }
+        if (pane.getChildren().contains(rightTurnArrowImageView)) {
+            pane.getChildren().remove(rightTurnArrowImageView);
+        }
+        if (pane.getChildren().contains(rightTurnYellowImageView)) {
+            pane.getChildren().remove(rightTurnYellowImageView);
+        }
+        lightColor = LightColor.REDRIGHT;
+    }
+
+    //============================================================================
+    //Return constructor values
+    /**
+     *
+     * @return constructor's enum light state
+     */
     public LightColor getLightColor() {
         return lightColor;
     }
 
+    /**
+     *
+     * @return traffic light's object id
+     */
     public int getId() {
         return id;
     }
