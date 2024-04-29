@@ -41,7 +41,6 @@ public class TrafficScene {
     private Testing testing = new Testing();
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private List<Bus3D> busCollidables3D = new ArrayList<>();
-    //
     private List<Person> personCollidables = new ArrayList<>();
     private AtomicInteger clickCount = new AtomicInteger(0);
     private int counter = 0;

@@ -51,11 +51,20 @@ public class SystemController {
             add(new Object[]{"W", 595, 658});
             add(new Object[]{"E", 674, 676});
         }});
+        //Coordinates for lights at bus intersections
+        put(7, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 309, 640});
+            add(new Object[]{"S", 275, 688});
+        }});
+        put(8, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 648, 640});
+            add(new Object[]{"S", 614, 688});
+        }});
     }};
 
     //HashMap to store the collision box coordinates for each intersection
     //Object[] = {String associated light, double xCenter, double yCenter}
-    private final HashMap<Integer, ArrayList<Object[]>> collisionCoords = new HashMap<>(){{
+    private final HashMap<Integer, ArrayList<Object[]>> lightCollisionCoords = new HashMap<>(){{
         put(1, new ArrayList<Object[]>(){{
             add(new Object[]{"N", 322, 155});
             add(new Object[]{"N", 302, 156});
@@ -112,7 +121,157 @@ public class SystemController {
             add(new Object[]{"E", 575, 674});
             add(new Object[]{"W", 685, 653});
         }});
-
+        //Busses
+        put(7, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 322, 589});
+            add(new Object[]{"N", 302, 589});
+            add(new Object[]{"S", 284, 528});
+            add(new Object[]{"S", 264, 528});
+            add(new Object[]{"B", 250, 548});
+            add(new Object[]{"B", 30, 568});
+        }});
+        put(8, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 636, 589});
+            add(new Object[]{"N", 656, 589});
+            add(new Object[]{"S", 602, 528});
+            add(new Object[]{"S", 622, 528});
+            add(new Object[]{"B", 602, 548});
+            add(new Object[]{"B", 372, 568});
+        }});
+    }};
+    //HashMap to store the pedestrian light coordinates for each intersection
+    //Object[] = {String associated light, double xCenter, double yCenter}
+    private final HashMap<Integer, ArrayList<Object[]>> pedestrianLights = new HashMap<>(){{
+        put(1, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 322, 155});
+            add(new Object[]{"S", 264, 86});
+            add(new Object[]{"E", 242, 130});
+            add(new Object[]{"W", 342, 111});
+        }});
+        put(2, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 636, 156});
+            add(new Object[]{"S", 622, 86});
+            add(new Object[]{"E", 576, 130});
+            add(new Object[]{"W", 686, 111});
+        }});
+        put(3, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 299, 467});
+            add(new Object[]{"S", 268, 328});
+            add(new Object[]{"E", 234, 408});
+            add(new Object[]{"W", 345, 355});
+        }});
+        put(4, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 641, 469});
+            add(new Object[]{"S", 602, 330});
+            add(new Object[]{"E", 570, 410});
+            add(new Object[]{"W", 682, 355});
+        }});
+        put(5, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 300, 699});
+            add(new Object[]{"S", 264, 630});
+            add(new Object[]{"E", 237, 674});
+            add(new Object[]{"W", 346, 653});
+        }});
+        put(6, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 638, 699});
+            add(new Object[]{"S", 600, 630});
+            add(new Object[]{"E", 575, 674});
+            add(new Object[]{"W", 685, 653});
+        }});
+        //Pedestrian lights for busses
+        put(7, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 322, 589});
+            add(new Object[]{"S", 284, 528});
+        }});
+        put(8, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 636, 589});
+            add(new Object[]{"S", 602, 528});
+        }});
+    }};
+    //HashMap to store the pedestrian light collision box coordinates for each intersection
+    //Object[] = {String associated light, double xCenter, double yCenter}
+    private final HashMap<Integer, ArrayList<Object[]>> pedCollisionCoords = new HashMap<>(){{
+        put(1, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 254, 97});
+            add(new Object[]{"N", 330, 97});
+            add(new Object[]{"S", 257, 150});
+            add(new Object[]{"S", 328, 150});
+            add(new Object[]{"E", 340, 106});
+            add(new Object[]{"E", 340, 136});
+            add(new Object[]{"W", 241, 106});
+            add(new Object[]{"W", 241, 139});
+        }});
+        put(2, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 667, 92});
+            add(new Object[]{"N", 595, 92});
+            add(new Object[]{"S", 667, 150});
+            add(new Object[]{"S", 595, 150});
+            add(new Object[]{"E", 678, 106});
+            add(new Object[]{"E", 678, 136});
+            add(new Object[]{"W", 586, 106});
+            add(new Object[]{"W", 586, 139});
+        }});
+        put(3, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 255, 340});
+            add(new Object[]{"N", 325, 340});
+            add(new Object[]{"S", 254, 465});
+            add(new Object[]{"S", 330, 465});
+            add(new Object[]{"E", 337, 350});
+            add(new Object[]{"E", 337, 459});
+            add(new Object[]{"W", 241, 355});
+            add(new Object[]{"W", 241, 454});
+        }});
+        put(4, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 595, 340});
+            add(new Object[]{"N", 666, 340});
+            add(new Object[]{"S", 666, 465});
+            add(new Object[]{"S", 595, 465});
+            add(new Object[]{"E", 679, 350});
+            add(new Object[]{"E", 679, 459});
+            add(new Object[]{"W", 583, 350});
+            add(new Object[]{"W", 583, 459});
+        }});
+        put(5, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 254, 638});
+            add(new Object[]{"N", 330, 638});
+            add(new Object[]{"S", 257, 690});
+            add(new Object[]{"S", 328, 690});
+            add(new Object[]{"E", 340, 645});
+            add(new Object[]{"E", 340, 682});
+            add(new Object[]{"W", 241, 645});
+            add(new Object[]{"W", 241, 682});
+        }});
+        put(6, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 667, 638});
+            add(new Object[]{"N", 595, 638});
+            add(new Object[]{"S", 667, 690});
+            add(new Object[]{"S", 595, 690});
+            add(new Object[]{"E", 678, 645});
+            add(new Object[]{"E", 678, 682});
+            add(new Object[]{"W", 586, 645});
+            add(new Object[]{"W", 586, 682});
+        }});
+        //Pedestrian lights for busses
+        put(7, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 254, 530});
+            add(new Object[]{"N", 330, 530});
+            add(new Object[]{"S", 257, 590});
+            add(new Object[]{"S", 328, 590});
+            add(new Object[]{"E", 340, 539});
+            add(new Object[]{"E", 340, 578});
+            add(new Object[]{"W", 241, 539});
+            add(new Object[]{"W", 241, 578});
+        }});
+        put(8, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 667, 530});
+            add(new Object[]{"N", 595, 530});
+            add(new Object[]{"S", 667, 590});
+            add(new Object[]{"S", 595, 590});
+            add(new Object[]{"E", 678, 539});
+            add(new Object[]{"E", 678, 578});
+            add(new Object[]{"W", 586, 539});
+            add(new Object[]{"W", 586, 578});
+        }});
     }};
     //HashMap to store the light controllers
     private final HashMap<Integer, LightController> lightControllers = new HashMap<>();
@@ -132,8 +291,11 @@ public class SystemController {
      */
     private void spawnLights() {
         for (int i = 1; i <= INTERSECTIONS; i++) {
-            lightControllers.put(i, new LightController(lightCoords.get(i), collisionCoords.get(i)));
+            lightControllers.put(i, new LightController(LightController.lightType.STANDARD, lightCoords.get(i), lightCollisionCoords.get(i), pedestrianLights.get(i), pedCollisionCoords.get(i)));
         }
+        //Create the bus lights, last two elements in the HashMap
+        lightControllers.put(7, new LightController(LightController.lightType.BUS, lightCoords.get(7), lightCollisionCoords.get(7), pedestrianLights.get(7), pedCollisionCoords.get(7)));
+        lightControllers.put(8, new LightController(LightController.lightType.BUS, lightCoords.get(8), lightCollisionCoords.get(8), pedestrianLights.get(8), pedCollisionCoords.get(8)));
     }
 
     /**
@@ -166,11 +328,33 @@ public class SystemController {
         }
     }
 
+    //Check for collisions with pedestrians
+    public void checkPedestrianCrossing(List<Person> pedestrians) {
+        for (LightController lightController : lightControllers.values()) {
+            lightController.checkPedestrianCollision(pedestrians);
+        }
+    }
+
+    //Check for collisions with busses
+    public void checkBusCrossing(List<Bus> busses) {
+        for (LightController lightController : lightControllers.values()) {
+            lightController.checkBusCollision(busses);
+        }
+    }
     //Get the light collision boxes
-    public ArrayList<CollisionBox> getCollisionBoxes() {
+    public ArrayList<CollisionBox> getLightCollisionBoxes() {
         ArrayList<CollisionBox> collisionBoxes = new ArrayList<>();
         for (LightController lightController : lightControllers.values()) {
-            collisionBoxes.addAll(lightController.getCollisionBoxes());
+            collisionBoxes.addAll(lightController.getLightCollisionBoxes());
+        }
+        return collisionBoxes;
+    }
+
+    //Get the pedestrian collision boxes
+    public ArrayList<CollisionBox> getPedestrianCollisionBoxes() {
+        ArrayList<CollisionBox> collisionBoxes = new ArrayList<>();
+        for (LightController lightController : lightControllers.values()) {
+            collisionBoxes.addAll(lightController.getPedCollisionBoxes());
         }
         return collisionBoxes;
     }

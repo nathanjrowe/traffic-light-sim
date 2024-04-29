@@ -3,7 +3,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import javafx.animation.AnimationTimer;
+import javafx.scene.effect.Light;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Rotate;
 
@@ -20,10 +23,19 @@ public class LightController {
     private final HashMap<String, Pane> trafficLights = new HashMap<>();
     //HashMap to store the pedestrian lights
     //Not implemented yet
-    private final HashMap<Integer, Pane> pedestrianLights = new HashMap<>();
+    private final HashMap<String, Pane> pedestrianLights = new HashMap<>();
     //HashMap to store the collision boxes
     //Key stores the location of the light(N, S, E, W)
-    private final HashMap<String, List<CollisionBox>> collisionBoxes = new HashMap<>(){{
+    private final HashMap<String, List<CollisionBox>> lightCollisionBoxes = new HashMap<>(){{
+        put("N", new ArrayList<>());
+        put("S", new ArrayList<>());
+        put("E", new ArrayList<>());
+        put("W", new ArrayList<>());
+        put("B", new ArrayList<>());
+    }};
+    //HashMap to store the collision boxes
+    //Key stores the location of the light(N, S, E, W)
+    private final HashMap<String, List<CollisionBox>> pedCollisionBoxes = new HashMap<>(){{
         put("N", new ArrayList<>());
         put("S", new ArrayList<>());
         put("E", new ArrayList<>());
@@ -31,7 +43,7 @@ public class LightController {
     }};
     private CollisionBox intersectionBox = null;
     //Store a list of vehicles in the intersection
-    private List<Vehicle3D> vehicles = new ArrayList<>();
+    private CopyOnWriteArrayList<Vehicle3D> vehicles = new CopyOnWriteArrayList<>();
     //Vars to store the time in seconds for the lights
     private final int cycleTime = 120;
     private final int yellow = 6;
@@ -40,8 +52,14 @@ public class LightController {
     private int maxGreen = 30;
     private int vehicleCount = 0;
     private Vehicle currentVehicle = null;
+    private Boolean busApproaching = false;
     //Enum to control the cycle changes
     private enum direction {NS, EW};
+    //Enum to mark the type of light
+    protected enum lightType {STANDARD, BUS};
+    private lightType type;
+    //List of scheduled pedestrian light changes
+    private List<String> pedLightChanges = new ArrayList<>();
     
     //Constructor
     //Takes a list of coordinates for the lights
@@ -49,15 +67,24 @@ public class LightController {
     //lightCoord[1]: x coordinate
     //lightCoord[2]: y coordinate
     //See SystemController for the list of coordinates
-    public LightController(List<Object[]> lightCoords, List<Object[]> collisionCoords) {
+    public LightController(lightType type, List<Object[]> lightCoords, List<Object[]> lightCollisionCoords, List<Object[]> pedestrianLightCoords, List<Object[]> pedestrianCollisionCoords) {
         //Create the traffic lights at the intersection
         for(Object[] coord : lightCoords){
             createTrafficLight((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
         }
         //Create the collision boxes at the intersection
-        for(Object[] coord : collisionCoords){
-            createCollisionBox((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
+        for(Object[] coord : lightCollisionCoords){
+            createLightCollisionBox((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
         }
+        //Create the pedestrian lights at the intersection
+        for(Object[] coord : pedestrianLightCoords){
+           // createPedestrianLight((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
+        }
+        //Create the collision boxes for the pedestrian lights
+        for(Object[] coord : pedestrianCollisionCoords){
+            createPedCollisionBox((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
+        }
+        this.type = type;
     }
 
     /**
@@ -83,11 +110,27 @@ public class LightController {
     }
 
     //Create a collision box
-    protected void createCollisionBox(String location, double x, double y){
-        CollisionBox collisionBox = new CollisionBox(x, y, 6, 6, this);
+    protected void createLightCollisionBox(String location, double x, double y){
+        CollisionBox collisionBox;
+        if(location == "B") {
+            collisionBox = new CollisionBox(x, y, 300, 6, this);
+            collisionBox.setState(CollisionBox.State.GO);
+        }
+        else {
+            collisionBox = new CollisionBox(x, y, 6, 6, this);
+            collisionBox.setState(CollisionBox.State.STOP);
+        }
+        
+        //Add collision box to the list of collision boxes for the location
+        lightCollisionBoxes.get(location).add(collisionBox);
+    }
+
+    //Create a collision box
+    protected void createPedCollisionBox(String location, double x, double y){
+        CollisionBox collisionBox = new CollisionBox(x, y, 1, 1, this);
         collisionBox.setState(CollisionBox.State.STOP);
         //Add collision box to the list of collision boxes for the location
-        collisionBoxes.get(location).add(collisionBox);
+        pedCollisionBoxes.get(location).add(collisionBox);
     }
 
     //Create the intersection box
@@ -101,14 +144,14 @@ public class LightController {
      * @param y position
      * @return pane of pedestrian light
      */
-    private Pane createPedestrianLight(double x, double y){
+    private Pane createPedestrianLight(String location, double x, double y){
         Pane pedestrianLight = new Pane();
-        PedestrianLightCreation pedestrianLightCreation = new PedestrianLightCreation();
+        PedestrianLight pedestrianLightCreation = new PedestrianLight();
         pedestrianLight.getChildren().add(pedestrianLightCreation.getPedestrianLight());
         pedestrianLight.setLayoutY(0);
         pedestrianLight.setLayoutX(0);
         pedestrianLight.setTranslateZ(0);
-        pedestrianLights.put(pedestrianLightCreation.getId(), pedestrianLight);
+        pedestrianLights.put(location, pedestrianLight);
         return pedestrianLight;
     }
 
@@ -138,7 +181,12 @@ public class LightController {
         for(Pane pedestrianLight : pedestrianLights.values()){
             root.getChildren().add(pedestrianLight);
         }
-        for(List<CollisionBox> collisionBox : collisionBoxes.values()){
+        for(List<CollisionBox> collisionBox : lightCollisionBoxes.values()){
+            for(CollisionBox box : collisionBox){
+                root.getChildren().add(box);
+            }
+        }
+        for(List<CollisionBox> collisionBox : pedCollisionBoxes.values()){
             for(CollisionBox box : collisionBox){
                 root.getChildren().add(box);
             }
@@ -148,9 +196,50 @@ public class LightController {
         }
     }
 
-    public List<CollisionBox> getCollisionBoxes(){
+    //Get the type of light, returns STANDARD or BUS
+    public LightController.lightType getType() {
+        return type;
+    }
+
+    //Get the bus collision boxes
+    public List<CollisionBox> getBusCollisionBoxes() {
+        return lightCollisionBoxes.get("B");
+    }
+
+    //Check collsions with bus collision boxes
+    public void checkBusCollision(List<Bus> allBuses) {
+        //Print the size of the list holding the boxes
+      //  System.out.println("Number of collision boxes bus: " + lightCollisionBoxes.get("B").size());
+        if(lightCollisionBoxes.get("B").size() == 0){
+            return;
+        }
+        CollisionBox box1 = lightCollisionBoxes.get("B").get(0);
+        CollisionBox box2 = lightCollisionBoxes.get("B").get(1);
+        for (Bus bus : allBuses) {
+            for (CollisionBox box : lightCollisionBoxes.get("B")) {
+                if (box.isColliding(bus.returnCarShape().getBoundsInParent())) {
+                    this.busApproaching = true;
+                }
+            }
+            //Check if there is no bus in either lanes
+            if(!box1.isColliding(bus.returnCarShape().getBoundsInParent()) && !box2.isColliding(bus.returnCarShape().getBoundsInParent())){
+                this.busApproaching = false;
+
+            }
+        }
+    }
+
+    public List<CollisionBox> getLightCollisionBoxes(){
         List<CollisionBox> boxes = new ArrayList<>();
-        for(List<CollisionBox> collisionBox : collisionBoxes.values()){
+        for(List<CollisionBox> collisionBox : lightCollisionBoxes.values()){
+            boxes.addAll(collisionBox);
+        }
+        return boxes;
+    }
+
+    public List<CollisionBox> getPedCollisionBoxes(){
+        List<CollisionBox> boxes = new ArrayList<>();
+        for(List<CollisionBox> collisionBox : pedCollisionBoxes.values()){
             boxes.addAll(collisionBox);
         }
         return boxes;
@@ -185,7 +274,54 @@ public class LightController {
         }
     }
 
-  
+    //Method to check pedestrian collision
+    public void checkPedestrianCollision(List<Person> allPeople) {
+        for (Person person : allPeople) {
+            for (CollisionBox box : pedCollisionBoxes.get("N")) {
+                if (box.isColliding(person.returnCarShape().getBoundsInParent())) {
+                    if (!pedLightChanges.contains("N")) {
+                        pedLightChanges.add("N");
+                    }
+                }
+            }
+            for (CollisionBox box : pedCollisionBoxes.get("S")) {
+                if (box.isColliding(person.returnCarShape().getBoundsInParent())) {
+                    if (!pedLightChanges.contains("S")) {
+                        pedLightChanges.add("S");
+                    }
+                }
+            }
+            for (CollisionBox box : pedCollisionBoxes.get("E")) {
+                if (box.isColliding(person.returnCarShape().getBoundsInParent())) {
+                    if (!pedLightChanges.contains("E")) {
+                        pedLightChanges.add("E");
+                    }
+                }
+            }
+            for (CollisionBox box : pedCollisionBoxes.get("W")) {
+                if (box.isColliding(person.returnCarShape().getBoundsInParent())) {
+                    if (!pedLightChanges.contains("W")) {
+                        pedLightChanges.add("W");
+                    }
+                }
+            }
+        }
+    }
+
+    //Method to activate the pedestrian lights
+    public void changePedestrianLight(String location, PedestrianLight.LightColor state) {
+        Pane pedestrianLight = pedestrianLights.get(location);
+        //Get the light attached to the pane and change the color
+        PedestrianLight pedestrianLightData = (PedestrianLight) pedestrianLight.getUserData();
+        switch (state) {
+            case RED:
+                pedestrianLightData.setRedHand();
+                break;
+            case WALKING:
+                pedestrianLightData.setWalking();
+                break;
+        }
+    }
 
     //TODO: Add changes for arrows and pedestrian lights
     /**
@@ -196,6 +332,9 @@ public class LightController {
     private void changeLightState(String location, String color) {
         Pane trafficLight = trafficLights.get(location);
         //Get the light attached to the pane and change the color
+        if(trafficLight == null){
+            return;
+        }
         TrafficLight trafficLightData = (TrafficLight) trafficLight.getUserData();
         switch (color) {
             case "red":
@@ -227,8 +366,6 @@ public class LightController {
             private direction dir = direction.NS;
             private int time = cycleTime;
             private int yellowTime = yellow;
-            private int pedestrianTime = 0;
-            private int pedestrianCycle = 0;
             private Duration lastUpdate = Duration.of(0, ChronoUnit.NANOS);
 
             /**
@@ -243,7 +380,23 @@ public class LightController {
                 Duration nowDur = Duration.of(now, ChronoUnit.NANOS);
                 if (nowDur.minus(lastUpdate).toMillis() >= 150) {
                     //Update last update time
-                    lastUpdate = nowDur;  
+                    lastUpdate = nowDur;
+
+                    //Update min green time to 30 seconds if the pedestrian light contains an item
+                    if(pedLightChanges.size() > 0){
+                        minGreen = 30;
+                    }
+                    else{
+                        minGreen = 15;
+                    }
+                    //If bus light, set green time to 0 if a pedestrian light contains an item
+                    if(type == lightType.BUS){
+                        //System.out.println(busApproaching);
+                        if(busApproaching || pedLightChanges.size() > 0){
+                            greenTime = 0;
+                            yellowTime = 0;
+                        }
+                    }
                     //Change the light color for perpendicular lights
                     //Identified by the location of the light
                     //North and South lights
@@ -265,59 +418,145 @@ public class LightController {
                             changeLightState("N", "green");
                             changeLightState("S", "green");
                             //Change the state of the collision boxes
-                            for(CollisionBox box : collisionBoxes.get("N")){
+                            for(CollisionBox box : lightCollisionBoxes.get("N")){
                                 box.setState(CollisionBox.State.GO);
                             }
-                            for(CollisionBox box : collisionBoxes.get("S")){
+                            for(CollisionBox box : lightCollisionBoxes.get("S")){
                                 box.setState(CollisionBox.State.GO);
                             }
+                            
                         }
                         else if(dir == direction.EW){
                             changeLightState("E", "green");
                             changeLightState("W", "green");
                             //Change the state of the collision boxes
-                            for(CollisionBox box : collisionBoxes.get("E")){
+                            for(CollisionBox box : lightCollisionBoxes.get("E")){
                                 box.setState(CollisionBox.State.GO);
                             }
-                            for(CollisionBox box : collisionBoxes.get("W")){
+                            for(CollisionBox box : lightCollisionBoxes.get("W")){
                                 box.setState(CollisionBox.State.GO);
+                            }
+                            
+                        }
+                        //Decrement the green time
+                        greenTime--;
+                        //Increment green time if bus lane and no pedestrians
+                        if(type == lightType.BUS){
+                            if(pedLightChanges.size() == 0 || !busApproaching) {
+                                greenTime++;
                             }
                         }
-                        greenTime--;
                     } else if (yellowTime > 0) {
                         if(dir == direction.NS){
                             changeLightState("N", "yellow");
                             changeLightState("S", "yellow");
+                            //Set the pedestrian collision boxes to stop
+                            for(CollisionBox box : pedCollisionBoxes.get("E")){
+                                box.setState(CollisionBox.State.STOP);
+                            }
+                            for(CollisionBox box : pedCollisionBoxes.get("W")){
+                                box.setState(CollisionBox.State.STOP);
+                            }
                         }
                         else if(dir == direction.EW){
                             changeLightState("E", "yellow");
                             changeLightState("W", "yellow");
+                            //Set the pedestrian collision boxes to stop
+                            for(CollisionBox box : pedCollisionBoxes.get("N")){
+                                box.setState(CollisionBox.State.STOP);
+                            }
+                            for(CollisionBox box : pedCollisionBoxes.get("S")){
+                                box.setState(CollisionBox.State.STOP);
+                            }
                         }
                         yellowTime--;
                     } else {
+                        for(CollisionBox box : pedCollisionBoxes.get("E")){
+                            box.setState(CollisionBox.State.STOP);
+                        }
+                        for(CollisionBox box : pedCollisionBoxes.get("W")){
+                            box.setState(CollisionBox.State.STOP);
+                        }
+                        for(CollisionBox box : pedCollisionBoxes.get("N")){
+                            box.setState(CollisionBox.State.STOP);
+                        }
+                        for(CollisionBox box : pedCollisionBoxes.get("S")){
+                            box.setState(CollisionBox.State.STOP);
+                        }
                         if(dir == direction.NS){
                             changeLightState("N", "red");
                             changeLightState("S", "red");
+                            
                             //Change the state of the collision boxes
-                            for(CollisionBox box : collisionBoxes.get("N")){
+                            for(CollisionBox box : lightCollisionBoxes.get("N")){
                                 box.setState(CollisionBox.State.STOP);
                             }
-                            for(CollisionBox box : collisionBoxes.get("S")){
+                            for(CollisionBox box : lightCollisionBoxes.get("S")){
                                 box.setState(CollisionBox.State.STOP);
                             }
+                            //Change the east and west pedestrian lights to walk if the pedestrian light contains an item
+                            if(pedLightChanges.contains("S")){
+                                //changePedestrianLight("S", PedestrianLight.LightColor.WALKING);
+                                //Set the collision boxes to go
+                                for(CollisionBox box : pedCollisionBoxes.get("S")){
+                                    box.setState(CollisionBox.State.GO);
+                                }
+                                //Remove the item from the list
+                                pedLightChanges.remove("S");
+                            }
+                            if(pedLightChanges.contains("N")){
+                               // changePedestrianLight("N", PedestrianLight.LightColor.WALKING);
+                                //Set the collision boxes to go
+                                for(CollisionBox box : pedCollisionBoxes.get("N")){
+                                    box.setState(CollisionBox.State.GO);
+                                }
+                                //Remove the item from the list
+                                pedLightChanges.remove("N");
+                            }
+                            
+                            //Set East and West pedestrian lights to stop
+                            //changePedestrianLight("E", PedestrianLight.LightColor.RED);
+                            //changePedestrianLight("W", PedestrianLight.LightColor.RED);
+                           
                             //Transition to the next direction
-                            dir = direction.EW;
+                            if(type == LightController.lightType.STANDARD){
+                                dir = direction.EW;
+                            }
                         }
                         else if(dir == direction.EW){
                             changeLightState("E", "red");
                             changeLightState("W", "red");
                             //Change the state of the collision boxes
-                            for(CollisionBox box : collisionBoxes.get("E")){
+                            for(CollisionBox box : lightCollisionBoxes.get("E")){
                                 box.setState(CollisionBox.State.STOP);
                             }
-                            for(CollisionBox box : collisionBoxes.get("W")){
+                            for(CollisionBox box : lightCollisionBoxes.get("W")){
                                 box.setState(CollisionBox.State.STOP);
                             }
+                            //Change the east and west pedestrian lights to walk if the pedestrian light contains an item
+                            if(pedLightChanges.contains("E")){
+                                //changePedestrianLight("E", PedestrianLight.LightColor.WALKING);
+                                //Set the collision boxes to go
+                                for(CollisionBox box : pedCollisionBoxes.get("E")){
+                                    box.setState(CollisionBox.State.GO);
+                                }
+                                //Remove the item from the list
+                                pedLightChanges.remove("E");
+                            }
+                            if(pedLightChanges.contains("W")){
+                               // changePedestrianLight("W", PedestrianLight.LightColor.WALKING);
+                                //Set the collision boxes to go
+                                for(CollisionBox box : pedCollisionBoxes.get("W")){
+                                    box.setState(CollisionBox.State.GO);
+                                }
+                                //Remove the item from the list
+                                pedLightChanges.remove("W");
+                            }
+                            
+                            //Set North and South pedestrian lights to stop
+                            //changePedestrianLight("N", PedestrianLight.LightColor.RED);
+                            //changePedestrianLight("S", PedestrianLight.LightColor.RED);
+                            
                             dir = direction.NS;
                         }
                         //Set the green time for the next direction

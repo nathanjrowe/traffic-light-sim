@@ -25,7 +25,8 @@ public class Testing extends Application {
     private final Boolean getCoordinates = false;
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private List<Vehicle3D> vehicleCollidables3D = new ArrayList<>();
-    private List<CollisionBox> collisionBoxes = new ArrayList<>();
+    private List<CollisionBox> lightCollisionBoxes = new ArrayList<>();
+    private List<CollisionBox> pedCollisionBoxes = new ArrayList<>();
     private List<Bus> busCollidables = new ArrayList<>();
     private List<Bus3D> busCollidables3D = new ArrayList<>();
     //
@@ -124,7 +125,8 @@ public class Testing extends Application {
         systemController.addLights(tempPane);
         root.getChildren().add(tempPane);
          //Add collision boxes to list
-         collisionBoxes = systemController.getCollisionBoxes();
+        lightCollisionBoxes = systemController.getLightCollisionBoxes();
+        pedCollisionBoxes = systemController.getPedestrianCollisionBoxes();
     }
 
     /**
@@ -141,7 +143,7 @@ public class Testing extends Application {
         }
 
         if(flag3D == false) {
-            Vehicle vehicle = new Vehicle(tempPane, vehicleCollidables, collisionBoxes);
+            Vehicle vehicle = new Vehicle(tempPane, vehicleCollidables, lightCollisionBoxes);
 
 
             vehicle.startAnimation();
@@ -155,7 +157,7 @@ public class Testing extends Application {
             pause.play();
         }
         else{
-            Vehicle3D vehicle = new Vehicle3D(tempPane, vehicleCollidables3D, collisionBoxes);
+            Vehicle3D vehicle = new Vehicle3D(tempPane, vehicleCollidables3D, lightCollisionBoxes);
 
             vehicle.startAnimation();
             vehicleCollidables3D.add(vehicle);
@@ -187,7 +189,7 @@ public class Testing extends Application {
         busCollidables.add(bus);
 
         //Using a recursive method to guarantee that the pause actually occurs.
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(10000));
         pause.setOnFinished(event1 -> {
             addBuses(busCollidables.size(), tempPane, busCollidables);
         });
@@ -222,7 +224,7 @@ public class Testing extends Application {
         }
 
         if(flag3D == false) {
-            Person person = new Person(tempPane, personCollidables);
+            Person person = new Person(tempPane, personCollidables, pedCollisionBoxes);
 
             person.startAnimation();
             personCollidables.add(person);
@@ -267,59 +269,18 @@ public class Testing extends Application {
                 else {
                     for (Vehicle v1 : vehicleCollidables) {
                         v1.checkCollision(vehicleCollidables);
-                        systemController.checkVehicleCrossing(vehicleCollidables3D);
+                        
                     }
+                    for (Person p1 : personCollidables) {
+                        p1.checkCollision();
+                    }
+                    systemController.checkVehicleCrossing(vehicleCollidables3D);
+                    systemController.checkPedestrianCrossing(personCollidables);
+                    systemController.checkBusCrossing(busCollidables);
                 }
             }
         };
         timer.start();
-    }
-
-    /**
-     * Checks for all vehicle collisions
-     */
-    private void checkCollisions() {
-        for (int i = 0; i < vehicleCollidables.size(); i++) {
-            for (int j = i + 1; j < vehicleCollidables.size(); j++) {
-                Vehicle v1 = vehicleCollidables.get(i);
-                Vehicle v2 = vehicleCollidables.get(j);
-                //System.out.println(v2.returnCarShape().getBoundsInParent());
-                if ((Shape.intersect(v1.returnCarShape(), v2.returnCarShape()).getBoundsInParent().getWidth() > 0)
-                        && !v1.returnCollided() && !v2.returnCollided()) {
-                    //System.out.println((Shape.intersect(v1.returnCarShape(), v2.returnCarShape()).getBoundsInParent().getWidth()));
-                    //System.out.println((Shape.intersect(v1.returnCarShape(), v2.returnCarShape()).getBoundsInParent().getHeight()));
-                    v2.setCollided(true);
-                    v2.stopVehicle();
-                } else if ((Shape.intersect(v1.returnCarShape(), v2.returnCarShape()).getBoundsInParent().getWidth() <= 0)
-                        && !v1.returnCollided() && v2.returnCollided()) {
-                    v2.setCollided(false);
-                    v2.restartVehicle();
-                }
-//                else {
-//                    if (v1.returnCollided()){
-//                        v1.setCollided(false);
-//                        v1.restartVehicle();
-//                    }
-//                    else if (v2.returnCollided()){
-//                        v2.setCollided(false);
-//                        v2.restartVehicle();
-//                    }
-//                }
-            }
-        }
-    }
-
-    /**
-     * Check for each individual collision
-     * @param src
-     * @param other
-     */
-    private void checkCollision(Vehicle src, Vehicle other){
-        if(Shape.intersect(src.returnCarShape(), other.returnCarShape()).getBoundsInLocal().getWidth() > -1){
-            System.out.println("Collision Detected");
-        }else if(Shape.intersect(src.returnCarShape(), other.returnCarShape()).getBoundsInLocal().getWidth() <= 0){
-            //System.out.println("Collision Over");
-        }
     }
 
     /**

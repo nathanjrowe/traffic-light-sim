@@ -3,7 +3,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class PedestrianLightCreation {
+public class PedestrianLight {
 
     public enum LightColor {
         RED, WALKING
@@ -17,7 +17,7 @@ public class PedestrianLightCreation {
     //Random ID for the pedestrian light
     private final int id = (int) (Math.random() * 1000);
 
-    public PedestrianLightCreation() {
+    public PedestrianLight() {
         pane = new Pane();
 
         rectangle = new Rectangle(300, 50, 100, 100);
@@ -40,6 +40,7 @@ public class PedestrianLightCreation {
         lightColor = null;
 
         pane.getChildren().addAll(redHandImageView, walkingImageView);
+        pane.setUserData(this);
     }
 
     public Pane getPedestrianLight() {
