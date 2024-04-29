@@ -165,6 +165,14 @@ public class Person {
         collided = bool;
     }
 
+    public boolean isCrossing() {
+        return isCrossing;
+    }
+
+    public void setCrossing(boolean crossing) {
+        this.isCrossing = crossing;
+    }
+
     /**
      * Returns pedestrian path
      * @return
@@ -214,12 +222,11 @@ public class Person {
         for (CollisionBox box : collidableBoxes){
             if (box.isColliding(carShape.getBoundsInParent())){
                 if (box.getState() == CollisionBox.State.STOP && !this.isCrossing){
-                    this.isCrossing = true;
                     stopVehicle();
                 }
-                else if (box.getState() == CollisionBox.State.GO){
-                    this.isCrossing = true;
+                else {
                     restartVehicle();
+                    this.isCrossing = true;
                 }
             }
         }

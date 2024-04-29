@@ -189,88 +189,88 @@ public class SystemController {
         }});
     }};
     //HashMap to store the pedestrian light collision box coordinates for each intersection
-    //Object[] = {String associated light, double xCenter, double yCenter}
+    //Object[] = {String associated light, double xCenter, double yCenter, double width, double height}
     private final HashMap<Integer, ArrayList<Object[]>> pedCollisionCoords = new HashMap<>(){{
         put(1, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 254, 97});
-            add(new Object[]{"N", 330, 97});
-            add(new Object[]{"S", 257, 150});
-            add(new Object[]{"S", 328, 150});
-            add(new Object[]{"E", 340, 106});
-            add(new Object[]{"E", 340, 136});
-            add(new Object[]{"W", 241, 106});
-            add(new Object[]{"W", 241, 139});
+            add(new Object[]{"N", 254, 97, 76, 1});
+            //add(new Object[]{"N", 330, 97});
+            add(new Object[]{"S", 257, 150, 76, 1});
+            //add(new Object[]{"S", 328, 150});
+            add(new Object[]{"E", 340, 106, 1, 30});
+            //add(new Object[]{"E", 340, 136});
+            add(new Object[]{"W", 241, 106, 1, 30});
+            //add(new Object[]{"W", 241, 139});
         }});
         put(2, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 667, 92});
-            add(new Object[]{"N", 595, 92});
-            add(new Object[]{"S", 667, 150});
-            add(new Object[]{"S", 595, 150});
-            add(new Object[]{"E", 678, 106});
-            add(new Object[]{"E", 678, 136});
-            add(new Object[]{"W", 586, 106});
-            add(new Object[]{"W", 586, 139});
+            //add(new Object[]{"N", 667, 92});
+            add(new Object[]{"N", 595, 92, 76, 1});
+            //add(new Object[]{"S", 667, 150});
+            add(new Object[]{"S", 595, 150, 76, 1});
+            add(new Object[]{"E", 678, 106, 1, 30});
+            //add(new Object[]{"E", 678, 136});
+            add(new Object[]{"W", 586, 106, 1, 30});
+            //add(new Object[]{"W", 586, 139});
         }});
         put(3, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 255, 340});
-            add(new Object[]{"N", 325, 340});
-            add(new Object[]{"S", 254, 465});
-            add(new Object[]{"S", 330, 465});
-            add(new Object[]{"E", 337, 350});
-            add(new Object[]{"E", 337, 459});
-            add(new Object[]{"W", 241, 355});
-            add(new Object[]{"W", 241, 454});
+            add(new Object[]{"N", 255, 340, 70, 1});
+           // add(new Object[]{"N", 325, 340});
+            add(new Object[]{"S", 254, 465, 70, 1});
+            //add(new Object[]{"S", 330, 465});
+            add(new Object[]{"E", 337, 353, 1, 103});
+            //add(new Object[]{"E", 337, 459});
+            add(new Object[]{"W", 241, 353, 1, 103});
+            //add(new Object[]{"W", 241, 454});
         }});
         put(4, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 595, 340});
-            add(new Object[]{"N", 666, 340});
-            add(new Object[]{"S", 666, 465});
-            add(new Object[]{"S", 595, 465});
-            add(new Object[]{"E", 679, 350});
-            add(new Object[]{"E", 679, 459});
-            add(new Object[]{"W", 583, 350});
-            add(new Object[]{"W", 583, 459});
+            add(new Object[]{"N", 595, 340, 76, 1});
+            //add(new Object[]{"N", 666, 340});
+            //add(new Object[]{"S", 666, 465});
+            add(new Object[]{"S", 595, 465, 76, 1});
+            add(new Object[]{"E", 679, 350, 1, 109});
+            //add(new Object[]{"E", 679, 459});
+            add(new Object[]{"W", 583, 350, 1, 109});
+            //add(new Object[]{"W", 583, 459});
         }});
         put(5, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 254, 638});
-            add(new Object[]{"N", 330, 638});
-            add(new Object[]{"S", 257, 690});
-            add(new Object[]{"S", 328, 690});
-            add(new Object[]{"E", 340, 645});
-            add(new Object[]{"E", 340, 682});
-            add(new Object[]{"W", 241, 645});
-            add(new Object[]{"W", 241, 682});
+            add(new Object[]{"N", 254, 638, 76, 1});
+            //add(new Object[]{"N", 330, 638});
+            add(new Object[]{"S", 257, 690, 76, 1});
+            //add(new Object[]{"S", 328, 690});
+            add(new Object[]{"E", 340, 645, 1, 37});
+            //add(new Object[]{"E", 340, 682});
+            add(new Object[]{"W", 241, 645, 1, 37});
+            //add(new Object[]{"W", 241, 682});
         }});
         put(6, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 667, 638});
-            add(new Object[]{"N", 595, 638});
-            add(new Object[]{"S", 667, 690});
-            add(new Object[]{"S", 595, 690});
-            add(new Object[]{"E", 678, 645});
-            add(new Object[]{"E", 678, 682});
-            add(new Object[]{"W", 586, 645});
-            add(new Object[]{"W", 586, 682});
+            //add(new Object[]{"N", 667, 638});
+            add(new Object[]{"N", 595, 638, 76, 1});
+            //add(new Object[]{"S", 667, 690});
+            add(new Object[]{"S", 595, 690, 76, 1});
+            add(new Object[]{"E", 678, 645, 1, 37});
+            //add(new Object[]{"E", 678, 682});
+            add(new Object[]{"W", 586, 645, 1, 37});
+            //add(new Object[]{"W", 586, 682});
         }});
         //Pedestrian lights for busses
         put(7, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 254, 530});
-            add(new Object[]{"N", 330, 530});
-            add(new Object[]{"S", 257, 590});
-            add(new Object[]{"S", 328, 590});
-            add(new Object[]{"E", 340, 539});
-            add(new Object[]{"E", 340, 578});
-            add(new Object[]{"W", 241, 539});
-            add(new Object[]{"W", 241, 578});
+            add(new Object[]{"N", 254, 530, 76, 1});
+            //add(new Object[]{"N", 330, 530});
+            add(new Object[]{"S", 257, 590, 76, 1});
+            //add(new Object[]{"S", 328, 590});
+            add(new Object[]{"E", 340, 539, 1, 39});
+            //add(new Object[]{"E", 340, 578});
+            add(new Object[]{"W", 241, 539, 1, 39});
+            //add(new Object[]{"W", 241, 578});
         }});
         put(8, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 667, 530});
-            add(new Object[]{"N", 595, 530});
-            add(new Object[]{"S", 667, 590});
-            add(new Object[]{"S", 595, 590});
-            add(new Object[]{"E", 678, 539});
-            add(new Object[]{"E", 678, 578});
-            add(new Object[]{"W", 586, 539});
-            add(new Object[]{"W", 586, 578});
+            //add(new Object[]{"N", 667, 530});
+            add(new Object[]{"N", 595, 530, 76, 1});
+            //add(new Object[]{"S", 667, 590});
+            add(new Object[]{"S", 595, 590, 76, 1});
+            add(new Object[]{"E", 678, 539, 1, 39});
+            //add(new Object[]{"E", 678, 578});
+            add(new Object[]{"W", 586, 539, 1, 39});
+            //add(new Object[]{"W", 586, 578});
         }});
     }};
     //HashMap to store the light controllers
