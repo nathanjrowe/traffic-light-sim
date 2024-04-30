@@ -47,7 +47,7 @@ public class TrafficScene {
     private AtomicInteger clickCount = new AtomicInteger(0);
     private int counter = 0;
     private SubScene subScene;
-    private Pane root = new Pane();
+    private static Pane root = new Pane();
     private Pane root3D = new Pane();
     private Pane menuPane = new Pane();
     Text currentTimeT = new Text("Current Sim Time: 10:40 AM");
@@ -138,9 +138,10 @@ public class TrafficScene {
 
         //Add to root pane here. Make any 3d Models as a function that returns a group then add.
         //Commented out some models to keep the load times down when testing
-        root3D.getChildren().addAll(streetScene(),runWay(), empireStateBuilding(),townHome(), building2(), trees(),
+        root3D.getChildren().addAll(streetScene(),runWay(), empireStateBuilding(),townHome(), building2(), treesMiddle(),
                 airport(),shoppingMall(), apartment(), runWayParking(), runWayParking2(), city(), city1(), city2(),
-                city3(),city4(), city5(), city6(), trees1(), trees2(), trees3(), townHome1(), townHome2(), car());
+                city3(),city4(), city5(), city6(), treesSouth(), treesWest(), treesEast(), townHome1(), townHome2(), car(),
+                inforPane());
 
         Group joeGroup = joe();
         Path path1 = createJoePath();
@@ -288,6 +289,7 @@ public class TrafficScene {
         Text currentTrafficT = new Text("Traffic: Moderate");
         currentTrafficT.setFill(Color.WHITE);
 
+
         Image uiT = imageHelper.getImage("./images/logo.png");
         ImageView uiTitle = new ImageView(uiT);
         uiTitle.setScaleX(.5);
@@ -307,6 +309,23 @@ public class TrafficScene {
     public static void setData(String data){
         dataText.setText(data);
         dataText.setFill(Color.WHITE);
+        //Pane textPane = new Pane(dataText);
+    }
+
+    private Pane inforPane() {
+        //Menu
+        Pane infoPanes = new Pane();
+        //infoPanes.getChildren().add(dataText);
+        infoPanes.setTranslateY(100);
+        infoPanes.setTranslateZ(100);
+        infoPanes.setTranslateX(200);
+        infoPanes.setPrefWidth(500);
+        infoPanes.setPrefHeight(400);
+
+        infoPanes.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        //root3D.getChildren().add(infoPanes);
+        return infoPanes;
     }
 
     /**
@@ -331,6 +350,9 @@ public class TrafficScene {
                 testing.stopVehicles(personCollidablese3D);
             }
         });
+
+        Bus3D bus = new Bus3D(tempPane,busCollidables3D);
+         //tempPane.getChildren().get(tempPane.getChildren().indexOf(bus)).setTranslateX(100);
         return  spawnTrafficT;
     }
 
@@ -427,7 +449,7 @@ public class TrafficScene {
      * Grouped 3D tree models creation, placement, scale
      * @return
      */
-    private Group trees(){
+    private Group treesMiddle(){
         ObjModelImporter importe = new ObjModelImporter();
         ObjModelImporter importes = new ObjModelImporter();
 
@@ -489,7 +511,7 @@ public class TrafficScene {
      * Grouped 3D tree models creation, placement, scale
      * @return
      */
-    private Group trees1(){
+    private Group treesSouth(){
         ObjModelImporter importe = new ObjModelImporter();
         ObjModelImporter importes = new ObjModelImporter();
 
@@ -550,7 +572,7 @@ public class TrafficScene {
      * Grouped 3D tree models creation, placement, scale
      * @return
      */
-    private Group trees2(){
+    private Group treesWest(){
         ObjModelImporter importe = new ObjModelImporter();
         ObjModelImporter importes = new ObjModelImporter();
 
@@ -599,7 +621,7 @@ public class TrafficScene {
         group0.setTranslateY(-70);
         group0.setTranslateX(-1905);
 
-        group0.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+        group0.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
         group.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
@@ -611,7 +633,7 @@ public class TrafficScene {
      * Grouped 3D tree models creation, placement, scale
      * @return
      */
-    private Group trees3(){
+    private Group treesEast(){
         ObjModelImporter importe = new ObjModelImporter();
         ObjModelImporter importes = new ObjModelImporter();
         ObjModelImporter importe1 = new ObjModelImporter();
@@ -1607,5 +1629,9 @@ public class TrafficScene {
         timer.handle(5000);
         timer.start();
         return lg1[0];
+    }
+
+    public static Pane getRoot(){
+        return root;
     }
 }
