@@ -216,7 +216,7 @@ public class Testing extends Application {
         busCollidables.add(bus);
 
         //Using a recursive method to guarantee that the pause actually occurs.
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(5));
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(25));
         pause.setOnFinished(event1 -> {
             addBuses3D(busCollidables.size(), tempPane, busCollidables);
         });
