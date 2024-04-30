@@ -1,7 +1,9 @@
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -265,9 +267,9 @@ public class Person3D {
      * Handle pedestrian collision with other objects
      */
     protected void checkCollision(){
-        //System.out.println("Person Checking collison");
         for (CollisionBox box : collidableBoxes){
-            if (box.isColliding(carShape.getBoundsInParent())){
+            System.out.println("Collision Box state: " + box.getState());
+            if (box.isColliding(getBoundsInGrandparent(carShape))){
                 if (box.getState() == CollisionBox.State.STOP && !this.isCrossing){
                     stopVehicle();
                 }
@@ -277,6 +279,11 @@ public class Person3D {
                 }
             }
         }
+    }
+
+    protected Bounds getBoundsInGrandparent(Node node) {
+        Bounds nodeInParent = node.localToParent(node.getBoundsInLocal());
+        return node.getParent().localToParent(nodeInParent);
     }
 
 }

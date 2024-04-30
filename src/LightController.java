@@ -377,7 +377,7 @@ public class LightController {
     public void checkPedestrianCollision(List<Person3D> allPeople) {
         for (Person3D person : allPeople) {
             for (CollisionBox box : pedCollisionBoxes.get("N")) {
-                if (box.isColliding(person.returnCarShape().getBoundsInParent())) {
+                if (box.isColliding(person.getBoundsInGrandparent(person.returnCarShape()))) {
                     if (box.getState() != CollisionBox.State.GO && !pedLightChanges.contains("N")) {
                         pedLightChanges.add("N");   
                     }
@@ -386,6 +386,74 @@ public class LightController {
                     }
                 }
                 
+            }
+            for (CollisionBox box : pedCollisionBoxes.get("S")) {
+                if (box.isColliding(person.getBoundsInGrandparent(person.returnCarShape()))) {
+                    if (box.getState() != CollisionBox.State.GO && !pedLightChanges.contains("S")) {
+                        pedLightChanges.add("S");
+                    }
+                    if (box.getState() == CollisionBox.State.GO && !pedCrossingSouth.contains(person)) {
+                        pedCrossingSouth.add(person);
+                    }
+                }
+            }
+            for (CollisionBox box : pedCollisionBoxes.get("E")) {
+                if (box.isColliding(person.getBoundsInGrandparent(person.returnCarShape()))) {
+                    if (box.getState() != CollisionBox.State.GO && !pedLightChanges.contains("E")) {
+                        pedLightChanges.add("E");
+                    }
+                    if (box.getState() == CollisionBox.State.GO && !pedCrossingEast.contains(person)) {
+                        pedCrossingEast.add(person);
+                    }
+                }
+            }
+            for (CollisionBox box : pedCollisionBoxes.get("W")) {
+                if (box.isColliding(person.getBoundsInGrandparent(person.returnCarShape()))) {
+                    if (box.getState() != CollisionBox.State.GO && !pedLightChanges.contains("W")) {
+                        pedLightChanges.add("W");
+                    }
+                    if (box.getState() == CollisionBox.State.GO && !pedCrossingWest.contains(person)) {
+                        pedCrossingWest.add(person);
+                    }   
+                }
+            }
+        }
+        //Remove the Person3D from the list if they are no longer colliding
+        for (Person3D person : pedCrossingNorth) {
+            if (!pedCollisionBoxes.get("N").get(0).isColliding(person.returnCarShape().getBoundsInParent())) {
+                pedCrossingNorth.remove(person);
+            }
+        }
+        for (Person3D person : pedCrossingSouth) {
+            if (!pedCollisionBoxes.get("S").get(0).isColliding(person.returnCarShape().getBoundsInParent())) {
+                pedCrossingSouth.remove(person);
+            }
+        }
+        for (Person3D person : pedCrossingEast) {
+            if (!pedCollisionBoxes.get("E").get(0).isColliding(person.returnCarShape().getBoundsInParent())) {
+                pedCrossingEast.remove(person);
+            }
+        }
+        for (Person3D person : pedCrossingWest) {
+            if (!pedCollisionBoxes.get("W").get(0).isColliding(person.returnCarShape().getBoundsInParent())) {
+                pedCrossingWest.remove(person);
+            }
+        }
+
+    }
+
+    public void checkPedestrianCollision3D(List<Person3D> allPeople) {
+        for (Person3D person : allPeople) {
+            for (CollisionBox box : pedCollisionBoxes.get("N")) {
+                if (box.isColliding(person.returnCarShape().getBoundsInParent())) {
+                    if (box.getState() != CollisionBox.State.GO && !pedLightChanges.contains("N")) {
+                        pedLightChanges.add("N");
+                    }
+                    if (box.getState() == CollisionBox.State.GO && !pedCrossingNorth.contains(person)) {
+                        pedCrossingNorth.add(person);
+                    }
+                }
+
             }
             for (CollisionBox box : pedCollisionBoxes.get("S")) {
                 if (box.isColliding(person.returnCarShape().getBoundsInParent())) {
@@ -414,7 +482,7 @@ public class LightController {
                     }
                     if (box.getState() == CollisionBox.State.GO && !pedCrossingWest.contains(person)) {
                         pedCrossingWest.add(person);
-                    }   
+                    }
                 }
             }
         }
@@ -688,6 +756,7 @@ public class LightController {
                                 //changePedestrianLight("S", PedestrianLight.LightColor.WALKING);
                                 //Set the collision boxes to go
                                 for(CollisionBox box : pedCollisionBoxes.get("S")){
+                                    System.out.println("Pedestrian Light changing");
                                     box.setState(CollisionBox.State.GO);
                                 }
                                 //Remove the item from the list

@@ -99,9 +99,9 @@ public class Testing extends Application {
                     if (!currentlySpawning) {
                         //stopSpawning = false;
                         //currentlySpawning = true;
-                        addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
+                        //addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
                         //addBuses(busCollidables.size(), tempPane, busCollidables);
-                        //addPeople(personCollidables.size(), tempPane, personCollidables);
+                        addPeople(personCollidables.size(), tempPane, personCollidables);
                     } else {
                         System.out.println("Currently Spawning Bool: " + currentlySpawning);
                         System.out.println("Already Spawning");
@@ -279,7 +279,6 @@ public class Testing extends Application {
                 if(flag3D){
                     System.out.println("Vehicle Collidables 3D Size: " + vehicleCollidables3D.size());
                     for(Vehicle3D v1 : vehicleCollidables3D){
-                        System.out.println("Checking Vehicle 3D Collisions");
                         v1.checkCollision(vehicleCollidables3D);
                         systemController.checkVehicleCrossing(vehicleCollidables3D);
                     }
@@ -304,14 +303,21 @@ public class Testing extends Application {
         timer.start();
     }
 
-    public void startCollisionTimer3D(List<Vehicle3D> vehicleCollidables3D) {
+    public void startCollisionTimer3D(List<Vehicle3D> vehicleCollidable3D, List<Bus3D> busCollidable3D, List<Person3D> personCollidable3D) {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                for(Vehicle3D v1 : vehicleCollidables3D){
-                    v1.checkCollision(vehicleCollidables3D);
-                    systemController.checkVehicleCrossing(vehicleCollidables3D);
+                //System.out.println("Total Person Collidables: " + personCollidable3D.size());
+                for(Vehicle3D v1 : vehicleCollidable3D){
+                    v1.checkCollision(vehicleCollidable3D);
+                    systemController.checkVehicleCrossing(vehicleCollidable3D);
                 }
+                for (Person3D p1 : personCollidable3D) {
+                    p1.checkCollision();
+                }
+                systemController.checkVehicleCrossing(vehicleCollidable3D);
+                systemController.checkPedestrianCrossing(personCollidable3D);
+                systemController.checkBusCrossing(busCollidable3D);
             }
         };
         timer.start();

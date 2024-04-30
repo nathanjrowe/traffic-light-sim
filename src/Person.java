@@ -233,6 +233,7 @@ public class Person {
     protected void checkCollision(){
         //System.out.println("Person Checking collison");
         for (CollisionBox box : collidableBoxes){
+            //System.out.println("Collision Box state: " + box.getState());
             if (box.isColliding(carShape.getBoundsInParent())){
                 if (box.getState() == CollisionBox.State.STOP && !this.isCrossing){
                     stopVehicle();

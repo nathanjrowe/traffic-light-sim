@@ -71,7 +71,7 @@ public class TrafficScene {
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         //mediaPlayer.play();
 
-        testing.startCollisionTimer3D(vehicleCollidables3D);
+        testing.startCollisionTimer3D(vehicleCollidables3D, busCollidables3D, personCollidablese3D);
         createSubScene(); // Container for different components of scene
 
         //Root Pane
@@ -103,7 +103,7 @@ public class TrafficScene {
         Pane streetScene = testing.getRoot();
         Pane tempPane = new Pane();
 
-        streetScene.getChildren().addAll(tempPane, cityMap());
+        streetScene.getChildren().addAll(tempPane);//, cityMap());
 
         streetScene.setTranslateX(-800);
         streetScene.setTranslateZ(2200);
