@@ -560,11 +560,11 @@ public class TrafficScene {
         group0.setTranslateY(-70);
         group0.setTranslateX(-505);
 
-        group0.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+        group0.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
         group.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
-        group1.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(-90, Rotate.Y_AXIS),
+        group1.getTransforms().addAll(new Rotate(180, Rotate.X_AXIS),new Rotate(-90, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
         return group0;
     }
@@ -621,7 +621,7 @@ public class TrafficScene {
         group0.setTranslateY(-70);
         group0.setTranslateX(-1905);
 
-        group0.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+        group0.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
         group.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
