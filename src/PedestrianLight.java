@@ -3,6 +3,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/*
+ * object class for pedestrians
+ */
 public class PedestrianLight {
 
     public enum LightColor {
@@ -17,6 +20,11 @@ public class PedestrianLight {
     //Random ID for the pedestrian light
     private final int id = (int) (Math.random() * 1000);
 
+    /*
+     * This function creates the visual for each of the pedestestrian lights,
+     * using the imageHelper class to pull assets for the stop and go states
+     * of the light
+     */
     public PedestrianLight() {
         pane = new Pane();
 
@@ -43,26 +51,32 @@ public class PedestrianLight {
         pane.setUserData(this);
     }
 
+    /*
+     * The following are setters used to set the state of a chosen light between "RED" and "WALKING"
+     * the following getPedestrianLight function returns the parent pane of the light setup
+     * 
+     * Each of these functions are called in LightController.java
+     */
     public Pane getPedestrianLight() {
         return pane;
     }
-
     public void setRedHand() {
         redHandImageView.setVisible(true);
         walkingImageView.setVisible(false);
         lightColor = LightColor.RED;
     }
-
     public void setWalking() {
         redHandImageView.setVisible(false);
         walkingImageView.setVisible(true);
         lightColor = LightColor.WALKING;
     }
 
+    /*
+     * the following are unused getters that return the lightColor and id
+     */
     public LightColor getLightColor() {
         return lightColor;
     }
-
     public int getId() {
         return id;
     }

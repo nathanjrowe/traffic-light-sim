@@ -14,12 +14,13 @@ import static java.lang.Math.abs;
  */
 public class Bus {
 
+    // PATHS is the list of viable paths used to guide the busses.
     private static final double[][] PATHS = {
             {13,570,1185,570},{1185,552,13,552}
     };
 
     private List<double[]> startingPaths = new ArrayList<>();
-    private List<double[]> temp = new ArrayList<>();
+    private List<double[]> pathArr = new ArrayList<>();
     private Path path;
     private double distance;
     private double seconds;
@@ -42,18 +43,27 @@ public class Bus {
 
     /**
      * Creates car shape
+     * Each bus car is given a set width and height here,
+     * this function also references each path segment to determine
+     * the orientation of each bus as it travels.
      */
     private void initializeCarShape() {
         carShape = new Rectangle(8, 50);
         //Set initial angle based on the first segment
-        if (!temp.isEmpty()) {
-            double[] firstSegment = temp.get(0);
+        if (!pathArr.isEmpty()) {
+            double[] firstSegment = pathArr.get(0);
             carShape.setRotate(calculateAngle(firstSegment[0], firstSegment[1], firstSegment[2], firstSegment[3]));
         }
     }
 
     /**
      * Runs buses on paths
+     * This function utilizes tempPane and collidableBus, both obtained when the constructor
+     * is first called for the bus.
+     * 
+     * It then adds the path and carShape values to the proveded tempPane, and provided that both values exist
+     * it will initialize the pathTransition with an event to remove the bus once it has completed the path once.
+     * 
      * @param tempPane
      * @param collidableBus
      */
@@ -72,7 +82,7 @@ public class Bus {
     }
 
     /**
-     * Runs path transition for bus
+     * A protected method that runs the path transition for a selected bus
      */
     protected void startAnimation() {
         if (pathTransition != null) {
@@ -81,7 +91,7 @@ public class Bus {
     }
 
     /**
-     * Stops vehicle path transition
+     * A protected method that pauses the path transition for a selected bus
      */
     protected void stopVehicle() {
         if (pathTransition != null) {
@@ -90,7 +100,7 @@ public class Bus {
     }
 
     /**
-     * Restarts bus path transition
+     * A protected method that restarts the path transition for a selected bus
      */
     protected void restartVehicle() {
         if (pathTransition != null) {
@@ -99,7 +109,7 @@ public class Bus {
     }
 
     /**
-     * array of bus paths
+     * initializeArrays adds each viable path from PATHS into startingPaths 
      */
     private void initializeArrays(){
         for (double[] array : PATHS){
@@ -109,17 +119,25 @@ public class Bus {
 
     /**
      * Creates paths for buses to follow
+     * This function starts by randomly selecting a vaible path in the startingPaths array
+     * it then initializes a path and sets the correct starting location and MoveTo element 
+     * from startingPaths 0 and 1.
+     * 
+     * Looping through each element in the selected startingPath we create distance vectors
+     * to represent the distance and direction of each step in the bus' overall path.
+     * 
+     * The bus' speed is also set here as a ratio of the distance traveled / 100
      */
     protected void createPath(){
         Random random = new Random();
         int tempInt = random.nextInt(2);
-        temp.add(startingPaths.get(tempInt));
+        pathArr.add(startingPaths.get(tempInt));
         path = new Path();
-        path.getElements().add(new MoveTo(temp.get(0)[0], temp.get(0)[1]));
-        double startX = temp.get(0)[0];
-        double startY = temp.get(0)[1];
-        for (int i = 0; i < temp.size(); i++) {
-            double[] point = temp.get(i);
+        path.getElements().add(new MoveTo(pathArr.get(0)[0], pathArr.get(0)[1]));
+        double startX = pathArr.get(0)[0];
+        double startY = pathArr.get(0)[1];
+        for (int i = 0; i < pathArr.size(); i++) {
+            double[] point = pathArr.get(i);
             path.getElements().add(new LineTo(point[2], point[3]));
             double endX = point[2];
             double endY = point[3];
@@ -133,7 +151,8 @@ public class Bus {
     }
 
     /**
-     * Calculates angle
+     * calculateAngle is a helper function designed to calculate the angle of a bus
+     * based on which path segment it is currently on.
      * @param startX
      * @param startY
      * @param endX
@@ -150,7 +169,7 @@ public class Bus {
     }
 
     /**
-     * Sets bus collided to true
+     * setCollided is a helper function used to set the collision value of the bus to the provided value.
      * @param bool
      */
     protected void setCollided(boolean bool){
@@ -158,36 +177,24 @@ public class Bus {
     }
 
     /**
-     * Returns bus path
+     * The following are temporary helper functions used while debugging.
+     * They are simple return functions that provide a bus' path, seconds, pathArr, carShape, and collided
+     * values.
+     * 
      * @return
      */
     protected Path returnPath(){
         return path;
     }
-
     protected double returnSeconds(){
         return seconds;
     }
-
-    /**
-     * Returns bus path array
-     * @return
-     */
     protected List<double[]> returnPathArray(){
-        return temp;
+        return pathArr;
     }
-
-    /**
-     * @return returns car shape for collision
-     */
     protected Shape returnCarShape() {
         return carShape;
     }
-
-    /**
-     * Returns buses collided boolean variable
-     * @return
-     */
     protected boolean returnCollided(){
         return collided;
     }

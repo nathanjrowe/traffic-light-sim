@@ -5,7 +5,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
-import javafx.scene.image.Image;
+import javafx.scene.image.Image;//unused
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -22,6 +22,7 @@ import static java.lang.Math.abs;
 
 /**
  * 3D implementation of vehicle object
+ * INITIALPATHS is the list of viable paths used to guide the busses.
  */
 public class Vehicle3D {
     private static final double[][] INITIALPATHS = {
@@ -94,7 +95,7 @@ public class Vehicle3D {
 
     private final List<CollisionBox> collisionBoxes = new ArrayList<>();
     private List<double[]> allPossiblePaths = new ArrayList<>(); //Does not include Starting Paths
-    private int allPathSize;
+    private int allPathSize;//unused
     private List<double[]> startingPaths = new ArrayList<>();
     private double distance;
     private double seconds;
@@ -105,7 +106,7 @@ public class Vehicle3D {
     private Shape carShape;
     private Shape frontSensor;
     ImageHelper imageHelper = new ImageHelper();
-    private Pane carGroup;
+    private Pane carGroup;//unused
     private CollisionBox collidedBox = null;
     private Vehicle3D collidedVehicle = null;
     private Boolean stoppedAtLight = false;
@@ -137,7 +138,11 @@ public class Vehicle3D {
     }
 
     /**
-     * Imports 3D vehicle models into the scene
+     * As we've seen with the differences between Bus.java and Bus3D.java, and
+     * Person.java and Person3D.java, Vehicle.java and Vehicle3D.java have a
+     * different initialization where the 3D version requires its models to be
+     * loaded and headlights created.
+     *
      * @return
      */
     private Group car(){
@@ -306,7 +311,14 @@ public class Vehicle3D {
         return cars;
     }
     /**
-     * initializes path transition
+     * Runs vehicles on paths
+     * This function utilizes tempPane and collidableVehicles, both obtained when the constructor
+     * is first called for the vehicle.
+     * 
+     * It then adds the path and carShape values to the proveded tempPane, and provided that both values exist
+     * it will initialize the pathTransition with an event to remove the bus once it has completed the path once.
+     * 
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
      * @param tempPane
      * @param collidableVehicles
      */
@@ -336,7 +348,8 @@ public class Vehicle3D {
     }
 
     /**
-     * Starts vehicle path transition animation
+     * A protected method that runs the path transition for a selected vehicle
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
      */
     protected void startAnimation() {
         if (pathTransition != null) {
@@ -344,7 +357,8 @@ public class Vehicle3D {
         }
     }
     /**
-     * Stops vehicle path transition animation
+     * A protected method that pauses the path transition for a selected vehicle
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
      */
     protected void stopVehicle() {
         if (pathTransition != null) {
@@ -352,7 +366,9 @@ public class Vehicle3D {
         }
     }
     /**
-     * Restarts vehicle path transition animation
+     * A protected method that restarts the path transition for a selected vehicle
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
+     * 
      */
     protected void restartVehicle() {
         if (pathTransition != null) {
@@ -361,7 +377,16 @@ public class Vehicle3D {
     }
 
     /**
-     * Creates path
+     * Creates paths for vehicles to follow
+     * This function starts by randomly selecting a vaible path in the startingPaths array
+     * it then initializes a path and sets the correct starting location and MoveTo element 
+     * from startingPaths 0 and 1.
+     * 
+     * Looping through each element in the selected startingPath we create distance vectors
+     * to represent the distance and direction of each step in the vehicles' overall path.
+     * 
+     * The vehicles' speed is also set here as a ratio of the distance traveled / 100
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
      */
     protected void createPath(){
         temp = generateRandomPath(allPossiblePaths, startingPaths);
@@ -393,8 +418,11 @@ public class Vehicle3D {
         //Path1 endX == Path2 startX && Path1 endY == Path2 startY
         return path1[2] == path2[0] && path1[3] == path2[1];
     }
-    /**
-     * Generates path segments and adds to path
+     /**
+     * The vehicle paths are much more complex than the bus and pedestrian
+     * paths so this is a helper function designed to generate a viable
+     * path from the available nodes.
+     * same as in Vehicle.java
      * @param allPathsList
      * @param startingPathList
      * @return list of segments
@@ -486,7 +514,9 @@ public class Vehicle3D {
         return Math.sqrt(changeX * changeX + changeY * changeY);
     }
     /**
-     * Updates vehicle to the right direction based on path segment
+     * calculateAngle is a helper function designed to calculate the angle of a vehicle
+     * based on which path segment it is currently on.
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
      * @param startX
      * @param startY
      * @param endX
@@ -502,8 +532,12 @@ public class Vehicle3D {
     }
 
 
-    //Take a root pane to check for collisions
-    protected void checkCollision(List<Vehicle3D> vehicles) {
+    /*
+     * This is a collision checker similar to the one in Person.java that stops and starts
+     * vehicles based on wheter or not their collision boxes overlap.
+     * same as in Vehicle.java
+     */
+        protected void checkCollision(List<Vehicle3D> vehicles) {
         //Get the bounds of the front sensor
         Bounds frontBoundsInGrandParent = getBoundsInGrandparent(frontSensor);
         //Check for collisions every frame
@@ -566,52 +600,44 @@ public class Vehicle3D {
     }
 
     /**
-     * Updates vehicle object collide boolean
+     * setCollided is a helper function used to set the collision value of the bus to the provided value.
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
      * @param bool
      */
     protected void setCollided(boolean bool){
         collided = bool;
     }
     /**
-     * Returns path
+     * The following are temporary helper functions used while debugging.
+     * They are simple return functions that provide a bus' path, seconds, pathArr, carShape, and collided
+     * values.
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
+
      * @return
      */
     protected Path returnPath(){
         return path;
     }
-    /**
-     * Returns second for animation
-     * @return
-     */
     protected double returnSeconds(){
         return seconds;
     }
-    /**
-     * Returns path array
-     * @return
-     */
     protected List<double[]> returnPathArray(){
         return temp;
     }
-    /**
-     * Returns car shape box
-     * @return
-     */
     protected Shape returnCarShape() {
         return carShape;
     }
-    /**
-     * Returns vehicle collidable boolean
-     * @return
-     */
     protected boolean returnCollided(){
         return collided;
     }
-
     protected boolean returnStoppedAtLight() {
         return stoppedAtLight;
     }
 
+    /*
+     * This getter is slightly more complex than the rest, it checks the 
+     * grandparent node for a bounds box and returns the result.
+     */
     protected Bounds getBoundsInGrandparent(Node node) {
         Bounds nodeInParent = node.localToParent(node.getBoundsInLocal());
         return node.getParent().localToParent(nodeInParent);

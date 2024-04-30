@@ -1,3 +1,9 @@
+/*
+ * This is another class found by one of my teammates, the only currently used function is
+ * "clamp(double input, double min, double max)"
+ * used in Camera.java
+ */
+
 /**
  * MathUtils.java
  *

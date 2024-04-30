@@ -1,9 +1,9 @@
 import javafx.application.Application;
-import javafx.scene.control.Button;
+import javafx.scene.control.Button;//unused import
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Circle;//unused import
+import javafx.scene.shape.Rectangle;//unused import
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 
@@ -13,6 +13,10 @@ public class Traffic extends Application {
         launch(args);
     }
 
+    /*
+     * The Traffic class is our main function that is used to intialize the demonstration.
+     * 
+     */
     @Override
     public void start(Stage primaryStage) {
         Pane pane = new Pane();

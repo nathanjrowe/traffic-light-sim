@@ -19,6 +19,7 @@ import static java.lang.Math.abs;
  */
 public class Person3D {
 
+    // PATHS is the list of viable paths used to guide the busses.
     private static final double[][] PATHS = {
             {333,247,333,500}, {194, 467, 383, 467}, {206, 345, 384, 345},
             {583, 238, 583, 501}, {681, 501, 681, 242}, {532, 153, 751, 153},
@@ -54,7 +55,17 @@ public class Person3D {
         this.collidableBoxes = collidableBoxes;
     }
 
-
+    /**
+     * Creates 3D model for bus person based on the Male_Casual object found in
+     * "/People/Male_Casual.obj"
+     * 
+     * In addition to the default model used, this function correctly scales and shifts
+     * each person in order to better fit the visuals.
+     * 
+     * Finally, this function uses the firstSegment values to determine the Bus' initial orientation
+     * 
+     * @return
+     */
     private Group person(){
         carShape = new Circle(4);
         carShape.setFill(Color.GREEN);
@@ -95,7 +106,15 @@ public class Person3D {
         return group3;
     }
     /**
-     * Initialize path transitions
+     * Runs 3D people on paths
+     * This function utilizes tempPane and collidablePerson, both obtained when the constructor
+     * is first called for the person.
+     * 
+     * It then adds the path and person object values to the proveded tempPane, and provided that both values exist
+     * it will initialize the pathTransition with an event to remove the person once it has completed the path once.
+     * 
+     * this is the same as in Bus.java and Bus3D.java
+     * 
      * @param tempPane
      * @param collidablePerson
      */
@@ -114,7 +133,8 @@ public class Person3D {
     }
 
     /**
-     * Starts 3D pedestrian path transition animation
+     * A protected method that runs the path transition for a selected person
+     * same as in Bus.java, Bus3D.java, and Person.java
      */
     protected void startAnimation() {
         if (pathTransition != null) {
@@ -122,7 +142,8 @@ public class Person3D {
         }
     }
     /**
-     * Stops 3D pedestrian path transition animation
+     * A protected method that pauses the path transition for a selected person
+     * same as in Bus.java, Bus3D.java, and Person.java
      */
     protected void stopVehicle() {
         if (pathTransition != null) {
@@ -130,7 +151,8 @@ public class Person3D {
         }
     }
     /**
-     * Restarts 3D pedestrian path transition animation
+     * A protected method that restarts the path transition for a selected person
+     * same as in Bus.java, Bus3D.java, and Person.java
      */
     protected void restartVehicle() {
         if (pathTransition != null) {
@@ -139,7 +161,8 @@ public class Person3D {
     }
 
     /**
-     * Initialize paths array
+     * initializeArrays adds each viable path from PATHS into startingPaths
+     * is the same as in Bus.java, Bus3D.java, and Person.java
      */
     private void initializeArrays(){
         for (double[] array : PATHS){
@@ -148,7 +171,17 @@ public class Person3D {
     }
 
     /**
-     * Creates 3D pedestrian paths
+     * Creates paths for people to follow
+     * This function starts by randomly selecting a vaible path in the startingPaths array
+     * it then initializes a path and sets the correct starting location and MoveTo element 
+     * from startingPaths 0 and 1.
+     * 
+     * Looping through each element in the selected startingPath we create distance vectors
+     * to represent the distance and direction of each step in the person's overall path.
+     * 
+     * The person's speed is also set here as a ratio of the distance traveled / 50
+     * 
+     * is the same as in Bus.java, Bus3D.java, and Person.java
      */
     protected void createPath(){
         Random random = new Random();
@@ -173,8 +206,9 @@ public class Person3D {
     }
 
     /**
-     * Updates 3D pedestrian object to face the right direction
-     * by calculating the angles of paths
+     * calculateAngle is a helper function designed to calculate the angle of a bus
+     * based on which path segment it is currently on.
+     * this is the same as in Bus.java, Bus3D.java, and Person.java
      * @param startX
      * @param startY
      * @param endX
@@ -190,57 +224,39 @@ public class Person3D {
     }
 
     /**
-     * Updates the 3D pedestrian collided boolean
+     * setCollided is a helper function used to set the collision value of the person to the provided value.
+     * this is the same as in Bus.java, Bus3D.java, Person.java
      * @param bool
      */
     protected void setCollided(boolean bool){
         collided = bool;
     }
 
+    /**
+     * The following are temporary helper functions used while debugging.
+     * They are simple return functions that provide various info about a
+     * selected pedestrian's values.
+     * 
+     * @return
+     */
     public boolean isCrossing() {
         return isCrossing;
     }
-
     public void setCrossing(boolean crossing) {
         this.isCrossing = crossing;
     }
-
-    /**
-     * Returns the 3D pedestrian path
-     * @return
-     */
     protected Path returnPath(){
         return path;
     }
-
-    /**
-     * returns seconds for path transition
-     * @return
-     */
     protected double returnSeconds(){
         return seconds;
     }
-
-    /**
-     * returns path array
-     * @return
-     */
     protected List<double[]> returnPathArray(){
         return temp;
     }
-
-    /**
-     * returns 3D pedestrian shape
-     * @return
-     */
     protected Shape returnCarShape() {
         return carShape;
     }
-
-    /**
-     * returns 3D pedestrians collided boolean
-     * @return
-     */
     protected boolean returnCollided(){
         return collided;
     }
