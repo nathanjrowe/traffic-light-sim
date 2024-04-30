@@ -237,7 +237,7 @@ public class Testing extends Application {
             pause.play();
         }
         else{
-            Person3D person = new Person3D(tempPane, personCollidables3D);
+            Person3D person = new Person3D(tempPane, personCollidables3D, pedCollisionBoxes);
 
             person.startAnimation();
             personCollidables3D.add(person);
@@ -265,6 +265,12 @@ public class Testing extends Application {
                         v1.checkCollision(vehicleCollidables3D);
                         systemController.checkVehicleCrossing(vehicleCollidables3D);
                     }
+                    for (Person3D p1 : personCollidables3D) {
+                        p1.checkCollision();
+                    }
+                    systemController.checkVehicleCrossing(vehicleCollidables3D);
+                    systemController.checkPedestrianCrossing(personCollidables3D);
+                    systemController.checkBusCrossing(busCollidables3D);
                 }
                 else {
                     for (Vehicle v1 : vehicleCollidables) {
@@ -274,9 +280,7 @@ public class Testing extends Application {
                     for (Person p1 : personCollidables) {
                         p1.checkCollision();
                     }
-                    systemController.checkVehicleCrossing(vehicleCollidables3D);
-                    systemController.checkPedestrianCrossing(personCollidables);
-                    systemController.checkBusCrossing(busCollidables);
+                    
                 }
             }
         };

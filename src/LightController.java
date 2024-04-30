@@ -61,12 +61,12 @@ public class LightController {
     //List of scheduled pedestrian light changes
     private List<String> pedLightChanges = new ArrayList<>();
     //Queue to store the pedestrians waiting to cross
-    private List<Person> pedQueue = new ArrayList<>();
+    private List<Person3D> pedQueue = new ArrayList<>();
     //Lists to check if pedestrians are crossing
-    private CopyOnWriteArrayList<Person> pedCrossingNorth = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Person> pedCrossingSouth = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Person> pedCrossingEast = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Person> pedCrossingWest = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Person3D> pedCrossingNorth = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Person3D> pedCrossingSouth = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Person3D> pedCrossingEast = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Person3D> pedCrossingWest = new CopyOnWriteArrayList<>();
     
     //Constructor
     //Takes a list of coordinates for the lights
@@ -214,7 +214,7 @@ public class LightController {
     }
 
     //Check collsions with bus collision boxes
-    public void checkBusCollision(List<Bus> allBuses) {
+    public void checkBusCollision(List<Bus3D> allBuses) {
         //Print the size of the list holding the boxes
       //  System.out.println("Number of collision boxes bus: " + lightCollisionBoxes.get("B").size());
         if(lightCollisionBoxes.get("B").size() == 0){
@@ -222,7 +222,7 @@ public class LightController {
         }
         CollisionBox box1 = lightCollisionBoxes.get("B").get(0);
         CollisionBox box2 = lightCollisionBoxes.get("B").get(1);
-        for (Bus bus : allBuses) {
+        for (Bus3D bus : allBuses) {
             for (CollisionBox box : lightCollisionBoxes.get("B")) {
                 if (box.isColliding(bus.returnCarShape().getBoundsInParent())) {
                     this.busApproaching = true;
@@ -282,8 +282,8 @@ public class LightController {
     }
 
     //Method to check pedestrian collision
-    public void checkPedestrianCollision(List<Person> allPeople) {
-        for (Person person : allPeople) {
+    public void checkPedestrianCollision(List<Person3D> allPeople) {
+        for (Person3D person : allPeople) {
             for (CollisionBox box : pedCollisionBoxes.get("N")) {
                 if (box.isColliding(person.returnCarShape().getBoundsInParent())) {
                     if (box.getState() != CollisionBox.State.GO && !pedLightChanges.contains("N")) {
@@ -326,23 +326,23 @@ public class LightController {
                 }
             }
         }
-        //Remove the person from the list if they are no longer colliding
-        for (Person person : pedCrossingNorth) {
+        //Remove the Person3D from the list if they are no longer colliding
+        for (Person3D person : pedCrossingNorth) {
             if (!pedCollisionBoxes.get("N").get(0).isColliding(person.returnCarShape().getBoundsInParent())) {
                 pedCrossingNorth.remove(person);
             }
         }
-        for (Person person : pedCrossingSouth) {
+        for (Person3D person : pedCrossingSouth) {
             if (!pedCollisionBoxes.get("S").get(0).isColliding(person.returnCarShape().getBoundsInParent())) {
                 pedCrossingSouth.remove(person);
             }
         }
-        for (Person person : pedCrossingEast) {
+        for (Person3D person : pedCrossingEast) {
             if (!pedCollisionBoxes.get("E").get(0).isColliding(person.returnCarShape().getBoundsInParent())) {
                 pedCrossingEast.remove(person);
             }
         }
-        for (Person person : pedCrossingWest) {
+        for (Person3D person : pedCrossingWest) {
             if (!pedCollisionBoxes.get("W").get(0).isColliding(person.returnCarShape().getBoundsInParent())) {
                 pedCrossingWest.remove(person);
             }
@@ -399,7 +399,7 @@ public class LightController {
         int time = 0;
          while(pedQueue.size() > 0){
             if(time > 10000) {
-                Person person = pedQueue.get(0);
+                Person3D person = pedQueue.get(0);
                 person.setCrossing(true);
                 pedQueue.remove(0);
                 time = 0;
@@ -447,13 +447,14 @@ public class LightController {
                         minGreen = 15;
                     }
                     //If bus light, set green time to 0 if a pedestrian light contains an item
+                    
                     if(type == lightType.BUS){
                         //System.out.println(busApproaching);
-                        if(busApproaching || pedLightChanges.size() > 0){
+                        if(busApproaching || pedLightChanges.size() > 0 || !pedCrossingNorth.isEmpty() || !pedCrossingSouth.isEmpty() || !pedCrossingEast.isEmpty() || !pedCrossingWest.isEmpty()){
                             greenTime = 0;
                             yellowTime = 0;
                         }
-                    }
+                    } 
                     //Change the light color for perpendicular lights
                     //Identified by the location of the light
                     //North and South lights
@@ -499,7 +500,7 @@ public class LightController {
                         greenTime--;
                         //Increment green time if bus lane and no pedestrians
                         if(type == lightType.BUS){
-                            if(pedLightChanges.size() == 0 || !busApproaching) {
+                            if(!busApproaching && pedLightChanges.size() == 0){
                                 greenTime++;
                             }
                         }
@@ -527,6 +528,7 @@ public class LightController {
                             }
                         }
                         yellowTime--;
+                        //Red light logic
                     } else {
                         for(CollisionBox box : pedCollisionBoxes.get("E")){
                             box.setState(CollisionBox.State.STOP);

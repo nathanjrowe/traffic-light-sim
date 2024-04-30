@@ -329,14 +329,14 @@ public class SystemController {
     }
 
     //Check for collisions with pedestrians
-    public void checkPedestrianCrossing(List<Person> pedestrians) {
+    public void checkPedestrianCrossing(List<Person3D> pedestrians) {
         for (LightController lightController : lightControllers.values()) {
             lightController.checkPedestrianCollision(pedestrians);
         }
     }
 
     //Check for collisions with busses
-    public void checkBusCrossing(List<Bus> busses) {
+    public void checkBusCrossing(List<Bus3D> busses) {
         for (LightController lightController : lightControllers.values()) {
             lightController.checkBusCollision(busses);
         }
