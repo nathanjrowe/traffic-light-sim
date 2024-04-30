@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Testing extends Application {
     private final Boolean DEBUG = false;
-    private final Boolean getCoordinates = true;
+    private final Boolean getCoordinates = false;
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private List<Vehicle3D> vehicleCollidables3D = new ArrayList<>();
     private List<CollisionBox> lightCollisionBoxes = new ArrayList<>();
@@ -52,7 +52,7 @@ public class Testing extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        //startCollisionTimer();
+        startCollisionTimer();
         createRoot(clickCount);
 
         Scene scene = new Scene(root, 1200, 800);
@@ -97,11 +97,11 @@ public class Testing extends Application {
                     tempPane.getChildren().addAll(circle, dotCount);
                 } else {
                     if (!currentlySpawning) {
-                        stopSpawning = false;
-                        currentlySpawning = true;
+                        //stopSpawning = false;
+                        //currentlySpawning = true;
                         addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
-                        addBuses(busCollidables.size(), tempPane, busCollidables);
-                        addPeople(personCollidables.size(), tempPane, personCollidables);
+                        //addBuses(busCollidables.size(), tempPane, busCollidables);
+                        //addPeople(personCollidables.size(), tempPane, personCollidables);
                     } else {
                         System.out.println("Currently Spawning Bool: " + currentlySpawning);
                         System.out.println("Already Spawning");
@@ -138,7 +138,7 @@ public class Testing extends Application {
     public void addVehiclesUntilCount(int count, Pane tempPane, List<Vehicle> vehicleCollidables) {
         //System.out.println("Total Vehicles on Map: " + count);
         //System.out.println("Stop Spawning Boolean: " + stopSpawning);
-        if (count >= 100 || stopSpawning) {
+        if (count >= 1 || stopSpawning) {
             return;
         }
 
@@ -293,7 +293,6 @@ public class Testing extends Application {
                 else {
                     for (Vehicle v1 : vehicleCollidables) {
                         v1.checkCollision(vehicleCollidables);
-                        
                     }
                     for (Person p1 : personCollidables) {
                         p1.checkCollision();

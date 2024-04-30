@@ -119,6 +119,9 @@ public class Vehicle extends Node implements Runnable {
     private Pane carGroup;
     private CollisionBox collidedBox = null;
     private Vehicle collidedVehicle = null;
+    private List<String> directions = new ArrayList<>();
+    private double[] tempSegment;
+    private double[] previousSegment;
 
     /**
      * Constructor
@@ -193,6 +196,9 @@ public class Vehicle extends Node implements Runnable {
             pathTransition = new PathTransition(Duration.millis(seconds*1000), path, carGroup);
             pathTransition.setInterpolator(Interpolator.LINEAR);
             pathTransition.setCycleCount(1);
+            path.setOpacity(1);
+            path.setStrokeWidth(4);
+            path.setStroke(Color.PINK);
 
 
             //Car Rotation Code
@@ -200,6 +206,17 @@ public class Vehicle extends Node implements Runnable {
                 double xPosition = carGroup.getLayoutX() + carGroup.getTranslateX();
                 double yPosition = carGroup.getLayoutY() + carGroup.getTranslateY();
                 double[] currentSegment = findClosestSegmentBasedOnPosition(xPosition, yPosition, temp);
+                if (tempSegment == null && !checkDirections(temp.get(0), currentSegment, previousSegment)){
+                    System.out.println(directions);
+                    tempSegment = currentSegment.clone();
+                }
+                if (tempSegment != null && checkDirections(currentSegment, tempSegment, previousSegment)){
+                    previousSegment = tempSegment.clone();
+                    tempSegment = currentSegment.clone();
+                    if (directions.size() > 0) {
+                        directions.remove(0);
+                    }
+                }
                 if (currentSegment != null) {
                     double angle = calculateAngle(currentSegment[0], currentSegment[1], currentSegment[2], currentSegment[3]);
                     carGroup.setRotate(-angle);
@@ -210,6 +227,20 @@ public class Vehicle extends Node implements Runnable {
                 collidableVehicles.remove(this);
             });
         }
+    }
+
+    private boolean checkDirections(double[] current, double[] held, double[] previous){
+        if (held[0] != current[0] || held[1] != current[1] ||
+                held[2] != current[2] || held[3] != current[3]){
+            if (previous == null){
+                return true;
+            }
+            if (held[0] != previous[0] || held[1] != previous[1] ||
+                    held[2] != previous[2] || held[3] != previous[3]){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -266,12 +297,67 @@ public class Vehicle extends Node implements Runnable {
             double endX = point[2];
             double endY = point[3];
             distance += abs((endX - startX)) + abs((endY - startY));
+            
+            //Direction List
+            if (i < temp.size() - 1){
+                double x3 = temp.get(i+1)[2];
+                double y3 = temp.get(i+1)[3];
+                //Enter from Top
+                if (startX == endX && startY < endY){
+                    if (endX < x3 && endY == y3){
+                        directions.add("Left");
+                    } else if (endX == x3 && endY < y3) {
+                        directions.add("Straight");
+                    } else if (endX > x3 && endY == y3) {
+                        directions.add("Right");
+                    }
+                }
+                //Enter from Left
+                else if (startX < endX && startY == endY) {
+                    if (endX == x3 && endY > y3){
+                        directions.add("Left");
+                    } else if (endX < x3 && endY == y3) {
+                        directions.add("Straight");
+                    } else if (endX == x3 && endY < y3) {
+                        directions.add("Right");
+                    }
+                }
+                //Enter from Bottom
+                else if (startX == endX && startY > endY) {
+                    if (endX > x3 && endY == y3){
+                        directions.add("Left");
+                    } else if (endX == x3 && endY > y3) {
+                        directions.add("Straight");
+                    } else if (endX < x3 && endY == y3) {
+                        directions.add("Right");
+                    }
+                }
+                //Enter from Right
+                else if (startX > endX && startY == endY) {
+                    if (endX == x3 && endY < y3){
+                        directions.add("Left");
+                    } else if (endX > x3 && endY == y3) {
+                        directions.add("Straight");
+                    } else if (endX == x3 && endY > y3) {
+                        directions.add("Right");
+                    }
+                }
+            }
             startX = point[2];
             startY = point[3];
         }
         //This is where you edit the Speed
         seconds = distance / 100;
         path.setOpacity(0);
+    }
+
+    protected String returnCurrentDirection(){
+        if (directions.size() > 0) {
+            return directions.get(0);
+        }
+        else {
+            return "None";
+        }
     }
 
     /**
