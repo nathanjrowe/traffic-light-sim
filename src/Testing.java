@@ -82,7 +82,7 @@ public class Testing extends Application {
         System.out.println("Original Image Width: " + imageW + " Original Image Height: " + imageH);
 
         Pane mapPane = resizeImage(fullMap, 1200, 800);
-        root.getChildren().add(mapPane);
+        //root.getChildren().add(mapPane);
 
         if (!flag3D) {
             root.setOnMouseClicked(event -> {
@@ -216,7 +216,7 @@ public class Testing extends Application {
         busCollidables.add(bus);
 
         //Using a recursive method to guarantee that the pause actually occurs.
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(25));
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(5));
         pause.setOnFinished(event1 -> {
             addBuses3D(busCollidables.size(), tempPane, busCollidables);
         });

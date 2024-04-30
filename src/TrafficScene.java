@@ -51,11 +51,13 @@ public class TrafficScene {
     private Pane root3D = new Pane();
     private Pane menuPane = new Pane();
     Text currentTimeT = new Text("Current Sim Time: 10:40 AM");
+    private static Text dataText = new Text();
 
     // Define window size
     int width = 1200;
     int height = 800;
     boolean stop = false;
+    SystemController systemController = new SystemController();
 
     /**
      * Acts as the main function of the GUI scene.
@@ -73,7 +75,7 @@ public class TrafficScene {
         createSubScene(); // Container for different components of scene
 
         //Root Pane
-        root.setPrefHeight(height *1.1);
+        root.setPrefHeight(height-20);
         root.setPrefWidth(width);
 
         root.getChildren().addAll(subScene, menuPane);
@@ -126,7 +128,7 @@ public class TrafficScene {
         root3D = new Pane();
 
         //StopLight
-        SystemController systemController = new SystemController();
+
         //Add lights to the 3D scene
         //systemController.addLights(root3D);
 
@@ -136,9 +138,9 @@ public class TrafficScene {
 
         //Add to root pane here. Make any 3d Models as a function that returns a group then add.
         //Commented out some models to keep the load times down when testing
-        root3D.getChildren().addAll(streetScene(),runWay(), empireStateBuilding(),townHome(), building2(),car(), trees(),airport(),
-                shoppingMall(), apartment(), runWayParking(), runWayParking2(), city(), city1(), city2(), city3(),
-                city4(), city5(), city6(), trees1(), trees2(), trees3());
+        root3D.getChildren().addAll(streetScene(),runWay(), empireStateBuilding(),townHome(), building2(), trees(),
+                airport(),shoppingMall(), apartment(), runWayParking(), runWayParking2(), city(), city1(), city2(),
+                city3(),city4(), city5(), city6(), trees1(), trees2(), trees3(), townHome1(), townHome2(), car());
 
         Group joeGroup = joe();
         Path path1 = createJoePath();
@@ -230,6 +232,8 @@ public class TrafficScene {
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(true);
         perspectiveCamera.setFieldOfView(75);
         perspectiveCamera.setRotate(0);
+        perspectiveCamera.minWidth(height);
+        perspectiveCamera.minWidth(width);
 
         //Camera Rotation
         Rotate xRotate = new Rotate(0, Rotate.X_AXIS);
@@ -245,7 +249,7 @@ public class TrafficScene {
         perspectiveCamera.setLayoutY(-1550);
         perspectiveCamera.setLayoutX(0);
         perspectiveCamera.setTranslateZ(-1000);
-        perspectiveCamera.getTransforms().addAll(new Rotate(-40, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS)
+        perspectiveCamera.getTransforms().addAll(new Rotate(-30, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS)
                 ,new Rotate(0, Rotate.Z_AXIS));
 
         return  perspectiveCamera;
@@ -269,8 +273,14 @@ public class TrafficScene {
 
         //Label label = new Label("2D");
         //Pane for buttons
-        Pane buttonPane = new Pane();
+        Pane controlPane = new Pane();
+        controlPane.getChildren().add(spawnVehiclesBTN(tempPane));
+        controlPane.setPrefHeight(200);
+        controlPane.setPrefWidth(200);
 
+        Text labels = new Text("Traffic: Moderate");
+        labels.setFill(Color.WHITE);
+        controlPane.getChildren().add(labels);
         //Current Simulation Time
         currentTimeT = new Text("Current Sim Time: 10:40 AM");
         currentTimeT.setFill(Color.WHITE);
@@ -280,16 +290,23 @@ public class TrafficScene {
 
         Image uiT = imageHelper.getImage("./images/logo.png");
         ImageView uiTitle = new ImageView(uiT);
-        uiTitle.setScaleX(.75);
-        uiTitle.setScaleY(.75);
+        uiTitle.setScaleX(.5);
+        uiTitle.setScaleY(.5);
         //uiTitle.setFill(Color.WHITE);
 
-        menuPane.getChildren().addAll(startRec,buttonPane, spawnVehiclesBTN(tempPane), uiTitle, currentTimeT, currentTrafficT);//, testButton);
-        menuPane.setMargin(uiTitle, new Insets(-20,0,0,-775));
+        menuPane.getChildren().addAll(startRec, spawnVehiclesBTN(tempPane), uiTitle, currentTimeT,
+                currentTrafficT, dataText);//, testButton);
+        menuPane.setMargin(uiTitle, new Insets(-20,0,0,-950));
         menuPane.setMargin(currentTimeT, new Insets(-50,0,0,950));
         menuPane.setMargin(currentTrafficT, new Insets(0,0,0,895));
+        menuPane.setMargin(dataText, new Insets(0,0,0,600));
+        menuPane.setMargin(spawnVehiclesBTN(tempPane), new Insets(50,0,0,-800));
 
         return menuPane;
+    }
+    public static void setData(String data){
+        dataText.setText(data);
+        dataText.setFill(Color.WHITE);
     }
 
     /**
@@ -301,6 +318,7 @@ public class TrafficScene {
         Text spawnTrafficT = new Text("Spawn Traffic");
         spawnTrafficT.setFill(Color.WHITE);
 
+        spawnTrafficT.setTranslateX(-200);
         spawnTrafficT.setOnMouseClicked(event -> {
             if (!stop) {
                 testing.addVehicles3D(vehicleCollidables3D.size(), tempPane, vehicleCollidables3D);
@@ -516,7 +534,7 @@ public class TrafficScene {
 
         //group.setTranslateY(1000);
         group0.getChildren().addAll(group, group1);//, group2, group3, group4, group5, group6, group7);
-        group0.setTranslateZ(-200);
+        group0.setTranslateZ(-100);
         group0.setTranslateY(-70);
         group0.setTranslateX(-505);
 
@@ -742,12 +760,16 @@ public class TrafficScene {
         group.setScaleY(.125);
         group.setScaleZ(.125);
 
+
+
         //group.setTranslateY(1000);
-        group.setTranslateZ(3400);
+        group.setTranslateZ(3450);
         group.setTranslateY(1550);
-        group.setTranslateX(575);
+        group.setTranslateX(900);
         group.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(-87.5, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
+
+        group.getChildren().add(airportTarmac());
         return group;
     }
 
@@ -893,14 +915,14 @@ public class TrafficScene {
 
 
         group3.getChildren().addAll(meshViewss);
-        group3.setScaleX(10);
-        group3.setScaleY(10);
-        group3.setScaleZ(10);
+        group3.setScaleX(20);
+        group3.setScaleY(20);
+        group3.setScaleZ(20);
 
         //group.setTranslateY(1000);
-        group3.setTranslateZ(50);
-        group3.setTranslateY(-120);
-        group3.setTranslateX(200);
+        group3.setTranslateZ(1500);
+        group3.setTranslateY(-10);
+        group3.setTranslateX(410);
         group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
         return group3;
@@ -924,14 +946,74 @@ public class TrafficScene {
 
 
         group3.getChildren().addAll(meshViewss);
-        group3.setScaleX(.15);
+        group3.setScaleX(.45);
         group3.setScaleY(.15);
         group3.setScaleZ(.15);
 
         //group.setTranslateY(1000);
-        group3.setTranslateZ(800);
+        group3.setTranslateZ(810);
         group3.setTranslateY(40);
         group3.setTranslateX(-2000);
+        group3.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        return group3;
+    }
+    /**
+     * Town Home 3D model creation, placement, scale
+     * @return
+     */
+    private Group townHome1(){
+        ObjModelImporter importes = new ObjModelImporter();
+        try {
+            importes.read(this.getClass().getResource("/townhome/10091_townhome_V1_L1.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViewss = importes.getImport();
+        Group group3 = new Group();
+
+
+        group3.getChildren().addAll(meshViewss);
+        group3.setScaleX(.75);
+        group3.setScaleY(.15);
+        group3.setScaleZ(.14);
+
+        //group.setTranslateY(1000);
+        group3.setTranslateZ(380);
+        group3.setTranslateY(40);
+        group3.setTranslateX(1000);
+        group3.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(180, Rotate.Z_AXIS));
+        return group3;
+    }
+    /**
+     * Town Home 3D model creation, placement, scale
+     * @return
+     */
+    private Group townHome2(){
+        ObjModelImporter importes = new ObjModelImporter();
+        try {
+            importes.read(this.getClass().getResource("/townhome/10091_townhome_V1_L1.obj"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MeshView[] meshViewss = importes.getImport();
+        Group group3 = new Group();
+
+
+        group3.getChildren().addAll(meshViewss);
+        group3.setScaleX(.75);
+        group3.setScaleY(.15);
+        group3.setScaleZ(.16);
+
+        //group.setTranslateY(1000);
+        group3.setTranslateZ(800);
+        group3.setTranslateY(40);
+        group3.setTranslateX(1000);
         group3.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
         return group3;
@@ -959,23 +1041,41 @@ public class TrafficScene {
 
         return oceanBox;
     }
+    private Box airportTarmac(){
+        Box tarmac = new Box(width*15 -100,height*25,10);
+        tarmac.setLayoutY(-50);
+        //tarmac.setTranslateX(1500);
+        //tarmac.setTranslateZ(1000);
+
+        PhongMaterial tarmacMaterial = new PhongMaterial();
+        tarmacMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/airportTarmac.png"));
+        tarmacMaterial.setSpecularColor(Color.GRAY);
+        tarmacMaterial.setDiffuseMap(imageHelper.getImage("./images/airportTarmac.png"));
+        tarmac.setMaterial(tarmacMaterial);
+        tarmac.setMaterial(tarmacMaterial);
+
+        tarmac.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(-2, Rotate.Z_AXIS));
+
+        return tarmac;
+    }
     private Box cityMap(){
-        Box oceanBox = new Box(width,height,10);
-        oceanBox.setTranslateY(-50);
+        Box cityBox = new Box(width,height - 50,10);
+        cityBox.setTranslateY(-40);
         //oceanBox.setLayoutX(500);
-        oceanBox.setTranslateZ(5);
+        cityBox.setTranslateZ(10);
 
-        PhongMaterial oceanMaterial = new PhongMaterial();
-        oceanMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/trafficMap3d.png"));
-        oceanMaterial.setSpecularColor(Color.GRAY);
-        oceanMaterial.setDiffuseMap(imageHelper.getImage("./images/trafficMap3d.png"));
-        oceanMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/trafficMap3dLight.png"));
-        oceanBox.setMaterial(oceanMaterial);
+        PhongMaterial mapMaterial = new PhongMaterial();
+        mapMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/trafficMap3d.png"));
+        mapMaterial.setSpecularColor(Color.GRAY);
+        mapMaterial.setDiffuseMap(imageHelper.getImage("./images/trafficMap3d.png"));
+        mapMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/trafficMap3dLight.png"));
+        cityBox.setMaterial(mapMaterial);
 
-        oceanBox.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+        cityBox.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
 
-        return oceanBox;
+        return cityBox;
     }
 
     /**
@@ -1171,7 +1271,7 @@ public class TrafficScene {
 
     private Box runWayParking2(){
         //Simple runway for airplanes
-        Box runWay = new Box(width*1,height*2.75,10);
+        Box runWay = new Box(width,height*2.75,10);
         runWay.setLayoutY(0);
         runWay.setLayoutX(-1350);
         runWay.setTranslateZ(2800);
@@ -1215,10 +1315,10 @@ public class TrafficScene {
 
     private Box city1(){
         //Simple runway for airplanes
-        Box runWay = new Box(width*3,height*3.25,10);
+        Box runWay = new Box(width*3,height*3.14,10);
         runWay.setLayoutY(0);
         runWay.setLayoutX(-4200);
-        runWay.setTranslateZ(700);
+        runWay.setTranslateZ(750);
 
 
         PhongMaterial runway = new PhongMaterial();
@@ -1410,14 +1510,14 @@ public class TrafficScene {
 
         Group sunGroup = new Group(sunLight);
         Group moonGroup = new Group(moonLight);
-        Sphere sun = new Sphere(150);
+        Sphere sun = new Sphere(500);
 
         PhongMaterial sunMaterial = new PhongMaterial();
         sunMaterial.setDiffuseMap(imageHelper.getImage("./images/sun.png"));
         sunMaterial.setSelfIlluminationMap(imageHelper.getImage("./images/sun.png"));
         sun.setMaterial(sunMaterial);
 
-        Sphere moon = new Sphere(150);
+        Sphere moon = new Sphere(300);
 
         PhongMaterial moonMaterial = new PhongMaterial();
         moonMaterial.setDiffuseMap(imageHelper.getImage("./images/moon.png"));

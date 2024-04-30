@@ -427,6 +427,7 @@ public class LightController {
     public void sendData() {
         this.maxGreen = SystemController.updateMaxGreenTime(this.vehicleCount);
         this.vehicleCount = 0;
+        TrafficScene.setData("Traffic Light: " + getId()+ "\nAdjusting Green Time: " + maxGreen);
     }
 
     //Animation cycle for the lights
