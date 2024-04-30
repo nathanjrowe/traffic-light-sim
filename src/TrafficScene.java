@@ -1047,7 +1047,7 @@ public class TrafficScene {
             x-= 200;
         }
 
-        x = 4400;
+       /* x = 4400;
         int y = 4620;
         for(int j = 0; j< 4; j++) {
 
@@ -1122,7 +1122,7 @@ public class TrafficScene {
 
             runwayBalls.getChildren().add(sphere);
             y+= 70;
-        }
+        }*/
  /*       Sphere sphere = new Sphere(20);
         sphere.setLayoutY(0);
         sphere.setTranslateX(-500);
