@@ -1,13 +1,13 @@
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
-import javafx.animation.Animation;
+import javafx.animation.Animation;//unused
 import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
-import javafx.beans.binding.When;
+import javafx.beans.binding.When;//unused
 import javafx.geometry.Insets;
 import javafx.scene.*;
-import javafx.scene.effect.Light;
-import javafx.scene.effect.Lighting;
+import javafx.scene.effect.Light;//unused
+import javafx.scene.effect.Lighting;//unused
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -17,7 +17,7 @@ import javafx.scene.paint.*;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
-import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
+import com.interactivemesh.jfx.importer.stl.StlMeshImporter;//unused
 import javafx.util.Duration;
 
 import java.io.File;
@@ -39,11 +39,11 @@ public class TrafficScene {
 
     private ImageHelper imageHelper = new ImageHelper();
     private Testing testing = new Testing();
-    private List<Vehicle> vehicleCollidables = new ArrayList<>();
+    private List<Vehicle> vehicleCollidables = new ArrayList<>();//unused
     private List<Vehicle3D> vehicleCollidables3D = new ArrayList<>();
     private List<Bus3D> busCollidables3D = new ArrayList<>();
     private List<Person3D> personCollidablese3D = new ArrayList<>();
-    private List<Person> personCollidables = new ArrayList<>();
+    private List<Person> personCollidables = new ArrayList<>();//unused
     private AtomicInteger clickCount = new AtomicInteger(0);
     private int counter = 0;
     private SubScene subScene;
@@ -1023,7 +1023,7 @@ public class TrafficScene {
      * Default ocean mesh and material
      * @return
      */
-    private Box oceanBlock(){
+    private Box oceanBlock(){//unused
         Box oceanBox = new Box(width*2,height*10,10);
         oceanBox.setLayoutY(0);
         oceanBox.setLayoutX(-width*3.25);

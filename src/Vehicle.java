@@ -1,14 +1,14 @@
-import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
+import com.interactivemesh.jfx.importer.obj.ObjModelImporter;//unused
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.AnimationTimer;//unused
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
-import javafx.scene.Group;
+import javafx.scene.Group;//unused
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
-import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Rotate;//unused
 import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,44 +18,61 @@ import javafx.geometry.Bounds;
 
 public class Vehicle extends Node implements Runnable {
 
+    // INITIALPATHS is the list of viable paths used to guide the busses.
+
     //List of CollisionBoxes
     private final List<CollisionBox> collisionBoxes = new ArrayList<>();
     private static final double[][] INITIALPATHS = {
             /**Left Side Starting*/
             //Straight/Right First Lane, Right Second Lane, Left First Lane, Left Second Lane
             {13,127,269,127}, {13,127,289,127},{13,127,305,127},{13,127,324,127},
+
             //Left first lane, Left Second Lane, Straight
             {13,412,305,412}, {13,412,324,412}, {13,412,269,412},
+
             //Straight
             {13,428,269,428},
+
             //Straight/Right first lane, Right Second Lane
             {13,445,269,445}, {13,445,289,445},
+
             //Left first Lane, Left Second Lane, Straight/Right first lane, Right Second Lane
             {13,677,305,677},{13,677,324,677},{13,677,269,677}, {13,677,289,677},
+
             /**Bottom Side Starting**/
             //Left Turn, Straight Left Lane, Straight Right Lane/Right Turn
             {305,745,305,659},{305,745,305,677}, {324,745,324,677},
+
             //Left Turn, Straight Left Lane, Straight Right Lane/Right Turn
             {643,745,643,659},{643,745,643,677}, {663,745,663,677},
+
             /**Right Side Starting*/
             //Straight/Right First Lane, Right Second Lane, Left First Lane, Left Second Lane
             {1185,659,663,659},{1185,659,643,659},{1185,659,626,659},{1185,659,608,659},
+
             //Straight/Right first lane, Right second lane
             {1185,357,663,357},{1185,357,643,357},
+
             //Straight
             {1185,374,663,374},
+
             //Straight, Left first Lane, Left Second Lane
             {1185,394,663,394},{1185,394,626,394},{1185,394,608,394},
+
             //Straight/Right first lane, Right Second Lane, Left first lane, Left Second lane
             {1185,108,663,108},{1185,108,643,108},{1185,108,626,108},{1185,108,608,108},
+
             /**Top Side Starting*/
             //Straight Left Lane, Left Turn, Straight Right Lane/Right Turn
             {626,10,626,108},{626,10,626,127},{608,10,608,108},
+
             //Straight
             {466,10,466,127},
+
             //Straight
             //Potentially wrong
             {412,10,412,108},
+
             //Straight Left Lane, Left Turn, Straight/Right Turn
             {289,10,289,108},{289,10,289,127},{269,10,269,108}
     };
@@ -88,7 +105,7 @@ public class Vehicle extends Node implements Runnable {
             {626,412,1185,412},{269,677,412,677},{412,677,412,745}
     };
     private List<double[]> allPossiblePaths = new ArrayList<>(); //Does not include Starting Paths
-    private int allPathSize;
+    private int allPathSize;//unused
     private List<double[]> startingPaths = new ArrayList<>();
     private double distance;
     private double seconds;
@@ -130,7 +147,11 @@ public class Vehicle extends Node implements Runnable {
     }
 
     /**
-     * Creates car object box
+     * Each bus car is given a set width and height here,
+     * this function also references each path segment to determine
+     * the orientation of each bus as it travels.
+     * 
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
      */
     private void initializeCarShape() {
         //Create the car shape
@@ -150,7 +171,15 @@ public class Vehicle extends Node implements Runnable {
     }
 
     /**
-     * initializes path transition
+     * Runs vehicles on paths
+     * This function utilizes tempPane and collidableVehicles, both obtained when the constructor
+     * is first called for the vehicle.
+     * 
+     * It then adds the path and carShape values to the proveded tempPane, and provided that both values exist
+     * it will initialize the pathTransition with an event to remove the bus once it has completed the path once.
+     * 
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
+     * 
      * @param tempPane
      * @param collidableVehicles
      */
@@ -184,7 +213,8 @@ public class Vehicle extends Node implements Runnable {
     }
 
     /**
-     * Starts 3D vehicle path transition animation
+     * A protected method that runs the path transition for a selected vehicle
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
      */
     protected void startAnimation() {
         if (pathTransition != null) {
@@ -192,7 +222,8 @@ public class Vehicle extends Node implements Runnable {
         }
     }
     /**
-     * Stops vehicle path transition animation
+     * A protected method that pauses the path transition for a selected vehicle
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
      */
     protected void stopVehicle() {
         if (pathTransition != null) {
@@ -200,7 +231,9 @@ public class Vehicle extends Node implements Runnable {
         }
     }
     /**
-     * Restarts vehicle path transition animation
+     * A protected method that restarts the path transition for a selected vehicle
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
+     * 
      */
     protected void restartVehicle() {
         if (pathTransition != null) {
@@ -210,7 +243,16 @@ public class Vehicle extends Node implements Runnable {
     }
 
     /**
-     * Creates path
+     * Creates paths for vehicles to follow
+     * This function starts by randomly selecting a vaible path in the startingPaths array
+     * it then initializes a path and sets the correct starting location and MoveTo element 
+     * from startingPaths 0 and 1.
+     * 
+     * Looping through each element in the selected startingPath we create distance vectors
+     * to represent the distance and direction of each step in the vehicles' overall path.
+     * 
+     * The vehicles' speed is also set here as a ratio of the distance traveled / 100
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
      */
     protected void createPath(){
         temp = generateRandomPath(allPossiblePaths, startingPaths);
@@ -244,7 +286,10 @@ public class Vehicle extends Node implements Runnable {
     }
 
     /**
-     * Generates path segments and adds to path
+     * The vehicle paths are much more complex than the bus and pedestrian
+     * paths so this is a helper function designed to generate a viable
+     * path from the available nodes.
+     * 
      * @param allPathsList
      * @param startingPathList
      * @return list of segments
@@ -338,7 +383,9 @@ public class Vehicle extends Node implements Runnable {
     }
 
     /**
-     * Updates vehicle to the right direction based on path segment
+     * calculateAngle is a helper function designed to calculate the angle of a vehicle
+     * based on which path segment it is currently on.
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
      * @param startX
      * @param startY
      * @param endX
@@ -353,6 +400,10 @@ public class Vehicle extends Node implements Runnable {
         return angle;
     }
 
+    /*
+     * This is a collision checker similar to the one in Person.java that stops and starts
+     * vehicles based on wheter or not their collision boxes overlap.
+     */
     protected void checkCollision(List<Vehicle> vehicles) {
         //Get the bounds of the front sensor
         Bounds frontBoundsInGrandParent = getBoundsInGrandparent(frontSensor);
@@ -415,7 +466,8 @@ public class Vehicle extends Node implements Runnable {
     }
 
     /**
-     * Updates vehicle object collide boolean
+     * setCollided is a helper function used to set the collision value of the bus to the provided value.
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
      * @param bool
      */
     protected void setCollided(boolean bool){
@@ -423,49 +475,36 @@ public class Vehicle extends Node implements Runnable {
     }
 
     /**
-     * Returns path
+     * The following are temporary helper functions used while debugging.
+     * They are simple return functions that provide a bus' path, seconds, pathArr, carShape, and collided
+     * values.
+     * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
+
      * @return
      */
     protected Path returnPath(){
         return path;
     }
-
-    /**
-     * Returns second for animation
-     * @return
-     */
     protected double returnSeconds(){
         return seconds;
     }
-
-    /**
-     * Returns path array
-     * @return
-     */
     protected List<double[]> returnPathArray(){
         return temp;
     }
-
-    /**
-     * Returns car shape box
-     * @return
-     */
     protected Shape returnCarShape() {
         return carShape;
     }
-
-    /**
-     * Returns vehicle collidable boolean
-     * @return
-     */
     protected boolean returnCollided(){
         return collided;
     }
-
     protected boolean returnStoppedAtLight() {
         return stoppedAtLight;
     }
 
+    /*
+     * This getter is slightly more complex than the rest, it checks the 
+     * grandparent node for a bounds box and returns the result.
+     */
     protected Bounds getBoundsInGrandparent(Node node) {
         Bounds nodeInParent = node.localToParent(node.getBoundsInLocal());
         return node.getParent().localToParent(nodeInParent);

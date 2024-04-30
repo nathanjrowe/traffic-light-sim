@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 /**
- * Creates car images for 2D scene
+ * This class is old and currently unused...
  */
 public class TrafficCarCreation {
 

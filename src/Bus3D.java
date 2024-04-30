@@ -34,7 +34,7 @@ public class Bus3D {
     private PathTransition pathTransition;
     private Shape carShape;
     private Group buses = new Group();
-    private Bus bus;
+    private Bus bus;//this variable is unused
     private ImageHelper imageHelper = new ImageHelper();
 
     /**
@@ -51,7 +51,15 @@ public class Bus3D {
     }
 
     /**
-     * Creates 3D model for bus object
+     * Creates 3D model for bus object based on the Schoolbus object found in
+     * "/vehicleModles/School Bus.obj"
+     * 
+     * In addition to the default model used, this function creates interactable
+     * headlights and tailights, using setTranslate to position the lights on the model
+     * and using setMaterial to set the texture.
+     * 
+     * Finally, this function uses the firstSegment values to determine the Bus' initial orientation
+     * 
      * @return
      */
     private Group bus(){
@@ -136,7 +144,15 @@ public class Bus3D {
     }
 
     /**
-     * Initialize path transitions for bus paths
+     * Runs buses on paths
+     * This function utilizes tempPane and collidableBus, both obtained when the constructor
+     * is first called for the bus.
+     * 
+     * It then adds the path and carShape values to the proveded tempPane, and provided that both values exist
+     * it will initialize the pathTransition with an event to remove the bus once it has completed the path once.
+     * 
+     * this is the same as in Bus.java
+     * 
      * @param tempPane
      * @param collidableBus
      */
@@ -155,7 +171,8 @@ public class Bus3D {
     }
 
     /**
-     * Starts bus path transition animation
+     * A protected method that runs the path transition for a selected bus
+     * same as in Bus.java
      */
     protected void startAnimation() {
         if (pathTransition != null) {
@@ -164,7 +181,8 @@ public class Bus3D {
     }
 
     /**
-     * Stops bus path transition animation
+     * A protected method that pauses the path transition for a selected bus
+     * same as in Bus.java
      */
     protected void stopVehicle() {
         if (pathTransition != null) {
@@ -173,7 +191,8 @@ public class Bus3D {
     }
 
     /**
-     * restarts bus path transition animation
+     * A protected method that restarts the path transition for a selected bus
+     * same as in Bus.java
      */
     protected void restartVehicle() {
         if (pathTransition != null) {
@@ -182,7 +201,8 @@ public class Bus3D {
     }
 
     /**
-     * initialized path array
+     * initializeArrays adds each viable path from PATHS into startingPaths
+     * is the same as in Bus.java
      */
     private void initializeArrays(){
         for (double[] array : PATHS){
@@ -191,7 +211,17 @@ public class Bus3D {
     }
 
     /**
-     * Creates paths for buses
+     * Creates paths for buses to follow
+     * This function starts by randomly selecting a vaible path in the startingPaths array
+     * it then initializes a path and sets the correct starting location and MoveTo element 
+     * from startingPaths 0 and 1.
+     * 
+     * Looping through each element in the selected startingPath we create distance vectors
+     * to represent the distance and direction of each step in the bus' overall path.
+     * 
+     * The bus' speed is also set here as a ratio of the distance traveled / 100
+     * 
+     * is the same as in Bus.java
      */
     protected void createPath(){
         Random random = new Random();
@@ -216,8 +246,9 @@ public class Bus3D {
     }
 
     /**
-     * updates object to match segment angle.
-     * makes sure the bus object faces the right direction
+     * calculateAngle is a helper function designed to calculate the angle of a bus
+     * based on which path segment it is currently on.
+     * this is the same as in Bus.java
      * @param startX
      * @param startY
      * @param endX
@@ -233,7 +264,8 @@ public class Bus3D {
     }
 
     /**
-     * updates bus collided boolean
+     * setCollided is a helper function used to set the collision value of the bus to the provided value.
+     * this is the same as in Bus.java
      * @param bool
      */
     protected void setCollided(boolean bool){
@@ -241,41 +273,25 @@ public class Bus3D {
     }
 
     /**
-     * return bus path
+     * The following are temporary helper functions used while debugging.
+     * They are simple return functions that provide a bus' path, seconds, pathArr, carShape, and collided
+     * values.
+     * 
+     * these are the same as in Bus.java
      * @return
      */
     protected Path returnPath(){
         return path;
     }
-
-    /**
-     *
-     * @return seconds
-     */
     protected double returnSeconds(){
         return seconds;
     }
-
-    /**
-     *
-     * @return returns path array
-     */
     protected List<double[]> returnPathArray(){
         return temp;
     }
-
-    /**
-     * return bus object shape
-     * @return
-     */
     protected Shape returnCarShape() {
         return carShape;
     }
-
-    /**
-     * returns bus boolean
-     * @return
-     */
     protected boolean returnCollided(){
         return collided;
     }

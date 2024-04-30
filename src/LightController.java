@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javafx.animation.AnimationTimer;
-import javafx.scene.effect.Light;
+import javafx.scene.effect.Light;//unused import
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Rotate;
 
@@ -21,9 +21,13 @@ public class LightController {
     //HashMap to store the traffic lights
     //Key stores the location of the light(N, S, E, W)
     private final HashMap<String, Pane> trafficLights = new HashMap<>();
+
     //HashMap to store the pedestrian lights
     //Not implemented yet
     private final HashMap<String, Pane> pedestrianLights = new HashMap<>();
+    //HashMap to store the lane collision boxes
+    //Key stores the location of the light(N, S, E, W)
+    private final HashMap<String, CollisionBox> laneCollisionBoxes = new HashMap<>();
     //HashMap to store the collision boxes
     //Key stores the location of the light(N, S, E, W)
     private final HashMap<String, List<CollisionBox>> lightCollisionBoxes = new HashMap<>(){{
@@ -33,6 +37,7 @@ public class LightController {
         put("W", new ArrayList<>());
         put("B", new ArrayList<>());
     }};
+
     //HashMap to store the collision boxes
     //Key stores the location of the light(N, S, E, W)
     private final HashMap<String, List<CollisionBox>> pedCollisionBoxes = new HashMap<>(){{
@@ -41,9 +46,12 @@ public class LightController {
         put("E", new ArrayList<>());
         put("W", new ArrayList<>());
     }};
+
     private CollisionBox intersectionBox = null;
+    
     //Store a list of vehicles in the intersection
     private CopyOnWriteArrayList<Vehicle3D> vehicles = new CopyOnWriteArrayList<>();
+    
     //Vars to store the time in seconds for the lights
     private final int cycleTime = 120;
     private final int yellow = 6;
@@ -52,23 +60,33 @@ public class LightController {
     private int minGreen = 15;
     private int greenTime = minGreen;
     private int maxGreen = 30;
-    private int vehicleCount = 0;
-    private Vehicle currentVehicle = null;
+    private int vehicleCount = 0;//currently unused
+    private Vehicle currentVehicle = null;//currently unused
     private Boolean busApproaching = false;
+    
     //Enum to control the cycle changes
     private enum direction {NS, EW};
+    
     //Enum to mark the type of light
     protected enum lightType {STANDARD, BUS};
     private lightType type;
+    
     //List of scheduled pedestrian light changes
     private List<String> pedLightChanges = new ArrayList<>();
+    
     //Queue to store the pedestrians waiting to cross
     private List<Person3D> pedQueue = new ArrayList<>();
+    
     //Lists to check if pedestrians are crossing
     private CopyOnWriteArrayList<Person3D> pedCrossingNorth = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Person3D> pedCrossingSouth = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Person3D> pedCrossingEast = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Person3D> pedCrossingWest = new CopyOnWriteArrayList<>();
+    //Lists to check if left turn vehicles are in lanes
+    private CopyOnWriteArrayList<Vehicle3D> trafficLaneNorth = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Vehicle3D> trafficLaneSouth = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Vehicle3D> trafficLaneEast = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Vehicle3D> trafficLaneWest = new CopyOnWriteArrayList<>();
     
     //Constructor
     //Takes a list of coordinates for the lights
@@ -76,6 +94,30 @@ public class LightController {
     //lightCoord[1]: x coordinate
     //lightCoord[2]: y coordinate
     //See SystemController for the list of coordinates
+    public LightController(int id, lightType type, List<Object[]> lightCoords, List<Object[]> lightCollisionCoords, List<Object[]> pedestrianLightCoords, List<Object[]> pedestrianCollisionCoords, List<Object[]> laneCollisionCoords) {
+        //Create the traffic lights at the intersection
+        for(Object[] coord : lightCoords){
+            createTrafficLight((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
+        }
+        //Create the collision boxes at the intersection
+        for(Object[] coord : lightCollisionCoords){
+            createLightCollisionBox((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
+        }
+        //Create the pedestrian lights at the intersection
+        for(Object[] coord : pedestrianLightCoords){
+            //createPedestrianLight((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
+        }
+        //Create the collision boxes for the pedestrian lights
+        for(Object[] coord : pedestrianCollisionCoords){
+            createPedCollisionBox((String)coord[0], (Integer)coord[1], (Integer)coord[2], (Integer)coord[3], (Integer)coord[4]);
+        }
+        for(Object[] coord : laneCollisionCoords){
+            createLaneCollisionBoxes((String)coord[0], (Integer)coord[1], (Integer)coord[2], (Integer)coord[3], (Integer)coord[4]);
+        }
+        this.type = type;
+        this.id = id;
+    }
+
     public LightController(int id, lightType type, List<Object[]> lightCoords, List<Object[]> lightCollisionCoords, List<Object[]> pedestrianLightCoords, List<Object[]> pedestrianCollisionCoords) {
         //Create the traffic lights at the intersection
         for(Object[] coord : lightCoords){
@@ -87,7 +129,7 @@ public class LightController {
         }
         //Create the pedestrian lights at the intersection
         for(Object[] coord : pedestrianLightCoords){
-           // createPedestrianLight((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
+            //createPedestrianLight((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
         }
         //Create the collision boxes for the pedestrian lights
         for(Object[] coord : pedestrianCollisionCoords){
@@ -98,7 +140,10 @@ public class LightController {
     }
 
     /**
-     * Create a traffic light
+     * creates a traffic light at a given location with a layout determined by x and y
+     * the light is initially constructed on its own pane, and is added to its given location
+     * before being returned.
+     * 
      * @param location
      * @param x position
      * @param y position
@@ -107,19 +152,32 @@ public class LightController {
     private Pane createTrafficLight(String location, Integer x, Integer y){
         //Create a pane to hold the traffic light
         Pane trafficLight = new Pane();
+
         //Create the traffic light object
         TrafficLight trafficLightData = new TrafficLight();
         trafficLight = trafficLightData.getTrafficLight();
+
         //Set the location of the light
         trafficLight.setLayoutY(y);
         trafficLight.setLayoutX(x);
         trafficLight.setTranslateZ(0);
+
         //Add the light to the hashmap
         trafficLights.put(location, trafficLight);
         return trafficLight;
     }
 
-    //Create a collision box
+
+    /* Creates a collision box in the road for buses and cars.
+     * 
+     * This function is one of two that manages the collision boxes at each intersection.
+     * These collision boxes will manage the flow of traffic by phisically stopping any
+     * car/bus/pedestrian with a collision box.
+     * 
+     * The alternating state of these collision boxes, "GO" and "STOP" determine if they are active,
+     * this is necessary to prevent cars/buses/pedestrians from getting stuck inside the intersection
+     * when the light changes.
+     */
     protected void createLightCollisionBox(String location, double x, double y){
         CollisionBox collisionBox;
         if(location == "B") {
@@ -135,7 +193,11 @@ public class LightController {
         lightCollisionBoxes.get(location).add(collisionBox);
     }
 
-    //Create a collision box
+    /* Creates a collision box on the sidewalk for pedestrians. 
+     *
+     * As with the above "createLightCollisionBox" function this function is used to manage the flow of traffic
+     * by phisically blocking one direction with a collision box.
+     */
     protected void createPedCollisionBox(String location, double x, double y, int width, int height){
         CollisionBox collisionBox = new CollisionBox(x, y, width, height, this);
         collisionBox.setState(CollisionBox.State.STOP);
@@ -143,12 +205,19 @@ public class LightController {
         pedCollisionBoxes.get(location).add(collisionBox);
     }
 
-    //Create the intersection box
+
+    //This method is currently unused...
     protected void createIntersectionBox(double x, double y, int width, int height){
         intersectionBox = new CollisionBox(x, y, width, height, this);
     }
+    //Create a set of lane collision boxes
+    protected void createLaneCollisionBoxes(String location, double x, double y, int width, int height){
+        CollisionBox collisionBox = new CollisionBox(x, y, width, height, this);
+        laneCollisionBoxes.put(location, collisionBox);
+    }
 
-    /**
+    /**This method is currently unused...
+     * 
      * Creates a pedestrian light, Not implemented
      * @param x position
      * @param y position
@@ -166,7 +235,12 @@ public class LightController {
     }
 
     /**
-     * Method to add the lights to the root pane
+     * addLights adds each traffic/pedestrian light to the main scene
+     * it does this by looping through the list of lights and adding them to the root scene.
+     * each traffic light required a bit of tweaking to get its scale and position correct.
+     * 
+     * The function also adds each correspponding traffic & pedestrian collision box
+     * 
      * @param root
      */
     public void addLights(Pane root) {
@@ -200,6 +274,9 @@ public class LightController {
             for(CollisionBox box : collisionBox){
                 root.getChildren().add(box);
             }
+        }
+        for(CollisionBox box : laneCollisionBoxes.values()){
+            root.getChildren().add(box);
         }
         if(intersectionBox != null) {
             root.getChildren().add(intersectionBox);
@@ -244,6 +321,9 @@ public class LightController {
         }
     }
 
+    /*
+     * gets the list of light collision boxes
+     */
     public List<CollisionBox> getLightCollisionBoxes(){
         List<CollisionBox> boxes = new ArrayList<>();
         for(List<CollisionBox> collisionBox : lightCollisionBoxes.values()){
@@ -252,6 +332,9 @@ public class LightController {
         return boxes;
     }
 
+    /*
+     * gets the list of pedestrian collision boxes
+     */
     public List<CollisionBox> getPedCollisionBoxes(){
         List<CollisionBox> boxes = new ArrayList<>();
         for(List<CollisionBox> collisionBox : pedCollisionBoxes.values()){
@@ -259,6 +342,7 @@ public class LightController {
         }
         return boxes;
     }
+    
     //Set the maximum green time for the lights
     public void setMaxGreen(int time) {
         this.maxGreen = time;
@@ -358,6 +442,50 @@ public class LightController {
 
     }
 
+    //Method to check for vehicle collisions with lane boxes
+    //Determines right of way for vehicles
+    public void checkLaneCollision(List<Vehicle3D> allVehicles) {
+        //Add a vehicle to the lane list if it is in the lane
+        for (Vehicle3D vehicle : allVehicles) {
+            if(laneCollisionBoxes.get("N").isColliding(vehicle.getBoundsInGrandparent(vehicle.returnCarShape()))){
+                trafficLaneNorth.add(vehicle);
+            }
+            if(laneCollisionBoxes.get("S").isColliding(vehicle.getBoundsInGrandparent(vehicle.returnCarShape()))){
+                trafficLaneSouth.add(vehicle);
+            }
+            if(laneCollisionBoxes.get("E").isColliding(vehicle.getBoundsInGrandparent(vehicle.returnCarShape()))){
+                trafficLaneEast.add(vehicle);
+            }
+            if(laneCollisionBoxes.get("W").isColliding(vehicle.getBoundsInGrandparent(vehicle.returnCarShape()))){
+                trafficLaneWest.add(vehicle);
+            }
+        }
+        //Check each lane for left turning vehicles
+        //If a vehicle is in the lane, set the state of the opposing lane to stop
+        /*
+        for(Vehicle3D vehicle : trafficLaneNorth){
+            if(vehicle.getTurnDirection() == Vehicle3D.TurnDirection.LEFT){
+                laneCollisionBoxes.get("S").setState(CollisionBox.State.STOP);
+            }
+        }
+        for(Vehicle3D vehicle : trafficLaneSouth){
+            if(vehicle.getTurnDirection() == Vehicle3D.TurnDirection.LEFT){
+                laneCollisionBoxes.get("N").setState(CollisionBox.State.STOP);
+            }
+        }
+        for(Vehicle3D vehicle : trafficLaneEast){
+            if(vehicle.getTurnDirection() == Vehicle3D.TurnDirection.LEFT){
+                laneCollisionBoxes.get("W").setState(CollisionBox.State.STOP);
+            }
+        }
+        for(Vehicle3D vehicle : trafficLaneWest){
+            if(vehicle.getTurnDirection() == Vehicle3D.TurnDirection.LEFT){
+                laneCollisionBoxes.get("E").setState(CollisionBox.State.STOP);
+            }
+        }
+        */
+    }
+
     //Method to activate the pedestrian lights
     public void changePedestrianLight(String location, PedestrianLight.LightColor state) {
         Pane pedestrianLight = pedestrianLights.get(location);
@@ -398,21 +526,6 @@ public class LightController {
                 break;
             default:
                 break;
-        }
-    }
-
-    //Method to release pedestrians from the queue every 1 second
-    //Not working
-    private void releasePedestrians() {
-        int time = 0;
-         while(pedQueue.size() > 0){
-            if(time > 10000) {
-                Person3D person = pedQueue.get(0);
-                person.setCrossing(true);
-                pedQueue.remove(0);
-                time = 0;
-            }
-            time++;
         }
     }
     //Get the light state

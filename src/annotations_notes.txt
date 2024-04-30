@@ -1,0 +1,18 @@
+I just finished up the comments for each of the code sections, most of the classes had significant overlap
+next time writing something like this it would be best to use a parent "vehicle" class with more specific
+"bus" "car" and "person" classes inherriting all of the common methods. If a 2d and 3d version of these parent
+classes were made it would allow an expansion of the types and behaviors of vehicles.
+
+TrafficCarCreation.java
+and
+TrafficPedestrian.java
+are both old versions of the vehicle and person classes and should have been removed.
+
+The decision to use Camera.java and MathUtils.java was odd, these both add very little to the overall project,
+in particular MathUtils.java wasn't used at all except for a single simple math function, and that was only called
+in Camera.java.
+
+Another way to improve the code could be to set the background map onto a grid system and fit each intersection component
+in based on a double for loop that increments the distance between each intersection by some fixed amount.
+An alternative could be to create whole "blocks" of neighborhoods as modular sections and add them in some set or randomized
+pattern to create a city simulation.

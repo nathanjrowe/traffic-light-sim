@@ -1,3 +1,9 @@
+/*
+ * As described below, the ImageHelper class is used to manage javafx Image objects.
+ * Currently, the only function used in this project is getImage as a way to import
+ * png and jpg assets as 2d Image objects.
+ */
+
 /**
  * E. Puzak
  * CS 251 Project 5
@@ -30,6 +36,8 @@ public class ImageHelper {
     private static boolean imagesLoaded;
 
     /**
+     * This function is currently unused...
+     * 
      * Main get image function
      */
     public ImageHelper(){
@@ -43,7 +51,8 @@ public class ImageHelper {
     }
 
     /**
-     *
+     *This function is currently unused...
+     * 
      * @return returns loaded images
      */
     public boolean getImagesLoaded(){
@@ -51,7 +60,8 @@ public class ImageHelper {
     }
 
     /**
-     *
+     *This function is currently unused...
+
      * @param imageLocation
      * @return background image and sets it
      */
@@ -69,7 +79,9 @@ public class ImageHelper {
     }
 
     /**
-     * gets image from string
+     * This function is used throughout Bus3D.java, PedestrianLight.java
+     * Testing.java, TrafficLight.java, TrafficScene.java, and Vehicle3D.java
+     * it is used to load 2d textures or assets as a javafx image.
      * @param imageLocation
      * @return image from string
      */
