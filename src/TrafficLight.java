@@ -18,6 +18,9 @@ public class TrafficLight {
         GREENLEFT,YELLOWLEFT,REDLEFT,
         GREENRIGHT,YELLOWRIGHT,REDRIGHT
     }
+    public enum type{
+        LEFT, RIGHT, STRAIGHT
+    }
 
     private final GridPane pane;
     private final Circle redCircle;
@@ -29,6 +32,8 @@ public class TrafficLight {
     private final ImageView leftTurnRedImageView;
     private final ImageView rightTurnYellowImageView;
     private final ImageView rightTurnRedImageView;
+    private CollisionBox collisionBox;
+    private type type;
 
     private LightColor lightColor;
     //Create a pseudo-random ID for the traffic light
@@ -421,6 +426,38 @@ public class TrafficLight {
      */
     public int getId() {
         return id;
+    }
+
+    /**
+     * Method to set the type of the traffic light.
+     * @param type
+     */
+    public void setType(type type) {
+        this.type = type;
+    }
+
+    /**
+     * Method to get the type of the traffic light.
+     * @return type
+     */
+    public type getType() {
+        return type;
+    }
+
+    /**
+     * Method to add a collision box to the traffic light.
+     * @param collisionBox
+     */
+    public void setCollisionBox(CollisionBox collisionBox) {
+        this.collisionBox = collisionBox;
+    }
+
+    /**
+     * Method to get the collision box of the traffic light.
+     * @return collisionBox
+     */
+    public CollisionBox getCollisionBox() {
+        return collisionBox;
     }
 
 }

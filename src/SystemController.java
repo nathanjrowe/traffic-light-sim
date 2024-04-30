@@ -16,49 +16,69 @@ public class SystemController {
      */
     private final HashMap<Integer, ArrayList<Object[]>> lightCoords = new HashMap<>(){{
         put(1, new ArrayList<Object[]>(){{
-            add(new Object[]{"W", 256, 108});
-            add(new Object[]{"N", 316, 93});
-            add(new Object[]{"E", 337, 126});
-            add(new Object[]{"S", 280, 140});
+            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 256, 108});
+            add(new Object[]{"N", TrafficLight.type.RIGHT, 322, 93});
+            add(new Object[]{"N", TrafficLight.type.LEFT, 302, 93});
+            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 337, 126});
+            add(new Object[]{"S", TrafficLight.type.RIGHT, 264, 140});
+            add(new Object[]{"S", TrafficLight.type.LEFT, 284, 140});
         }});
         put(2, new ArrayList<Object[]>(){{
-            add(new Object[]{"W", 594, 108});
-            add(new Object[]{"N", 652, 92});
-            add(new Object[]{"E", 675, 127});
-            add(new Object[]{"S", 618, 141});
+            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 594, 108});
+            add(new Object[]{"N", TrafficLight.type.LEFT ,636, 92});
+            add(new Object[]{"N", TrafficLight.type.RIGHT, 656, 92});
+            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 675, 127});
+            add(new Object[]{"S", TrafficLight.type.LEFT, 622, 141});
+            add(new Object[]{"S", TrafficLight.type.RIGHT, 602, 141});
         }});
         put(3, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 314, 342});
-            add(new Object[]{"E", 340, 429});
-            add(new Object[]{"S", 279, 459});
-            add(new Object[]{"W", 255, 375});
+            add(new Object[]{"N", TrafficLight.type.RIGHT, 319, 342});
+            add(new Object[]{"N", TrafficLight.type.LEFT, 299, 342});
+            add(new Object[]{"E", TrafficLight.type.LEFT, 340, 408});
+            add(new Object[]{"E", TrafficLight.type.RIGHT, 340, 448});
+            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 340, 428});
+            add(new Object[]{"S", TrafficLight.type.LEFT, 268, 459});
+            add(new Object[]{"S", TrafficLight.type.RIGHT, 288, 459});
+            add(new Object[]{"W", TrafficLight.type.LEFT, 255, 395});
+            add(new Object[]{"W", TrafficLight.type.RIGHT, 255, 355});
+            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 255, 375});
         }});
         put(4, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 652, 342});
-            add(new Object[]{"E", 675, 429});
-            add(new Object[]{"S", 615, 460});
-            add(new Object[]{"W", 592, 374});
+            add(new Object[]{"N", TrafficLight.type.RIGHT, 661, 342});
+            add(new Object[]{"N", TrafficLight.type.LEFT, 641, 342});
+            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 675, 425});
+            add(new Object[]{"E", TrafficLight.type.RIGHT, 675, 445});
+            add(new Object[]{"E", TrafficLight.type.LEFT, 675, 405});
+            add(new Object[]{"S", TrafficLight.type.RIGHT, 602, 460});
+            add(new Object[]{"S", TrafficLight.type.LEFT, 622, 460});
+            add(new Object[]{"W", TrafficLight.type.LEFT, 592, 395});
+            add(new Object[]{"W", TrafficLight.type.RIGHT, 592, 355});
+            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 592, 375});
         }});
         put(5, new ArrayList<Object[]>(){{
-            add(new Object[]{"S", 278, 692});
-            add(new Object[]{"N", 314, 643});
-            add(new Object[]{"W", 257, 659});
-            add(new Object[]{"E", 337, 677});
+            add(new Object[]{"S", TrafficLight.type.LEFT, 284, 692});
+            add(new Object[]{"S", TrafficLight.type.RIGHT, 264, 692});
+            add(new Object[]{"N", TrafficLight.type.RIGHT, 320, 643});
+            add(new Object[]{"N", TrafficLight.type.LEFT, 300, 643});
+            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 257, 659});
+            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 337, 677});
         }});
         put(6, new ArrayList<Object[]>(){{
-            add(new Object[]{"S", 617, 691});
-            add(new Object[]{"N", 652, 643});
-            add(new Object[]{"W", 595, 658});
-            add(new Object[]{"E", 674, 676});
+            add(new Object[]{"S", TrafficLight.type.LEFT, 620, 691});
+            add(new Object[]{"S", TrafficLight.type.RIGHT, 600, 691});
+            add(new Object[]{"N", TrafficLight.type.RIGHT, 658, 643});
+            add(new Object[]{"N", TrafficLight.type.LEFT, 638, 643});
+            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 595, 658});
+            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 674, 676});
         }});
         //Coordinates for lights at bus intersections
         put(7, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 309, 640});
-            add(new Object[]{"S", 275, 688});
+            add(new Object[]{"N", TrafficLight.type.STRAIGHT, 309, 640});
+            add(new Object[]{"S", TrafficLight.type.STRAIGHT, 275, 688});
         }});
         put(8, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 648, 640});
-            add(new Object[]{"S", 614, 688});
+            add(new Object[]{"N", TrafficLight.type.STRAIGHT, 648, 640});
+            add(new Object[]{"S", TrafficLight.type.STRAIGHT, 614, 688});
         }});
     }};
 
@@ -66,77 +86,77 @@ public class SystemController {
     //Object[] = {String associated light, double xCenter, double yCenter}
     private final HashMap<Integer, ArrayList<Object[]>> lightCollisionCoords = new HashMap<>(){{
         put(1, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 322, 155});
-            add(new Object[]{"N", 302, 156});
-            add(new Object[]{"S", 264, 86});
-            add(new Object[]{"S", 284, 86});
-            add(new Object[]{"E", 242, 130});
-            add(new Object[]{"W", 342, 111});
+            add(new Object[]{"N", TrafficLight.type.RIGHT, 322, 155});
+            add(new Object[]{"N", TrafficLight.type.LEFT, 302, 156});
+            add(new Object[]{"S", TrafficLight.type.RIGHT, 264, 86});
+            add(new Object[]{"S", TrafficLight.type.LEFT, 284, 86});
+            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 242, 130});
+            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 342, 111});
         }});
         put(2, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 636, 156});
-            add(new Object[]{"N", 656, 156});
-            add(new Object[]{"S", 622, 86});
-            add(new Object[]{"S", 602, 86});
-            add(new Object[]{"E", 576, 130});
-            add(new Object[]{"W", 686, 111});
+            add(new Object[]{"N", TrafficLight.type.LEFT, 636, 156});
+            add(new Object[]{"N", TrafficLight.type.RIGHT, 656, 156});
+            add(new Object[]{"S", TrafficLight.type.LEFT, 622, 86});
+            add(new Object[]{"S", TrafficLight.type.RIGHT, 602, 86});
+            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 576, 130});
+            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 686, 111});
         }});
         put(3, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 299, 467});
-            add(new Object[]{"N", 319, 467});
-            add(new Object[]{"S", 268, 328});
-            add(new Object[]{"S", 284, 328});
-            add(new Object[]{"E", 234, 408});
-            add(new Object[]{"E", 234, 428});
-            add(new Object[]{"E", 234, 448});
-            add(new Object[]{"W", 345, 355});
-            add(new Object[]{"W", 345, 375});
-            add(new Object[]{"W", 345, 395});
+            add(new Object[]{"N", TrafficLight.type.LEFT, 299, 467});
+            add(new Object[]{"N", TrafficLight.type.RIGHT, 319, 467});
+            add(new Object[]{"S", TrafficLight.type.RIGHT, 268, 328});
+            add(new Object[]{"S", TrafficLight.type.LEFT, 284, 328});
+            add(new Object[]{"E", TrafficLight.type.LEFT, 234, 408});
+            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 234, 428});
+            add(new Object[]{"E", TrafficLight.type.RIGHT, 234, 444});
+            add(new Object[]{"W", TrafficLight.type.RIGHT, 345, 355});
+            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 345, 375});
+            add(new Object[]{"W", TrafficLight.type.LEFT, 345, 395});
         }});
         put(4, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 641, 469});
-            add(new Object[]{"N", 661, 469});
-            add(new Object[]{"S", 602, 330});
-            add(new Object[]{"S", 622, 330});
-            add(new Object[]{"E", 570, 410});
-            add(new Object[]{"E", 570, 425});
-            add(new Object[]{"E", 570, 445});
-            add(new Object[]{"W", 682, 355});
-            add(new Object[]{"W", 682, 375});
-            add(new Object[]{"W", 682, 395});
+            add(new Object[]{"N", TrafficLight.type.LEFT, 641, 469});
+            add(new Object[]{"N", TrafficLight.type.RIGHT, 661, 469});
+            add(new Object[]{"S", TrafficLight.type.RIGHT, 602, 330});
+            add(new Object[]{"S", TrafficLight.type.LEFT, 622, 330});
+            add(new Object[]{"E", TrafficLight.type.LEFT, 570, 405});
+            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 570, 425});
+            add(new Object[]{"E", TrafficLight.type.RIGHT, 570, 445});
+            add(new Object[]{"W", TrafficLight.type.RIGHT, 682, 355});
+            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 682, 375});
+            add(new Object[]{"W", TrafficLight.type.LEFT, 682, 395});
         }});
         put(5, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 300, 699});
-            add(new Object[]{"N", 320, 699});
-            add(new Object[]{"S", 264, 630});
-            add(new Object[]{"S", 284, 630});
-            add(new Object[]{"E", 237, 674});
-            add(new Object[]{"W", 346, 653});
+            add(new Object[]{"N", TrafficLight.type.LEFT, 300, 699});
+            add(new Object[]{"N", TrafficLight.type.RIGHT, 320, 699});
+            add(new Object[]{"S", TrafficLight.type.RIGHT, 264, 630});
+            add(new Object[]{"S", TrafficLight.type.LEFT, 284, 630});
+            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 237, 674});
+            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 346, 653});
         }});
         put(6, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 638, 699});
-            add(new Object[]{"N", 658, 699});
-            add(new Object[]{"S", 600, 630});
-            add(new Object[]{"S", 620, 630});
-            add(new Object[]{"E", 575, 674});
-            add(new Object[]{"W", 685, 653});
+            add(new Object[]{"N", TrafficLight.type.LEFT, 638, 699});
+            add(new Object[]{"N", TrafficLight.type.RIGHT, 658, 699});
+            add(new Object[]{"S", TrafficLight.type.RIGHT, 600, 630});
+            add(new Object[]{"S", TrafficLight.type.LEFT, 620, 630});
+            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 575, 674});
+            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 685, 653});
         }});
         //Busses
         put(7, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 322, 589});
-            add(new Object[]{"N", 302, 589});
-            add(new Object[]{"S", 284, 528});
-            add(new Object[]{"S", 264, 528});
-            add(new Object[]{"B", 250, 548});
-            add(new Object[]{"B", 30, 568});
+            add(new Object[]{"N", TrafficLight.type.STRAIGHT, 322, 589});
+            add(new Object[]{"N", TrafficLight.type.STRAIGHT, 302, 589});
+            add(new Object[]{"S", TrafficLight.type.STRAIGHT, 284, 528});
+            add(new Object[]{"S", TrafficLight.type.STRAIGHT, 264, 528});
+            add(new Object[]{"B", TrafficLight.type.STRAIGHT, 250, 548});
+            add(new Object[]{"B", TrafficLight.type.STRAIGHT, 30, 568});
         }});
         put(8, new ArrayList<Object[]>(){{
-            add(new Object[]{"N", 636, 589});
-            add(new Object[]{"N", 656, 589});
-            add(new Object[]{"S", 602, 528});
-            add(new Object[]{"S", 622, 528});
-            add(new Object[]{"B", 602, 548});
-            add(new Object[]{"B", 372, 568});
+            add(new Object[]{"N", TrafficLight.type.STRAIGHT, 636, 589});
+            add(new Object[]{"N", TrafficLight.type.STRAIGHT, 656, 589});
+            add(new Object[]{"S", TrafficLight.type.STRAIGHT, 602, 528});
+            add(new Object[]{"S", TrafficLight.type.STRAIGHT, 622, 528});
+            add(new Object[]{"B", TrafficLight.type.STRAIGHT, 602, 548});
+            add(new Object[]{"B", TrafficLight.type.STRAIGHT, 372, 568});
         }});
     }};
     //HashMap to store the pedestrian light coordinates for each intersection

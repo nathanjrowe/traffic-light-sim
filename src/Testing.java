@@ -82,7 +82,7 @@ public class Testing extends Application {
         System.out.println("Original Image Width: " + imageW + " Original Image Height: " + imageH);
 
         Pane mapPane = resizeImage(fullMap, 1200, 800);
-        //root.getChildren().add(mapPane);
+        root.getChildren().add(mapPane);
 
         if (!flag3D) {
             root.setOnMouseClicked(event -> {

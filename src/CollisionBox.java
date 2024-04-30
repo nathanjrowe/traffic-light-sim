@@ -51,4 +51,5 @@ public class CollisionBox extends Rectangle{
     public boolean isColliding(Bounds box){
         return this.getBoundsInParent().intersects(box);
     }
+
 }
