@@ -26,6 +26,7 @@ public class Person3D {
             {868, 529, 516, 529}, {244, 62, 244, 246}
     };
 
+    private List<CollisionBox> collidableBoxes = new ArrayList<>();
     private List<double[]> startingPaths = new ArrayList<>();
     private List<double[]> temp = new ArrayList<>();
     private Path path;
@@ -34,6 +35,7 @@ public class Person3D {
     private Boolean collided;
     private PathTransition pathTransition;
     private Shape carShape;
+    private Boolean isCrossing = false;
     private Group people = new Group();
 
     /**
@@ -42,13 +44,14 @@ public class Person3D {
      * @param collidablePerson
      */
 
-    public Person3D(Pane tempPane, List<Person3D> collidablePerson){
+    public Person3D(Pane tempPane, List<Person3D> collidablePerson, List<CollisionBox> collidableBoxes){
         person();
         initializeArrays();
         createPath();
         person();
         initializePathTransition(tempPane, collidablePerson);
         this.collided = false;
+        this.collidableBoxes = collidableBoxes;
     }
 
 
@@ -194,6 +197,14 @@ public class Person3D {
         collided = bool;
     }
 
+    public boolean isCrossing() {
+        return isCrossing;
+    }
+
+    public void setCrossing(boolean crossing) {
+        this.isCrossing = crossing;
+    }
+
     /**
      * Returns the 3D pedestrian path
      * @return
@@ -232,6 +243,24 @@ public class Person3D {
      */
     protected boolean returnCollided(){
         return collided;
+    }
+
+    /*
+     * Handle pedestrian collision with other objects
+     */
+    protected void checkCollision(){
+        //System.out.println("Person Checking collison");
+        for (CollisionBox box : collidableBoxes){
+            if (box.isColliding(carShape.getBoundsInParent())){
+                if (box.getState() == CollisionBox.State.STOP && !this.isCrossing){
+                    stopVehicle();
+                }
+                else {
+                    restartVehicle();
+                    this.isCrossing = true;
+                }
+            }
+        }
     }
 
 }

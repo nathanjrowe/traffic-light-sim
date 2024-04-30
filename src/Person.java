@@ -23,10 +23,12 @@ public class Person {
 
     private List<double[]> startingPaths = new ArrayList<>();
     private List<double[]> temp = new ArrayList<>();
+    private List<CollisionBox> collidableBoxes = new ArrayList<>();
     private Path path;
     private double distance;
     private double seconds;
     private Boolean collided;
+    private Boolean isCrossing = false;
     private PathTransition pathTransition;
     private Shape carShape;
 
@@ -35,12 +37,13 @@ public class Person {
      * @param tempPane
      * @param collidablePerson
      */
-    public Person(Pane tempPane, List<Person> collidablePerson){
+    public Person(Pane tempPane, List<Person> collidablePerson, List<CollisionBox> collidableBoxes){
         initializeArrays();
         createPath();
         initializeCarShape();
         initializePathTransition(tempPane, collidablePerson);
         this.collided = false;
+        this.collidableBoxes = collidableBoxes;
     }
 
     /**
@@ -161,6 +164,14 @@ public class Person {
         collided = bool;
     }
 
+    public boolean isCrossing() {
+        return isCrossing;
+    }
+
+    public void setCrossing(boolean crossing) {
+        this.isCrossing = crossing;
+    }
+
     /**
      * Returns pedestrian path
      * @return
@@ -201,4 +212,22 @@ public class Person {
         return collided;
     }
 
+
+    /*
+     * Handle pedestrian collision with other objects
+     */
+    protected void checkCollision(){
+        //System.out.println("Person Checking collison");
+        for (CollisionBox box : collidableBoxes){
+            if (box.isColliding(carShape.getBoundsInParent())){
+                if (box.getState() == CollisionBox.State.STOP && !this.isCrossing){
+                    stopVehicle();
+                }
+                else {
+                    restartVehicle();
+                    this.isCrossing = true;
+                }
+            }
+        }
+    }
 }

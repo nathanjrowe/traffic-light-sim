@@ -25,7 +25,8 @@ public class Testing extends Application {
     private final Boolean getCoordinates = true;
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private List<Vehicle3D> vehicleCollidables3D = new ArrayList<>();
-    private List<CollisionBox> collisionBoxes = new ArrayList<>();
+    private List<CollisionBox> lightCollisionBoxes = new ArrayList<>();
+    private List<CollisionBox> pedCollisionBoxes = new ArrayList<>();
     private List<Bus> busCollidables = new ArrayList<>();
     private List<Bus3D> busCollidables3D = new ArrayList<>();
     //
@@ -124,7 +125,8 @@ public class Testing extends Application {
         systemController.addLights(tempPane);
         root.getChildren().add(tempPane);
          //Add collision boxes to list
-         collisionBoxes = systemController.getCollisionBoxes();
+        lightCollisionBoxes = systemController.getLightCollisionBoxes();
+        pedCollisionBoxes = systemController.getPedestrianCollisionBoxes();
     }
 
     /**
@@ -141,7 +143,8 @@ public class Testing extends Application {
         }
 
         if(flag3D == false) {
-            Vehicle vehicle = new Vehicle(tempPane, vehicleCollidables, collisionBoxes);
+            Vehicle vehicle = new Vehicle(tempPane, vehicleCollidables, lightCollisionBoxes);
+
 
             vehicle.startAnimation();
             vehicleCollidables.add(vehicle);
@@ -154,7 +157,7 @@ public class Testing extends Application {
             pause.play();
         }
         else{
-            Vehicle3D vehicle = new Vehicle3D(tempPane, vehicleCollidables3D, collisionBoxes);
+            Vehicle3D vehicle = new Vehicle3D(tempPane, vehicleCollidables3D, lightCollisionBoxes);
 
             vehicle.startAnimation();
             vehicleCollidables3D.add(vehicle);
@@ -174,7 +177,7 @@ public class Testing extends Application {
             return;
         }
 
-        Vehicle3D vehicle = new Vehicle3D(tempPane, vehicleCollidables3D, collisionBoxes);
+        Vehicle3D vehicle = new Vehicle3D(tempPane, vehicleCollidables3D, lightCollisionBoxes);
 
         vehicle.startAnimation();
         vehicleCollidables3D.add(vehicle);
@@ -251,6 +254,23 @@ public class Testing extends Application {
         if (count >= 50) {
             return;
         }
+
+        if(flag3D == false) {
+            Person person = new Person(tempPane, personCollidables, pedCollisionBoxes);
+
+            person.startAnimation();
+            personCollidables.add(person);
+
+            //Using a recursive method to guarantee that the pause actually occurs.
+            PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(300));
+            pause.setOnFinished(event1 -> {
+                addPeople(personCollidables.size(), tempPane, personCollidables);
+            });
+            pause.play();
+        }
+        else{
+            Person3D person = new Person3D(tempPane, personCollidables3D, pedCollisionBoxes);
+        }
     }
 
     public void addPeople3D(int count, Pane tempPane, List<Person3D> personCollidable) {
@@ -258,7 +278,7 @@ public class Testing extends Application {
             return;
         }
 
-        Person3D person = new Person3D(tempPane, personCollidable);
+        Person3D person = new Person3D(tempPane, personCollidable, pedCollisionBoxes);
 
         person.startAnimation();
         personCollidable.add(person);
@@ -287,12 +307,22 @@ public class Testing extends Application {
                         v1.checkCollision(vehicleCollidables3D);
                         systemController.checkVehicleCrossing(vehicleCollidables3D);
                     }
+                    for (Person3D p1 : personCollidables3D) {
+                        p1.checkCollision();
+                    }
+                    systemController.checkVehicleCrossing(vehicleCollidables3D);
+                    systemController.checkPedestrianCrossing(personCollidables3D);
+                    systemController.checkBusCrossing(busCollidables3D);
                 }
                 else {
                     for (Vehicle v1 : vehicleCollidables) {
                         v1.checkCollision(vehicleCollidables);
-                        systemController.checkVehicleCrossing(vehicleCollidables3D);
+                        
                     }
+                    for (Person p1 : personCollidables) {
+                        p1.checkCollision();
+                    }
+                    
                 }
             }
         };
