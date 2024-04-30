@@ -268,7 +268,6 @@ public class Person3D {
      */
     protected void checkCollision(){
         for (CollisionBox box : collidableBoxes){
-            System.out.println("Collision Box state: " + box.getState());
             if (box.isColliding(getBoundsInGrandparent(carShape))){
                 if (box.getState() == CollisionBox.State.STOP && !this.isCrossing){
                     stopVehicle();

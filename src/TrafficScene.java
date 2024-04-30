@@ -103,7 +103,7 @@ public class TrafficScene {
         Pane streetScene = testing.getRoot();
         Pane tempPane = new Pane();
 
-        streetScene.getChildren().addAll(tempPane);//, cityMap());
+        streetScene.getChildren().addAll(tempPane, cityMap());
 
         streetScene.setTranslateX(-800);
         streetScene.setTranslateZ(2200);
