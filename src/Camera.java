@@ -73,7 +73,7 @@ public class Camera extends Parent {
     private boolean fwd, strafeL, strafeR, back, up, down, shift;
 
     private double mouseSpeed = 1.0, mouseModifier = 0.1;
-    private double moveSpeed = 10.0;
+    private double moveSpeed = 80.0;
     private double mousePosX;
     private double mousePosY;
     private double mouseOldX;
@@ -122,7 +122,7 @@ public class Camera extends Parent {
                                 break;
                             case SHIFT:
                                 shift = true;
-                                moveSpeed = 20;
+                                moveSpeed = 160;
                                 break;
                         }
                     } else if (ke.getEventType() == KeyEvent.KEY_RELEASED) {
@@ -146,7 +146,7 @@ public class Camera extends Parent {
                                 strafeR = false;
                                 break;
                             case SHIFT:
-                                moveSpeed = 10;
+                                moveSpeed = 80;
                                 shift = false;
                                 break;
                         }
@@ -178,7 +178,7 @@ public class Camera extends Parent {
                         mouseSpeed = 0.1;
                     }
                     if (me.isShiftDown()) {
-                        mouseSpeed = 1.0;
+                        mouseSpeed = 2.0;
                     }
                     t.setX(getPosition().getX());
                     t.setY(getPosition().getY());
@@ -252,7 +252,7 @@ public class Camera extends Parent {
                         break;
                     case SHIFT:
                         shift = true;
-                        moveSpeed = 20;
+                        moveSpeed = 160;
                         break;
                 }
             } else if (ke.getEventType() == KeyEvent.KEY_RELEASED) {
@@ -276,7 +276,7 @@ public class Camera extends Parent {
                         strafeR = false;
                         break;
                     case SHIFT:
-                        moveSpeed = 10;
+                        moveSpeed = 80;
                         shift = false;
                         break;
                 }
