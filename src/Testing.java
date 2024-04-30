@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Testing extends Application {
     private final Boolean DEBUG = false;
-    private final Boolean getCoordinates = false;
+    private final Boolean getCoordinates = true;
     private List<Vehicle> vehicleCollidables = new ArrayList<>();
     private List<Vehicle3D> vehicleCollidables3D = new ArrayList<>();
     private List<CollisionBox> lightCollisionBoxes = new ArrayList<>();
@@ -84,41 +84,41 @@ public class Testing extends Application {
         Pane mapPane = resizeImage(fullMap, 1200, 800);
         root.getChildren().add(mapPane);
 
-        root.setOnMouseClicked(event -> {
-            if (getCoordinates) {
-                double[] temp = {event.getX(), event.getY()};
-                System.out.println("X Position: " + temp[0] + ", Y Position: " + temp[1] + ", Dot Number: " + clickCount.get());
-                Circle circle = new Circle(event.getX(), event.getY(),2);
-                circle.setFill(Color.RED);
-                Text dotCount = new Text(event.getX() + 3, event.getY(), String.valueOf(clickCount.get()));
-                dotCount.setFill(Color.RED);
-                clickCount.getAndIncrement();
-                tempPane.getChildren().addAll(circle, dotCount);
-            }
-            else {
-                if (!currentlySpawning) {
-                    stopSpawning = false;
-                    currentlySpawning = true;
-                    addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
-                    addBuses(busCollidables.size(), tempPane, busCollidables);
-                    addPeople(personCollidables.size(), tempPane, personCollidables);
-                }
-                else {
-                    System.out.println("Currently Spawning Bool: " + currentlySpawning);
-                    System.out.println("Already Spawning");
-                }
-            }
-        });
-        root.setOnKeyPressed(event1 -> {
-            if (event1.getCode() == KeyCode.SPACE) {
-                if (!stopSpawning) {
-                    stopSpawning = true;
-                    currentlySpawning = false;
+        if (!flag3D) {
+            root.setOnMouseClicked(event -> {
+                if (getCoordinates) {
+                    double[] temp = {event.getX(), event.getY()};
+                    System.out.println("X Position: " + temp[0] + ", Y Position: " + temp[1] + ", Dot Number: " + clickCount.get());
+                    Circle circle = new Circle(event.getX(), event.getY(), 2);
+                    circle.setFill(Color.RED);
+                    Text dotCount = new Text(event.getX() + 3, event.getY(), String.valueOf(clickCount.get()));
+                    dotCount.setFill(Color.RED);
+                    clickCount.getAndIncrement();
+                    tempPane.getChildren().addAll(circle, dotCount);
                 } else {
-                    currentlySpawning = false;
+                    if (!currentlySpawning) {
+                        stopSpawning = false;
+                        currentlySpawning = true;
+                        addVehiclesUntilCount(vehicleCollidables.size(), tempPane, vehicleCollidables);
+                        addBuses(busCollidables.size(), tempPane, busCollidables);
+                        addPeople(personCollidables.size(), tempPane, personCollidables);
+                    } else {
+                        System.out.println("Currently Spawning Bool: " + currentlySpawning);
+                        System.out.println("Already Spawning");
+                    }
                 }
-            }
-        });
+            });
+            root.setOnKeyPressed(event1 -> {
+                if (event1.getCode() == KeyCode.SPACE) {
+                    if (!stopSpawning) {
+                        stopSpawning = true;
+                        currentlySpawning = false;
+                    } else {
+                        currentlySpawning = false;
+                    }
+                }
+            });
+        }
 
         //Add lights to the map
         systemController = new SystemController();
@@ -216,7 +216,7 @@ public class Testing extends Application {
         busCollidables.add(bus);
 
         //Using a recursive method to guarantee that the pause actually occurs.
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(25000));
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(25));
         pause.setOnFinished(event1 -> {
             addBuses3D(busCollidables.size(), tempPane, busCollidables);
         });
