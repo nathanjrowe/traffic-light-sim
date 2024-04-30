@@ -273,6 +273,46 @@ public class SystemController {
             //add(new Object[]{"W", 586, 578});
         }});
     }};
+    //HashMap to store the coordinates for the lane collision boxes
+    private final HashMap<Integer, ArrayList<Object[]>> laneCollisionCoords = new HashMap<>(){{
+        put(1, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 258, 21, 30, 70});
+            add(new Object[]{"S", 296, 150, 30, 150});
+            add(new Object[]{"E", 343, 106, 80, 15});
+            add(new Object[]{"W", 41, 122, 215, 15});
+        }});
+        put(2, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 597, 21, 30, 70});
+            add(new Object[]{"S", 632, 150, 30, 150});
+            add(new Object[]{"E", 675, 106, 215, 15});
+            add(new Object[]{"W", 484, 124, 100, 15});
+        }});
+        put(3, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 260, 203, 30, 130});
+            add(new Object[]{"S", 295, 465, 30, 60});
+            add(new Object[]{"E", 340, 350, 215, 40});
+            add(new Object[]{"W", 41, 408, 215, 40});
+        }});
+        put(4, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 596, 203, 30, 130});
+            add(new Object[]{"S", 632, 470, 30, 60});
+            add(new Object[]{"E", 682, 351, 215, 40});
+            add(new Object[]{"W", 380, 404, 215, 40});
+        }});
+        put(5, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 259, 584, 30, 60});
+            add(new Object[]{"S", 295, 692, 30, 60});
+            add(new Object[]{"E", 338, 649, 80, 15});
+            add(new Object[]{"W", 41, 648, 215, 15});
+        }});
+        put(6, new ArrayList<Object[]>(){{
+            add(new Object[]{"N", 596, 584, 30, 60});
+            add(new Object[]{"S", 632, 692, 30, 60});
+            add(new Object[]{"E", 677, 645, 216, 15});
+            add(new Object[]{"W", 475, 666, 110, 15});
+        }});
+    }};
+
     //HashMap to store the light controllers
     private final HashMap<Integer, LightController> lightControllers = new HashMap<>();
     //Set final value for the number of intersections
@@ -293,7 +333,7 @@ public class SystemController {
      */
     private void spawnLights() {
         for (int i = 1; i <= INTERSECTIONS; i++) {
-            lightControllers.put(i, new LightController(i, LightController.lightType.STANDARD, lightCoords.get(i), lightCollisionCoords.get(i), pedestrianLights.get(i), pedCollisionCoords.get(i)));
+            lightControllers.put(i, new LightController(i, LightController.lightType.STANDARD, lightCoords.get(i), lightCollisionCoords.get(i), pedestrianLights.get(i), pedCollisionCoords.get(i), laneCollisionCoords.get(i)));
         }
         //Create the bus lights, last two elements in the HashMap
         lightControllers.put(7, new LightController(7, LightController.lightType.BUS, lightCoords.get(7), lightCollisionCoords.get(7), pedestrianLights.get(7), pedCollisionCoords.get(7)));
