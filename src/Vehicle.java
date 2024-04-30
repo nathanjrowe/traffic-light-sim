@@ -165,6 +165,7 @@ public class Vehicle extends Node implements Runnable {
             pathTransition.setInterpolator(Interpolator.LINEAR);
             pathTransition.setCycleCount(1);
 
+
             //Car Rotation Code
             pathTransition.currentTimeProperty().addListener((obs, old, current) -> {
                 double xPosition = carGroup.getLayoutX() + carGroup.getTranslateX();
