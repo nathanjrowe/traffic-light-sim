@@ -20,7 +20,12 @@ public class LightController {
 
     //HashMap to store the traffic lights
     //Key stores the location of the light(N, S, E, W)
-    private final HashMap<String, Pane> trafficLights = new HashMap<>();
+    private final HashMap<String, List<Pane>> trafficLights = new HashMap<>(){{
+        put("N", new ArrayList<>());
+        put("S", new ArrayList<>());
+        put("E", new ArrayList<>());
+        put("W", new ArrayList<>());
+    }};
 
     //HashMap to store the pedestrian lights
     //Not implemented yet
@@ -97,11 +102,11 @@ public class LightController {
     public LightController(int id, lightType type, List<Object[]> lightCoords, List<Object[]> lightCollisionCoords, List<Object[]> pedestrianLightCoords, List<Object[]> pedestrianCollisionCoords, List<Object[]> laneCollisionCoords) {
         //Create the traffic lights at the intersection
         for(Object[] coord : lightCoords){
-            createTrafficLight((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
+            createTrafficLight((String)coord[0], (TrafficLight.type)coord[1], (Integer)coord[2], (Integer)coord[3]);
         }
         //Create the collision boxes at the intersection
         for(Object[] coord : lightCollisionCoords){
-            createLightCollisionBox((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
+            createLightCollisionBox((String)coord[0], (TrafficLight.type)coord[1], (Integer)coord[2], (Integer)coord[3]);
         }
         //Create the pedestrian lights at the intersection
         for(Object[] coord : pedestrianLightCoords){
@@ -117,15 +122,16 @@ public class LightController {
         this.type = type;
         this.id = id;
     }
-
+    
+    //Constructor for busses
     public LightController(int id, lightType type, List<Object[]> lightCoords, List<Object[]> lightCollisionCoords, List<Object[]> pedestrianLightCoords, List<Object[]> pedestrianCollisionCoords) {
         //Create the traffic lights at the intersection
         for(Object[] coord : lightCoords){
-            createTrafficLight((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
+            createTrafficLight((String)coord[0], (TrafficLight.type)coord[1], (Integer)coord[2], (Integer)coord[3]);
         }
         //Create the collision boxes at the intersection
         for(Object[] coord : lightCollisionCoords){
-            createLightCollisionBox((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
+            createLightCollisionBox((String)coord[0], (TrafficLight.type)coord[1], (Integer)coord[2], (Integer)coord[3]);
         }
         //Create the pedestrian lights at the intersection
         for(Object[] coord : pedestrianLightCoords){
@@ -145,11 +151,12 @@ public class LightController {
      * before being returned.
      * 
      * @param location
+     * @param type of light: RIGHT, LEFT, STRAIGHT
      * @param x position
      * @param y position
      * @return pane of trafic light
      */
-    private Pane createTrafficLight(String location, Integer x, Integer y){
+    private Pane createTrafficLight(String location, TrafficLight.type type, Integer x, Integer y){
         //Create a pane to hold the traffic light
         Pane trafficLight = new Pane();
 
@@ -161,9 +168,10 @@ public class LightController {
         trafficLight.setLayoutY(y);
         trafficLight.setLayoutX(x);
         trafficLight.setTranslateZ(0);
-
+        //Set the type of light
+        trafficLightData.setType(type);
         //Add the light to the hashmap
-        trafficLights.put(location, trafficLight);
+        trafficLights.get(location).add(trafficLight);
         return trafficLight;
     }
 
@@ -178,7 +186,7 @@ public class LightController {
      * this is necessary to prevent cars/buses/pedestrians from getting stuck inside the intersection
      * when the light changes.
      */
-    protected void createLightCollisionBox(String location, double x, double y){
+    protected void createLightCollisionBox(String location, TrafficLight.type type, double x, double y){
         CollisionBox collisionBox;
         if(location == "B") {
             collisionBox = new CollisionBox(x, y, 300, 6, this);
@@ -187,6 +195,13 @@ public class LightController {
         else {
             collisionBox = new CollisionBox(x, y, 6, 6, this);
             collisionBox.setState(CollisionBox.State.STOP);
+            //Connect the collision box to the associated traffic light
+            for(Pane trafficLight : trafficLights.get(location)){
+                TrafficLight trafficLightData = (TrafficLight) trafficLight.getUserData();
+                if(trafficLightData.getType() == type){
+                    trafficLightData.setCollisionBox(collisionBox);
+                }
+            }
         }
         
         //Add collision box to the list of collision boxes for the location
@@ -244,8 +259,17 @@ public class LightController {
      * @param root
      */
     public void addLights(Pane root) {
-        for(Pane trafficLight : trafficLights.values()){
-            root.getChildren().add(trafficLight);
+        for(List<Pane> trafficLightList : trafficLights.values()){
+            for(Pane trafficLight : trafficLightList){
+                root.getChildren().add(trafficLight);
+                trafficLight.setTranslateZ(-150);
+                trafficLight.setScaleY(1.25);
+                trafficLight.setScaleX(1.25);
+                //Light rotations 3D
+                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
+                        new Rotate(0, Rotate.Z_AXIS));
+            }
+        }
 
        /*     Pane trafficlightLeftSide = new Pane(trafficLight);
 
@@ -255,13 +279,7 @@ public class LightController {
             trafficlightLeftSide.setScaleY(1.25);
             trafficlightLeftSide.setScaleX(1.25);*/
 
-            trafficLight.setTranslateZ(-150);
-            trafficLight.setScaleY(1.25);
-            trafficLight.setScaleX(1.25);
-            //Light rotations 3D
-            trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
-                    new Rotate(0, Rotate.Z_AXIS));
-        }
+           
         for(Pane pedestrianLight : pedestrianLights.values()){
             root.getChildren().add(pedestrianLight);
         }
@@ -357,10 +375,10 @@ public class LightController {
                         //Increment the green time up to the max green time
                         //Only increment time if there are lights in the green state
                         if(greenTime < maxGreen) {
-                            if(getLightState("N") == TrafficLight.LightColor.GREEN ||
-                             getLightState("S") == TrafficLight.LightColor.GREEN ||
-                            getLightState("E") == TrafficLight.LightColor.GREEN || 
-                            getLightState("W") == TrafficLight.LightColor.GREEN) {
+                            if(getAllLightState("N") == TrafficLight.LightColor.GREEN ||
+                             getAllLightState("S") == TrafficLight.LightColor.GREEN ||
+                            getAllLightState("E") == TrafficLight.LightColor.GREEN || 
+                            getAllLightState("W") == TrafficLight.LightColor.GREEN) {
                                 greenTime++;
                             }
                         }
@@ -501,14 +519,17 @@ public class LightController {
         }
     }
 
-    //TODO: Add changes for arrows and pedestrian lights
+    
     /**
      * Changes the state for a light at the intersection
      * @param location
      * @param color
+     * @param type
      */
-    private void changeLightState(String location, String color) {
-        Pane trafficLight = trafficLights.get(location);
+    private void changeLightState(String location, TrafficLight.type type, String color) {
+        //Get the light pane
+        Pane trafficLight = trafficLights.get(location).stream().filter(light -> ((TrafficLight)light.getUserData()).getType() == type).findFirst().orElse(null);
+        
         //Get the light attached to the pane and change the color
         if(trafficLight == null){
             return;
@@ -517,23 +538,88 @@ public class LightController {
         switch (color) {
             case "red":
                 trafficLightData.setRed();
+                trafficLightData.getCollisionBox().setState(CollisionBox.State.STOP);
                 break;
             case "yellow":
                 trafficLightData.setYellow();
                 break;
             case "green":
                 trafficLightData.setGreen();
+                trafficLightData.getCollisionBox().setState(CollisionBox.State.GO);
+                break;
+            case "green-left":
+                trafficLightData.setGreenLeftTurnArrow();
+                trafficLightData.getCollisionBox().setState(CollisionBox.State.LEFT);
+                break;
+            case "green-right":
+                trafficLightData.setGreenRightTurnArrow();
+                trafficLightData.getCollisionBox().setState(CollisionBox.State.RIGHT);
+                break;
+            case "yellow-left":
+                trafficLightData.setYellowLeftTurnArrow();
+                break;
+            case "yellow-right":
+                trafficLightData.setYellowRightTurnArrow();
                 break;
             default:
                 break;
         }
     }
-    //Get the light state
-    private TrafficLight.LightColor getLightState(String location) {
-        Pane trafficLight = trafficLights.get(location);
+
+    /**
+     * Changes the state for a light at the intersection
+     * @param location
+     * @param color
+     */
+    private void changeAllLightState(String location, String color) {
+        //Get all light panes at the location
+        List<Pane> trafficLightList = trafficLights.get(location);
+        
         //Get the light attached to the pane and change the color
+        for(Pane trafficLight : trafficLightList) {
+            TrafficLight trafficLightData = (TrafficLight) trafficLight.getUserData();
+            switch (color) {
+                case "red":
+                    trafficLightData.setRed();
+                    trafficLightData.getCollisionBox().setState(CollisionBox.State.STOP);
+                    break;
+                case "yellow":
+                    trafficLightData.setYellow();
+                    break;
+                case "green":
+                    trafficLightData.setGreen();
+                    trafficLightData.getCollisionBox().setState(CollisionBox.State.GO);
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+    }
+    //Get the light state
+    private TrafficLight.LightColor getLightState(String location, TrafficLight.type type) {
+        //Get the light pane
+        Pane trafficLight = trafficLights.get(location).stream().filter(light -> ((TrafficLight)light.getUserData()).getType() == type).findFirst().orElse(null);
+        //Get the light attached to the pane and change the color
+        if(trafficLight == null){
+            return null;
+        }
         TrafficLight trafficLightData = (TrafficLight) trafficLight.getUserData();
         return trafficLightData.getLightColor();
+    }
+     //Get the light state
+     private TrafficLight.LightColor getAllLightState(String location) {
+        //Get the light pane
+        TrafficLight.LightColor lightColor = null;
+        for(Pane trafficLight : trafficLights.get(location)) {
+            TrafficLight trafficLightData = (TrafficLight) trafficLight.getUserData();
+            lightColor =  trafficLightData.getLightColor();
+        }
+        //Get the light attached to the pane and change the color
+        if(lightColor == null){
+            return null;
+        }
+        return lightColor;
     }
 
     //Send vehicle count to the system controller
@@ -603,28 +689,12 @@ public class LightController {
                     //Change the light color for the current direction
                     if (greenTime > 0) {
                         if(dir == direction.NS && pedCrossingNorth.isEmpty() && pedCrossingSouth.isEmpty()){
-                            changeLightState("N", "green");
-                            changeLightState("S", "green");
-                            //Change the state of the collision boxes
-                            for(CollisionBox box : lightCollisionBoxes.get("N")){
-                                box.setState(CollisionBox.State.GO);
-                            }
-                            for(CollisionBox box : lightCollisionBoxes.get("S")){
-                                box.setState(CollisionBox.State.GO);
-                            }
-                            
+                            changeAllLightState("N", "green");
+                            changeAllLightState("S", "green");
                         }
                         else if(dir == direction.EW && pedCrossingEast.isEmpty() && pedCrossingWest.isEmpty()){
-                            changeLightState("E", "green");
-                            changeLightState("W", "green");
-                            //Change the state of the collision boxes
-                            for(CollisionBox box : lightCollisionBoxes.get("E")){
-                                box.setState(CollisionBox.State.GO);
-                            }
-                            for(CollisionBox box : lightCollisionBoxes.get("W")){
-                                box.setState(CollisionBox.State.GO);
-                            }
-                            
+                            changeAllLightState("E", "green");
+                            changeAllLightState("W", "green");
                         }
                         //Decrement the green time
                         greenTime--;
@@ -636,8 +706,8 @@ public class LightController {
                         }
                     } else if (yellowTime > 0) {
                         if(dir == direction.NS){
-                            changeLightState("N", "yellow");
-                            changeLightState("S", "yellow");
+                            changeAllLightState("N", "yellow");
+                            changeAllLightState("S", "yellow");
                             //Set the pedestrian collision boxes to stop
                             for(CollisionBox box : pedCollisionBoxes.get("E")){
                                 box.setState(CollisionBox.State.STOP);
@@ -647,8 +717,8 @@ public class LightController {
                             }
                         }
                         else if(dir == direction.EW){
-                            changeLightState("E", "yellow");
-                            changeLightState("W", "yellow");
+                            changeAllLightState("E", "yellow");
+                            changeAllLightState("W", "yellow");
                             //Set the pedestrian collision boxes to stop
                             for(CollisionBox box : pedCollisionBoxes.get("N")){
                                 box.setState(CollisionBox.State.STOP);
@@ -673,16 +743,9 @@ public class LightController {
                             box.setState(CollisionBox.State.STOP);
                         }
                         if(dir == direction.NS){
-                            changeLightState("N", "red");
-                            changeLightState("S", "red");
+                            changeAllLightState("N", "red");
+                            changeAllLightState("S", "red");
                             
-                            //Change the state of the collision boxes
-                            for(CollisionBox box : lightCollisionBoxes.get("N")){
-                                box.setState(CollisionBox.State.STOP);
-                            }
-                            for(CollisionBox box : lightCollisionBoxes.get("S")){
-                                box.setState(CollisionBox.State.STOP);
-                            }
                             //Change the east and west pedestrian lights to walk if the pedestrian light contains an item
                             if(pedLightChanges.contains("S")){
                                 //changePedestrianLight("S", PedestrianLight.LightColor.WALKING);
@@ -713,15 +776,8 @@ public class LightController {
                             }
                         }
                         else if(dir == direction.EW){
-                            changeLightState("E", "red");
-                            changeLightState("W", "red");
-                            //Change the state of the collision boxes
-                            for(CollisionBox box : lightCollisionBoxes.get("E")){
-                                box.setState(CollisionBox.State.STOP);
-                            }
-                            for(CollisionBox box : lightCollisionBoxes.get("W")){
-                                box.setState(CollisionBox.State.STOP);
-                            }
+                            changeAllLightState("E", "red");
+                            changeAllLightState("W", "red");
                             //Change the east and west pedestrian lights to walk if the pedestrian light contains an item
                             if(pedLightChanges.contains("E")){
                                 //changePedestrianLight("E", PedestrianLight.LightColor.WALKING);
