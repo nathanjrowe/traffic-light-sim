@@ -47,6 +47,8 @@ public class LightController {
     //Vars to store the time in seconds for the lights
     private final int cycleTime = 120;
     private final int yellow = 6;
+    //ID for the controller
+    private final int id;
     private int minGreen = 15;
     private int greenTime = minGreen;
     private int maxGreen = 30;
@@ -74,7 +76,7 @@ public class LightController {
     //lightCoord[1]: x coordinate
     //lightCoord[2]: y coordinate
     //See SystemController for the list of coordinates
-    public LightController(lightType type, List<Object[]> lightCoords, List<Object[]> lightCollisionCoords, List<Object[]> pedestrianLightCoords, List<Object[]> pedestrianCollisionCoords) {
+    public LightController(int id, lightType type, List<Object[]> lightCoords, List<Object[]> lightCollisionCoords, List<Object[]> pedestrianLightCoords, List<Object[]> pedestrianCollisionCoords) {
         //Create the traffic lights at the intersection
         for(Object[] coord : lightCoords){
             createTrafficLight((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
@@ -92,6 +94,7 @@ public class LightController {
             createPedCollisionBox((String)coord[0], (Integer)coord[1], (Integer)coord[2], (Integer)coord[3], (Integer)coord[4]);
         }
         this.type = type;
+        this.id = id;
     }
 
     /**
@@ -206,6 +209,11 @@ public class LightController {
     //Get the type of light, returns STANDARD or BUS
     public LightController.lightType getType() {
         return type;
+    }
+    
+    //Get the id for the light controller
+    public int getId() {
+        return id;
     }
 
     //Get the bus collision boxes
@@ -415,6 +423,12 @@ public class LightController {
         return trafficLightData.getLightColor();
     }
 
+    //Send vehicle count to the system controller
+    public void sendData() {
+        this.maxGreen = SystemController.updateMaxGreenTime(this.vehicleCount);
+        this.vehicleCount = 0;
+    }
+
     //Animation cycle for the lights
     //Uses an animation timer to change light colors at the intersection
     //Counts time in milliseconds
@@ -439,6 +453,11 @@ public class LightController {
                     //Update last update time
                     lastUpdate = nowDur;
 
+                    for (Vehicle3D vehicle : vehicles) {
+                        if (!intersectionBox.getBoundsInParent().intersects(vehicle.getBoundsInGrandparent(vehicle.returnCarShape()))) {
+                            vehicles.remove(vehicle);
+                    }
+
                     //Update min green time to 30 seconds if the pedestrian light contains an item
                     if(pedLightChanges.size() > 0){
                         minGreen = 30;
@@ -462,11 +481,8 @@ public class LightController {
                        
                         //Reset the time
                         time = cycleTime;
-                        //Clean up the vehicle list
-                        for (Vehicle3D vehicle : vehicles) {
-                        if (!intersectionBox.getBoundsInParent().intersects(vehicle.getBoundsInGrandparent(vehicle.returnCarShape()))) {
-                            vehicles.remove(vehicle);
-                        }
+                        //Send traffic data to the system controller
+                        sendData();
                     }
                         
                     }

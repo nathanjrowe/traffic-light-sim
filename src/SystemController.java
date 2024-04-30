@@ -277,6 +277,8 @@ public class SystemController {
     private final HashMap<Integer, LightController> lightControllers = new HashMap<>();
     //Set final value for the number of intersections
     private final int INTERSECTIONS = 6;
+    //Minimum time for a light to be green
+    private final static int MIN_GREEN = 15;
 
     /**
      * Constructor
@@ -291,11 +293,11 @@ public class SystemController {
      */
     private void spawnLights() {
         for (int i = 1; i <= INTERSECTIONS; i++) {
-            lightControllers.put(i, new LightController(LightController.lightType.STANDARD, lightCoords.get(i), lightCollisionCoords.get(i), pedestrianLights.get(i), pedCollisionCoords.get(i)));
+            lightControllers.put(i, new LightController(i, LightController.lightType.STANDARD, lightCoords.get(i), lightCollisionCoords.get(i), pedestrianLights.get(i), pedCollisionCoords.get(i)));
         }
         //Create the bus lights, last two elements in the HashMap
-        lightControllers.put(7, new LightController(LightController.lightType.BUS, lightCoords.get(7), lightCollisionCoords.get(7), pedestrianLights.get(7), pedCollisionCoords.get(7)));
-        lightControllers.put(8, new LightController(LightController.lightType.BUS, lightCoords.get(8), lightCollisionCoords.get(8), pedestrianLights.get(8), pedCollisionCoords.get(8)));
+        lightControllers.put(7, new LightController(7, LightController.lightType.BUS, lightCoords.get(7), lightCollisionCoords.get(7), pedestrianLights.get(7), pedCollisionCoords.get(7)));
+        lightControllers.put(8, new LightController(8, LightController.lightType.BUS, lightCoords.get(8), lightCollisionCoords.get(8), pedestrianLights.get(8), pedCollisionCoords.get(8)));
     }
 
     /**
@@ -357,5 +359,11 @@ public class SystemController {
             collisionBoxes.addAll(lightController.getPedCollisionBoxes());
         }
         return collisionBoxes;
+    }
+
+    //Receives the number of vehicles from a light controller as input and sends an updated maximum green time as output
+    public static int updateMaxGreenTime(int numVehicles) {
+        //Calculate the maximum green with an upper bound of 80 seconds
+        return (int)Math.min(80, Math.floor(MIN_GREEN + (numVehicles / 3.75)));
     }
 }
