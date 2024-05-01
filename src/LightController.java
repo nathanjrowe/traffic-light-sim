@@ -940,7 +940,7 @@ public class LightController {
                         //Set the green time for the next direction
                         greenTime = minGreen;
                         yellowTime = yellow;
-                        leftTurnTime = 20;
+                        leftTurnTime = 40;
                     }
                     time--;
 
