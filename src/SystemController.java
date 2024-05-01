@@ -34,13 +34,13 @@ public class SystemController {
         put(3, new ArrayList<Object[]>(){{
             add(new Object[]{"N", TrafficLight.type.RIGHT, 319, 342});
             add(new Object[]{"N", TrafficLight.type.LEFT, 299, 342});
-            add(new Object[]{"E", TrafficLight.type.LEFT, 340, 408});
-            add(new Object[]{"E", TrafficLight.type.RIGHT, 340, 448});
+            add(new Object[]{"E", TrafficLight.type.LEFT, 340, 448});
+            add(new Object[]{"E", TrafficLight.type.RIGHT, 340, 408});
             add(new Object[]{"E", TrafficLight.type.STRAIGHT, 340, 428});
             add(new Object[]{"S", TrafficLight.type.LEFT, 268, 459});
             add(new Object[]{"S", TrafficLight.type.RIGHT, 288, 459});
-            add(new Object[]{"W", TrafficLight.type.LEFT, 255, 395});
-            add(new Object[]{"W", TrafficLight.type.RIGHT, 255, 355});
+            add(new Object[]{"W", TrafficLight.type.LEFT, 255, 355});
+            add(new Object[]{"W", TrafficLight.type.RIGHT, 255, 395});
             add(new Object[]{"W", TrafficLight.type.STRAIGHT, 255, 375});
         }});
         put(4, new ArrayList<Object[]>(){{

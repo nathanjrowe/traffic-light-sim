@@ -73,45 +73,45 @@ public class TrafficLight {
 
         Image map = imageHelper.getImage("./images/Steady_Green_Arrow-removebg-preview.png");
         leftTurnArrowImageView.setImage(map);
-        leftTurnArrowImageView.setFitWidth(50); // Match the diameter of the greenCircle
-        leftTurnArrowImageView.setFitHeight(50);
+        leftTurnArrowImageView.setFitWidth(10); // Match the diameter of the greenCircle
+        leftTurnArrowImageView.setFitHeight(10);
         leftTurnArrowImageView.setX(325); // Position it over the greenCircle
         leftTurnArrowImageView.setY(205);
 
         map = imageHelper.getImage("./images/right_Steady_Green_Arrow-removebg-preview.png");
         rightTurnArrowImageView.setImage(map);
-        rightTurnArrowImageView.setFitWidth(50); // Match the diameter of the greenCircle
-        rightTurnArrowImageView.setFitHeight(50);
+        rightTurnArrowImageView.setFitWidth(10); // Match the diameter of the greenCircle
+        rightTurnArrowImageView.setFitHeight(10);
         rightTurnArrowImageView.setX(325); // Position it over the greenCircle
         rightTurnArrowImageView.setY(205);
 
         map = imageHelper.getImage("./images/left_yellow_arrow.png");
-        leftTurnArrowImageView.setImage(map);
-        leftTurnArrowImageView.setFitWidth(50); // Match the diameter of the greenCircle
-        leftTurnArrowImageView.setFitHeight(50);
-        leftTurnArrowImageView.setX(325); // Position it over the greenCircle
-        leftTurnArrowImageView.setY(205);
+        leftTurnYellowImageView.setImage(map);
+        leftTurnYellowImageView.setFitWidth(10); // Match the diameter of the greenCircle
+        leftTurnYellowImageView.setFitHeight(10);
+        leftTurnYellowImageView.setX(325); // Position it over the greenCircle
+        leftTurnYellowImageView.setY(205);
 
         map = imageHelper.getImage("./images/left_red_arrow.png");
-        leftTurnArrowImageView.setImage(map);
-        leftTurnArrowImageView.setFitWidth(50); // Match the diameter of the greenCircle
-        leftTurnArrowImageView.setFitHeight(50);
-        leftTurnArrowImageView.setX(325); // Position it over the greenCircle
-        leftTurnArrowImageView.setY(205);
+        leftTurnRedImageView.setImage(map);
+        leftTurnRedImageView.setFitWidth(10); // Match the diameter of the greenCircle
+        leftTurnRedImageView.setFitHeight(10);
+        leftTurnRedImageView.setX(325); // Position it over the greenCircle
+        leftTurnRedImageView.setY(205);
 
         map = imageHelper.getImage("./images/right_yellow_arrow.png");
-        leftTurnArrowImageView.setImage(map);
-        leftTurnArrowImageView.setFitWidth(50); // Match the diameter of the greenCircle
-        leftTurnArrowImageView.setFitHeight(50);
-        leftTurnArrowImageView.setX(325); // Position it over the greenCircle
-        leftTurnArrowImageView.setY(205);
+        rightTurnYellowImageView.setImage(map);
+        rightTurnYellowImageView.setFitWidth(10); // Match the diameter of the greenCircle
+        rightTurnYellowImageView.setFitHeight(10);
+        rightTurnYellowImageView.setX(325); // Position it over the greenCircle
+        rightTurnYellowImageView.setY(205);
 
         map = imageHelper.getImage("./images/right_red_arrow.png");
-        leftTurnArrowImageView.setImage(map);
-        leftTurnArrowImageView.setFitWidth(50); // Match the diameter of the greenCircle
-        leftTurnArrowImageView.setFitHeight(50);
-        leftTurnArrowImageView.setX(325); // Position it over the greenCircle
-        leftTurnArrowImageView.setY(205);
+        rightTurnRedImageView.setImage(map);
+        rightTurnRedImageView.setFitWidth(10); // Match the diameter of the greenCircle
+        rightTurnRedImageView.setFitHeight(10);
+        rightTurnRedImageView.setX(325); // Position it over the greenCircle
+        rightTurnRedImageView.setY(205);
 
         lightColor = null;
 
