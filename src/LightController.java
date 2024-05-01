@@ -53,10 +53,10 @@ public class LightController {
     }};
 
     private CollisionBox intersectionBox = null;
-    
+
     //Store a list of vehicles in the intersection
     private CopyOnWriteArrayList<Vehicle3D> vehicles = new CopyOnWriteArrayList<>();
-    
+
     //Vars to store the time in seconds for the lights
     private final int cycleTime = 120;
     private final int yellow = 6;
@@ -68,20 +68,20 @@ public class LightController {
     private int vehicleCount = 0;//currently unused
     private Vehicle currentVehicle = null;//currently unused
     private Boolean busApproaching = false;
-    
+
     //Enum to control the cycle changes
     private enum direction {NS, EW};
-    
+
     //Enum to mark the type of light
     protected enum lightType {STANDARD, BUS};
     private lightType type;
-    
+
     //List of scheduled pedestrian light changes
     private List<String> pedLightChanges = new ArrayList<>();
-    
+
     //Queue to store the pedestrians waiting to cross
     private List<Person3D> pedQueue = new ArrayList<>();
-    
+
     //Lists to check if pedestrians are crossing
     private CopyOnWriteArrayList<Person3D> pedCrossingNorth = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Person3D> pedCrossingSouth = new CopyOnWriteArrayList<>();
@@ -92,7 +92,7 @@ public class LightController {
     private CopyOnWriteArrayList<Vehicle3D> trafficLaneSouth = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Vehicle3D> trafficLaneEast = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Vehicle3D> trafficLaneWest = new CopyOnWriteArrayList<>();
-    
+
     //Constructor
     //Takes a list of coordinates for the lights
     //lightCoord[0]: location of the light(N, S, E, W)
@@ -110,7 +110,7 @@ public class LightController {
         }
         //Create the pedestrian lights at the intersection
         for(Object[] coord : pedestrianLightCoords){
-            //createPedestrianLight((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
+            createPedestrianLight((String)coord[0], (Integer)coord[1], (Integer)coord[2]);
         }
         //Create the collision boxes for the pedestrian lights
         for(Object[] coord : pedestrianCollisionCoords){
@@ -122,7 +122,7 @@ public class LightController {
         this.type = type;
         this.id = id;
     }
-    
+
     //Constructor for busses
     public LightController(int id, lightType type, List<Object[]> lightCoords, List<Object[]> lightCollisionCoords, List<Object[]> pedestrianLightCoords, List<Object[]> pedestrianCollisionCoords) {
         //Create the traffic lights at the intersection
@@ -149,7 +149,7 @@ public class LightController {
      * creates a traffic light at a given location with a layout determined by x and y
      * the light is initially constructed on its own pane, and is added to its given location
      * before being returned.
-     * 
+     *
      * @param location
      * @param type of light: RIGHT, LEFT, STRAIGHT
      * @param x position
@@ -177,11 +177,11 @@ public class LightController {
 
 
     /* Creates a collision box in the road for buses and cars.
-     * 
+     *
      * This function is one of two that manages the collision boxes at each intersection.
      * These collision boxes will manage the flow of traffic by phisically stopping any
      * car/bus/pedestrian with a collision box.
-     * 
+     *
      * The alternating state of these collision boxes, "GO" and "STOP" determine if they are active,
      * this is necessary to prevent cars/buses/pedestrians from getting stuck inside the intersection
      * when the light changes.
@@ -203,12 +203,12 @@ public class LightController {
                 }
             }
         }
-        
+
         //Add collision box to the list of collision boxes for the location
         lightCollisionBoxes.get(location).add(collisionBox);
     }
 
-    /* Creates a collision box on the sidewalk for pedestrians. 
+    /* Creates a collision box on the sidewalk for pedestrians.
      *
      * As with the above "createLightCollisionBox" function this function is used to manage the flow of traffic
      * by phisically blocking one direction with a collision box.
@@ -232,7 +232,7 @@ public class LightController {
     }
 
     /**This method is currently unused...
-     * 
+     *
      * Creates a pedestrian light, Not implemented
      * @param x position
      * @param y position
@@ -242,10 +242,11 @@ public class LightController {
         Pane pedestrianLight = new Pane();
         PedestrianLight pedestrianLightCreation = new PedestrianLight();
         pedestrianLight.getChildren().add(pedestrianLightCreation.getPedestrianLight());
-        pedestrianLight.setLayoutY(0);
-        pedestrianLight.setLayoutX(0);
+        pedestrianLight.setLayoutY(y);
+        pedestrianLight.setLayoutX(x);
         pedestrianLight.setTranslateZ(0);
         pedestrianLights.put(location, pedestrianLight);
+
         return pedestrianLight;
     }
 
@@ -253,22 +254,228 @@ public class LightController {
      * addLights adds each traffic/pedestrian light to the main scene
      * it does this by looping through the list of lights and adding them to the root scene.
      * each traffic light required a bit of tweaking to get its scale and position correct.
-     * 
+     *
      * The function also adds each correspponding traffic & pedestrian collision box
-     * 
+     *
      * @param root
      */
     public void addLights(Pane root) {
+        int counter = 0;
         for(List<Pane> trafficLightList : trafficLights.values()){
+            int innerCount = 0;
             for(Pane trafficLight : trafficLightList){
                 root.getChildren().add(trafficLight);
-                trafficLight.setTranslateZ(-150);
-                trafficLight.setScaleY(1.25);
-                trafficLight.setScaleX(1.25);
+                //trafficLight.setTranslateZ(-150);
+                trafficLight.setScaleY(.5);
+                trafficLight.setScaleX(.5);
+                if(counter == 0) {
+                    if(id == 2 || id == 4) {
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-14.5);
+                                trafficLight.setTranslateX(-28);
+                                trafficLight.setTranslateZ(-80);
+                                //trafficLight.setTranslateY(-50);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-14);
+                                trafficLight.setTranslateX(30);
+                                trafficLight.setTranslateZ(-140);
+                                //trafficLight.setTranslateY(-50);
+                                break;
+                        }
+                    }
+                    else{
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-13.5);
+                                trafficLight.setTranslateX(20);
+                                trafficLight.setTranslateZ(-140);
+                                //trafficLight.setTranslateY(-50);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-14);
+                                trafficLight.setTranslateX(-38);
+                                trafficLight.setTranslateZ(-80);
+                                //trafficLight.setTranslateY(-50);
+                                break;
+                        }
+                    }
+                    innerCount++;
+                }
+                else if(counter == 1){
+                    if(id == 2){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(90, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-20.5);
+                                trafficLight.setTranslateX(8);
+                                trafficLight.setTranslateZ(-140);
+                                //trafficLight.setTranslateY(-50);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-19.5);
+                                trafficLight.setTranslateX(26);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                            case 2:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-19.5);
+                                trafficLight.setTranslateX(26);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                        }
+
+                    }
+                    else {
+                        switch (innerCount) {
+                            case 0:
+
+                                trafficLight.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(90, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-60.5);
+                                trafficLight.setTranslateX(-5);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(90, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(21.5);
+                                trafficLight.setTranslateX(-5);
+                                trafficLight.setTranslateZ(-140);
+                                //trafficLight.setTranslateY(-50);
+                                break;
+                            case 2:
+                                trafficLight.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(90, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-21.5);
+                                trafficLight.setTranslateX(-5);
+                                trafficLight.setTranslateZ(-140);
+                                //trafficLight.setTranslateY(-50);
+                                break;
+                        }
+                    }
+
+                    innerCount++;
+                }
+                else if(counter == 2){
+                    if(id == 2){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-20.5);
+                                trafficLight.setTranslateX(26);
+                                trafficLight.setTranslateZ(-140);
+                                //trafficLight.setTranslateY(-50);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-19.5);
+                                trafficLight.setTranslateX(26);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                            case 2:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-19.5);
+                                trafficLight.setTranslateX(26);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                        }
+                    }
+                    else {
+                        switch (innerCount) {
+                            case 0:
+
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-20.5);
+                                trafficLight.setTranslateX(-5);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-20.5);
+                                trafficLight.setTranslateX(-5);
+                                trafficLight.setTranslateZ(-140);
+                                //trafficLight.setTranslateY(-50);
+                                break;
+                            case 2:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-20.5);
+                                trafficLight.setTranslateX(-5);
+                                trafficLight.setTranslateZ(-140);
+                                //trafficLight.setTranslateY(-50);
+                                break;
+                        }
+                    }
+
+                    innerCount++;
+                }
+                else if(counter == 3){
+                    if(id == 2){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-20.5);
+                                trafficLight.setTranslateX(9);
+                                trafficLight.setTranslateZ(-140);
+                                //trafficLight.setTranslateY(-50);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-19.5);
+                                trafficLight.setTranslateX(26);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                        }
+                    }
+                    else {
+                        switch (innerCount) {
+                            case 0:
+
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-20.5);
+                                trafficLight.setTranslateX(15);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-21.5);
+                                trafficLight.setTranslateX(-5);
+                                trafficLight.setTranslateZ(-140);
+                                //trafficLight.setTranslateY(-50);
+                                break;
+                        }
+                    }
+
+                    innerCount++;
+                }
                 //Light rotations 3D
-                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
-                        new Rotate(0, Rotate.Z_AXIS));
+                //trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
+                        //new Rotate(0, Rotate.Z_AXIS));
             }
+            counter++;
         }
 
        /*     Pane trafficlightLeftSide = new Pane(trafficLight);
@@ -282,6 +489,13 @@ public class LightController {
            
         for(Pane pedestrianLight : pedestrianLights.values()){
             root.getChildren().add(pedestrianLight);
+            pedestrianLight.setScaleX(.05);
+            pedestrianLight.setScaleY(.05);
+            pedestrianLight.setTranslateZ(-100);
+            pedestrianLight.setTranslateX(-240);
+            pedestrianLight.setTranslateY(-80);
+            pedestrianLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                    new Rotate(0, Rotate.Z_AXIS));
         }
         for(List<CollisionBox> collisionBox : lightCollisionBoxes.values()){
             for(CollisionBox box : collisionBox){
@@ -692,9 +906,9 @@ public class LightController {
 
     //Send vehicle count to the system controller
     public void sendData() {
-        this.maxGreen = SystemController.updateMaxGreenTime(this.vehicleCount);
+        this.maxGreen = SystemController.updateMaxGreenTime(this.vehicleCount, id );
+        TrafficScene.setData("Traffic Light: " + getId()+ "\nCar Counter: " + vehicleCount + "\n Message Sent to Central Controller");
         this.vehicleCount = 0;
-        TrafficScene.setData("Traffic Light: " + getId()+ "\nAdjusting Green Time: " + maxGreen);
     }
 
     //Animation cycle for the lights
@@ -742,7 +956,7 @@ public class LightController {
                             greenTime = 0;
                             yellowTime = 0;
                         }
-                    } 
+                    }
                     //Change the light color for perpendicular lights
                     //Identified by the location of the light
                     //North and South lights
@@ -940,7 +1154,7 @@ public class LightController {
                         //Set the green time for the next direction
                         greenTime = minGreen;
                         yellowTime = yellow;
-                        leftTurnTime = 20;
+                        leftTurnTime = 40;
                     }
                     time--;
 
@@ -948,5 +1162,13 @@ public class LightController {
             }
         };
         timer.start();
+    }
+
+    public boolean getBusApproaching(){
+        return busApproaching;
+    }
+
+    public int getCarCounter(){
+        return vehicleCount;
     }
 }

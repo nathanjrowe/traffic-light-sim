@@ -48,10 +48,12 @@ public class TrafficScene {
     private int counter = 0;
     private SubScene subScene;
     private static Pane root = new Pane();
-    private Pane root3D = new Pane();
+    private static Pane root3D = new Pane();
     private Pane menuPane = new Pane();
     Text currentTimeT = new Text("Current Sim Time: 10:40 AM");
+    private static Text vehicleCounter1, vehicleCounter2,vehicleCounter3, vehicleCounter4, vehicleCounter5, vehicleCounter6;
     private static Text dataText = new Text();
+    private static Text systemText = new Text();
 
     // Define window size
     int width = 1200;
@@ -141,7 +143,9 @@ public class TrafficScene {
         root3D.getChildren().addAll(streetScene(),runWay(), empireStateBuilding(),townHome(), building2(), treesMiddle(),
                 airport(),shoppingMall(), apartment(), runWayParking(), runWayParking2(), city(), city1(), city2(),
                 city3(),city4(), city5(), city6(), treesSouth(), treesWest(), treesEast(), townHome1(), townHome2(), car(),
-                inforPane());
+                trafficLight());
+
+        addVehicleCounters();
 
         Group joeGroup = joe();
         Path path1 = createJoePath();
@@ -297,11 +301,11 @@ public class TrafficScene {
         //uiTitle.setFill(Color.WHITE);
 
         menuPane.getChildren().addAll(startRec, spawnVehiclesBTN(tempPane), uiTitle, currentTimeT,
-                currentTrafficT, dataText);//, testButton);
+                currentTrafficT, systemText);//, testButton);
         menuPane.setMargin(uiTitle, new Insets(-20,0,0,-950));
         menuPane.setMargin(currentTimeT, new Insets(-50,0,0,950));
         menuPane.setMargin(currentTrafficT, new Insets(0,0,0,895));
-        menuPane.setMargin(dataText, new Insets(0,0,0,600));
+        menuPane.setMargin(systemText, new Insets(0,0,0,600));
         menuPane.setMargin(spawnVehiclesBTN(tempPane), new Insets(50,0,0,-800));
 
         return menuPane;
@@ -309,22 +313,146 @@ public class TrafficScene {
     public static void setData(String data){
         dataText.setText(data);
         dataText.setFill(Color.WHITE);
+        dataText.setScaleY(10);
+        dataText.setScaleX(10);
         //Pane textPane = new Pane(dataText);
     }
 
-    private Pane inforPane() {
-        //Menu
-        Pane infoPanes = new Pane();
+    public void addVehicleCounters(){
+        vehicleCounter1 = new Text();
+        vehicleCounter1.setFill(Color.WHITE);
+        vehicleCounter2 = new Text();
+        vehicleCounter2.setFill(Color.WHITE);
+        vehicleCounter3 = new Text();
+        vehicleCounter3.setFill(Color.WHITE);
+        vehicleCounter4 = new Text();
+        vehicleCounter4.setFill(Color.WHITE);
+        vehicleCounter5 = new Text();
+        vehicleCounter5.setFill(Color.WHITE);
+        vehicleCounter6 = new Text();
+        vehicleCounter6.setFill(Color.WHITE);
+
+        root3D.getChildren().addAll(vehicleCounter1, vehicleCounter2, vehicleCounter3, vehicleCounter4, vehicleCounter5,
+                vehicleCounter6);
+        vehicleCounter1.setTranslateX(-1300);
+        vehicleCounter1.setTranslateY(-200);
+        vehicleCounter1.setTranslateZ(1707);
+
+        vehicleCounter1.setScaleX(10);
+        vehicleCounter1.setScaleY(10);
+
+        vehicleCounter2.setTranslateX(0);
+        vehicleCounter2.setTranslateY(-200);
+        vehicleCounter2.setTranslateZ(1707);
+
+        vehicleCounter2.setScaleX(10);
+        vehicleCounter2.setScaleY(10);
+
+        vehicleCounter3.setTranslateX(-1300);
+        vehicleCounter3.setTranslateY(-200);
+        vehicleCounter3.setTranslateZ(707);
+
+        vehicleCounter3.setScaleX(10);
+        vehicleCounter3.setScaleY(10);
+    }
+    public static void vehicleCounters(int count, int intersectionId){
+        Text message = new Text(count + "");
+        message.setFill(Color.WHITE);
+        int x = 0;
+        int y = 0;
+        switch (intersectionId){
+            case 1: x = 265;  y = 107; vehicleCounter1.setText(count+ ""); break;
+            case 2: x = 603; y = 107; vehicleCounter2.setText(count+ "");break;
+            case 3: x = 263; y = 358; vehicleCounter3.setText(count+ "");break;
+            case 4: x = 603; y = 358; vehicleCounter4.setText(count+ "");break;
+            case 5: x = 262; y = 652; vehicleCounter5.setText(count+ "");break;
+            case 6: x = 601; y = 652;  vehicleCounter6.setText(count+ "");break;
+        }
+/*        Pane infoPanes = new Pane();
         //infoPanes.getChildren().add(dataText);
-        infoPanes.setTranslateY(100);
-        infoPanes.setTranslateZ(100);
-        infoPanes.setTranslateX(200);
+
         infoPanes.setPrefWidth(500);
         infoPanes.setPrefHeight(400);
 
-        infoPanes.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+        infoPanes.getChildren().add(message);
+
+        infoPanes.setTranslateZ(y*5);
+        infoPanes.setTranslateX(x*5);
+
+        Group group = new Group(infoPanes);
+        group.setTranslateZ(-1000);
+        group.setTranslateX(-3000);
+
+        root3D.getChildren().add(group);*/
+    }
+    public static void setMessage(String data, int intersectionId){
+     Text message = new Text(data);
+        message.setFill(Color.WHITE);
+        int x = 0;
+        int y = 0;
+        switch (intersectionId){
+            case 1: x = 265;  y = 107; break;
+            case 2: x = 603; y = 107; break;
+            case 3: x = 263; y = 358; break;
+            case 4: x = 603; y = 358; break;
+            case 5: x = 262; y = 652; break;
+            case 6: x = 601; y = 652;  break;
+        }
+        Pane infoPanes = new Pane();
+        //infoPanes.getChildren().add(dataText);
+
+        infoPanes.setPrefWidth(500);
+        infoPanes.setPrefHeight(400);
+
+        infoPanes.getChildren().add(message);
+
+        infoPanes.setTranslateZ(y*5);
+        infoPanes.setTranslateX(x*5);
+
+        Group group = new Group(infoPanes);
+        group.setTranslateZ(-1000);
+        group.setTranslateX(-3000);
+
+        root3D.getChildren().add(group);
+    }
+
+    public static void setSystemData(String data, int x, int y){
+        systemText.setText(data);
+        systemText.setFill(Color.WHITE);
+
+        Pane newPane = new Pane(dataText);
+
+
+       /* newPane.setTranslateX(x*4);
+        newPane.setTranslateY(y*4);
+        newPane.setTranslateZ(-500);*/
+        inforPane(x,y);
+    }
+
+    private static Pane inforPane(int x, int y) {
+        //Menu
+        Box infoBox = new Box(200, 200, 200);
+        Pane infoPanes = new Pane();
+        //infoPanes.getChildren().add(dataText);
+
+        infoPanes.setPrefWidth(500);
+        infoPanes.setPrefHeight(400);
+/*
+        infoBox.setTranslateY(-100);
+        infoBox.setTranslateZ(y*5);
+        infoBox.setTranslateX(x*5);*/
+        infoPanes.getChildren().add(dataText);
+
+        infoPanes.setTranslateY(-500);
+        infoPanes.setTranslateZ(y*5);
+        infoPanes.setTranslateX(x*5);
+        infoPanes.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
-        //root3D.getChildren().add(infoPanes);
+        Group group = new Group(infoPanes);
+        group.setTranslateZ(-1000);
+        group.setTranslateX(-3000);
+
+        root3D.getChildren().add(group);
         return infoPanes;
     }
 
@@ -405,7 +533,7 @@ public class TrafficScene {
         group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
 
-        ImageView imageView = createFollowingImage("joe.png");
+        ImageView imageView = createFollowingImage("white.png");
         imageView.setScaleX(5);
         imageView.setScaleY(5);
 
@@ -951,6 +1079,154 @@ public class TrafficScene {
     }
 
     /**
+     * Cars 3D models grouped creation, placement, scale
+     * @return
+     */
+    private Group trafficLight(){
+     /*   vehicleCounter1.setTranslateX(-1300);
+        vehicleCounter1.setTranslateY(-200);
+        vehicleCounter1.setTranslateZ(1707);
+
+        vehicleCounter1.setScaleX(10);
+        vehicleCounter1.setScaleY(10);
+
+        vehicleCounter2.setTranslateX(0);
+        vehicleCounter2.setTranslateY(-200);
+        vehicleCounter2.setTranslateZ(1707);
+
+        vehicleCounter2.setScaleX(10);
+        vehicleCounter2.setScaleY(10);
+
+        vehicleCounter3.setTranslateX(-1300);
+        vehicleCounter3.setTranslateY(-200);
+        vehicleCounter3.setTranslateZ(707);*/
+        Group trafficLights = new Group();
+        for(int i = 0; i < 8; i++){
+            int x = 0; int y = 0; int z = 0;
+            switch (i){
+                case 0:
+                    x = -1300; y = -50; z = 1700;
+                    break;
+                case 1:
+                    x = 0; y = -50; z = 1700;
+                    break;
+                case 2:
+                    x = -1300; y = -50; z = 530;
+                    break;
+                case 3:
+                    x = -20; y = -50; z = 530;
+                    break;
+                case 4:
+                    x = -1300; y = -50; z = 30;
+                    break;
+                case 5:
+                    x = -20; y = -50; z = 30;
+                    break;
+                case 6:
+                    x = -1300; y = -50; z = -360;
+                    break;
+                case 7:
+                    x = -20; y = -50; z = -360;
+                    break;
+            }
+            for(int j = 0; j < 4; j++){
+                ObjModelImporter importes = new ObjModelImporter();
+                try {
+                    importes.read(this.getClass().getResource("/trafficLight/trafficlight.obj"));
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                MeshView[] meshViewss = importes.getImport();
+                Group group3 = new Group();
+
+
+                group3.getChildren().addAll(meshViewss);
+                group3.setScaleX(15);
+                group3.setScaleY(12);
+                group3.setScaleZ(12);
+
+                switch (j){
+                    case 0:
+                        if(i == 2 || i == 3) {
+                            x += 190;
+                            z += 435;
+                        }
+                        else {
+                            x += 200;
+                            z += 200;
+                        }
+                        group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(180, Rotate.Y_AXIS),
+                                new Rotate(0, Rotate.Z_AXIS));
+                        break;
+                    case 1:
+
+                        if(i == 2 || i == 3) {
+                            x -= 0;
+                            z -= 450;
+                            group3.setScaleZ(20);
+                        }
+                        else {
+                            x-= 10; z-=200;
+                        }
+                        group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(-90, Rotate.Y_AXIS),
+                                new Rotate(0, Rotate.Z_AXIS));
+                        break;
+                    case 2:
+
+                        if(i == 2 || i == 3) {
+                            x -= 320;
+                            z -= 20;
+                        }
+                        else {
+                            x-= 330; z-=10;
+                        }
+                        group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                                new Rotate(0, Rotate.Z_AXIS));
+                        break;
+                    case 3:
+
+                        if(i == 2 || i == 3) {
+                            x -= 20;
+                            z += 465;
+                            group3.setScaleZ(20);
+                        }
+                        else if(i == 6 || i ==7){
+                            x -= 20;
+                            z+= 230;
+                        }
+                        else {
+                            x-= 50; z+=250;
+                        }
+                        group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
+                                new Rotate(0, Rotate.Z_AXIS));
+                        break;
+                }
+                //group.setTranslateY(1000);
+              /*  group3.setTranslateZ(1900);
+                group3.setTranslateY(-50);
+                group3.setTranslateX(160);*/
+                group3.setTranslateZ(z);
+                group3.setTranslateY(y);
+                group3.setTranslateX(x);
+                //((i != 5 && j != 1) || (i != 5 && j != 3))
+                if(i == 4 && j == 1  || i == 4 && j == 3) {
+
+                }
+                else if(i == 5 && j == 1 || i == 5 && j == 3){
+
+                }
+                else{
+                    trafficLights.getChildren().addAll(group3);
+                }
+            }
+        }
+
+        return trafficLights;
+    }
+
+    /**
      * Town Home 3D model creation, placement, scale
      * @return
      */
@@ -1083,7 +1359,7 @@ public class TrafficScene {
     }
     private Box cityMap(){
         Box cityBox = new Box(width,height - 50,10);
-        cityBox.setTranslateY(-40);
+        cityBox.setTranslateY(-80);
         //oceanBox.setLayoutX(500);
         cityBox.setTranslateZ(10);
 
@@ -1594,8 +1870,6 @@ public class TrafficScene {
                     }
                     else {
                         redFlag[0] = true;
-
-                        System.out.println("True red" + red[0] + " green" + green[0] + " blue" + blue[0]);
                     }
                 }
 

@@ -14,7 +14,7 @@ public class SystemController {
      * Pass to each light controller the coordinate of the lights
      * Object[] = {String direction, int x, int y}
      */
-    private final HashMap<Integer, ArrayList<Object[]>> lightCoords = new HashMap<>(){{
+    private static final HashMap<Integer, ArrayList<Object[]>> lightCoords = new HashMap<>(){{
         put(1, new ArrayList<Object[]>(){{
             add(new Object[]{"W", TrafficLight.type.STRAIGHT, 256, 108});
             add(new Object[]{"N", TrafficLight.type.RIGHT, 322, 93});
@@ -334,7 +334,7 @@ public class SystemController {
     }};
 
     //HashMap to store the light controllers
-    private final HashMap<Integer, LightController> lightControllers = new HashMap<>();
+    private static final HashMap<Integer, LightController> lightControllers = new HashMap<>();
     //Set final value for the number of intersections
     private final int INTERSECTIONS = 6;
     //Minimum time for a light to be green
@@ -387,6 +387,7 @@ public class SystemController {
     public void checkVehicleCrossing(List<Vehicle3D> vehicles) {
         for (LightController lightController : lightControllers.values()) {
             lightController.incrementVehicleCount(vehicles);
+            TrafficScene.vehicleCounters(lightController.getCarCounter(), lightController.getId());
         }
     }
 
@@ -401,6 +402,9 @@ public class SystemController {
     public void checkBusCrossing(List<Bus3D> busses) {
         for (LightController lightController : lightControllers.values()) {
             lightController.checkBusCollision(busses);
+            if(lightController.getBusApproaching() == true) {
+                TrafficScene.setMessage("Bus approaching intersection!", lightController.getId());
+            }
         }
     }
     //Get the light collision boxes
@@ -422,8 +426,25 @@ public class SystemController {
     }
 
     //Receives the number of vehicles from a light controller as input and sends an updated maximum green time as output
-    public static int updateMaxGreenTime(int numVehicles) {
+    public static int updateMaxGreenTime(int numVehicles, int id) {
         //Calculate the maximum green with an upper bound of 80 seconds
-        return (int)Math.min(80, Math.floor(MIN_GREEN + (numVehicles / 3.75)));
+        int time = (int)Math.min(80, Math.floor(MIN_GREEN + (numVehicles / 3.75)));
+        systemMessages(numVehicles,id, time);
+        return time;
+    }
+    public static void systemMessages(int numVehicles, int id, int time){
+        int x = 0;
+        int y = 0;
+        switch (id){
+            case 1: x = 265;  y = 107; break;
+            case 2: x = 603; y = 107; break;
+            case 3: x = 263; y = 358; break;
+            case 4: x = 603; y = 358; break;
+            case 5: x = 262; y = 652; break;
+            case 6: x = 601; y = 652;  break;
+        }
+        String lightMessage = "Traffic Light: " + id + "\nMessage Received \nAdjusting green time for: "
+                + numVehicles + " cars. \nNew Time: " + time + " seconds";
+        TrafficScene.setSystemData(lightMessage, x, y);
     }
 }
