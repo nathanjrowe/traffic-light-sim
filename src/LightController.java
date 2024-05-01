@@ -705,6 +705,7 @@ public class LightController {
             private direction dir = direction.NS;
             private int time = cycleTime;
             private int yellowTime = yellow;
+            private int leftTurnTime = 20;
             private Duration lastUpdate = Duration.of(0, ChronoUnit.NANOS);
 
             /**
@@ -754,8 +755,71 @@ public class LightController {
                     }
                         
                     }
+                    //Change to the left turn arrow
+                    if(leftTurnTime > 0){
+                        if(dir == direction.NS){
+                            //Set north box to left and east box to right for five seconds
+                            if(leftTurnTime >= 15) {
+                                changeLightState("N", TrafficLight.type.LEFT, "green-left");
+                                changeLightState("E", TrafficLight.type.RIGHT, "green-right");
+                            }
+                            //Set to yellow for 5 seconds
+                            else if(leftTurnTime < 15 && leftTurnTime > 10){
+                                changeLightState("N", TrafficLight.type.LEFT, "yellow-left");
+                                changeLightState("E", TrafficLight.type.RIGHT, "yellow-right");
+                            }
+                            //Allow left turn at south light and right turn at west light
+                            else if(leftTurnTime <= 10 && leftTurnTime > 5){
+                                changeLightState("N", TrafficLight.type.LEFT, "red");
+                                changeLightState("E", TrafficLight.type.RIGHT, "red");
+                                changeLightState("S", TrafficLight.type.LEFT, "green-left");
+                                changeLightState("W", TrafficLight.type.RIGHT, "green-right");
+                            }
+                            //Set to yellow for 4 seconds
+                            else if(leftTurnTime <= 5 && leftTurnTime > 1){
+                                changeLightState("S", TrafficLight.type.LEFT, "yellow-left");
+                                changeLightState("W", TrafficLight.type.RIGHT, "yellow-right");
+                            }
+                            //Set to red for 1 second
+                            else if(leftTurnTime == 1){
+                                changeLightState("S", TrafficLight.type.LEFT, "red");
+                                changeLightState("W", TrafficLight.type.RIGHT, "red");
+                            }
+                            
+                        }
+                        else if(dir == direction.EW){
+                            //Set east box to left and north box to right for five seconds
+                            if(leftTurnTime >= 15) {
+                                changeLightState("E", TrafficLight.type.LEFT, "green-left");
+                                changeLightState("N", TrafficLight.type.RIGHT, "green-right");
+                            }
+                            //Set to yellow for 5 seconds
+                            else if(leftTurnTime < 15 && leftTurnTime > 10){
+                                changeLightState("E", TrafficLight.type.LEFT, "yellow-left");
+                                changeLightState("N", TrafficLight.type.RIGHT, "yellow-right");
+                            }
+                            //Allow left turn at west light and right turn at south light
+                            else if(leftTurnTime <= 10 && leftTurnTime > 5){
+                                changeLightState("E", TrafficLight.type.LEFT, "red");
+                                changeLightState("N", TrafficLight.type.RIGHT, "red");
+                                changeLightState("W", TrafficLight.type.LEFT, "green-left");
+                                changeLightState("S", TrafficLight.type.RIGHT, "green-right");
+                            }
+                            //Set to yellow for 4 seconds
+                            else if(leftTurnTime <= 5 && leftTurnTime > 1){
+                                changeLightState("W", TrafficLight.type.LEFT, "yellow-left");
+                                changeLightState("S", TrafficLight.type.RIGHT, "yellow-right");
+                            }
+                            //Set to red for 1 second
+                            else if(leftTurnTime == 1){
+                                changeLightState("W", TrafficLight.type.LEFT, "red");
+                                changeLightState("S", TrafficLight.type.RIGHT, "red");
+                            }
+                        }
+                        leftTurnTime--;
+                    }
                     //Change the light color for the current direction
-                    if (greenTime > 0) {
+                    else if (greenTime > 0) {
                         if(dir == direction.NS && pedCrossingNorth.isEmpty() && pedCrossingSouth.isEmpty()){
                             changeAllLightState("N", "green");
                             changeAllLightState("S", "green");
@@ -876,6 +940,7 @@ public class LightController {
                         //Set the green time for the next direction
                         greenTime = minGreen;
                         yellowTime = yellow;
+                        leftTurnTime = 20;
                     }
                     time--;
 
