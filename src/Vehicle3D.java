@@ -334,8 +334,8 @@ public class Vehicle3D {
 
             //Car Rotation Code
             pathTransition.currentTimeProperty().addListener((obs, old, current) -> {
-                double xPosition = carGroup.getLayoutX() + carGroup.getTranslateX();
-                double yPosition = carGroup.getLayoutY() + carGroup.getTranslateY();
+                double xPosition = cars.getLayoutX() + cars.getTranslateX();
+                double yPosition = cars.getLayoutY() + cars.getTranslateY();
                 double[] currentSegment = findClosestSegmentBasedOnPosition(xPosition, yPosition, temp);
 
                 if (tempSegment == null && !checkDirections(temp.get(0), currentSegment, previousSegment)){
