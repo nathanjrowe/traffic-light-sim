@@ -205,7 +205,7 @@ public class LightController {
                 }
             }
         }
-
+        collisionBox.setType(type);
 
         //Add collision box to the list of collision boxes for the location
         lightCollisionBoxes.get(location).add(collisionBox);

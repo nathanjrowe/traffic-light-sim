@@ -13,6 +13,7 @@ public class CollisionBox extends Rectangle{
     private Object parent = null;
     private static Color color = Color.RED;
     private boolean isOff = false;
+    private TrafficLight.type lightType;
 
     //Constructor for a simple rectangle
     public CollisionBox(double x, double y, int width, int height) {
@@ -45,7 +46,15 @@ public class CollisionBox extends Rectangle{
     public Object getParentClass(){
         return this.parent;
     }
-
+    
+    //Set type
+    public void setType(TrafficLight.type type){
+        this.lightType = type;
+    }
+    //Get type
+    public TrafficLight.type getType(){
+        return this.lightType;
+    }
     /*Check if a collision box is colliding with another object
     * this is acomplished by using the built-in intersects function to return
     * true if a collision box is overlapping with another
