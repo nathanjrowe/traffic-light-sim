@@ -58,7 +58,7 @@ public class TrafficScene {
     // Define window size
     int width = 1200;
     int height = 800;
-    boolean stop = false;
+    boolean stop = true;
     SystemController systemController = new SystemController();
 
     /**
@@ -467,15 +467,17 @@ public class TrafficScene {
 
         spawnTrafficT.setTranslateX(-200);
         spawnTrafficT.setOnMouseClicked(event -> {
-            if (!stop) {
+            if (stop) {
+                testing.restartVehicles();
                 testing.addVehicles3D(vehicleCollidables3D.size(), tempPane, vehicleCollidables3D);
                 testing.addBuses3D(busCollidables3D.size(), tempPane, busCollidables3D);
                 testing.addPeople3D(personCollidablese3D.size(), tempPane, personCollidablese3D);
                 //streetScene.getChildren().add(tempPane);
-                stop = true;
+                stop = false;
             }
             else {
-                testing.stopVehicles(personCollidablese3D);
+                testing.stopVehicles();
+                stop = true;
             }
         });
 

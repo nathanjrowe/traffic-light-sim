@@ -157,7 +157,6 @@ public class Testing extends Application {
     }
 
     public void addVehicles3D(int count, Pane tempPane, List<Vehicle3D> vehicleCollidables3D) {
-        //System.out.println("Vehicles on Map is: " + vehicleCollidables3D.size());
         if (count >= 100 || stopSpawning) {
             return;
         }
@@ -168,15 +167,19 @@ public class Testing extends Application {
         vehicleCollidables3D.add(vehicle);
 
         //Using a recursive method to guarantee that the timeframe actually occurs.
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(250));
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(450));
         pause.setOnFinished(event1 -> {
             addVehicles3D(vehicleCollidables3D.size(), tempPane, vehicleCollidables3D);
         });
         pause.play();
     }
 
-    protected void stopVehicles(List<Person3D> people){
+    protected void stopVehicles(){
         stopSpawning = true;
+    }
+
+    protected void restartVehicles(){
+        stopSpawning = false;
     }
 
     /**
@@ -216,7 +219,7 @@ public class Testing extends Application {
         busCollidables.add(bus);
 
         //Using a recursive method to guarantee that the pause actually occurs.
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(25));
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(30));
         pause.setOnFinished(event1 -> {
             addBuses3D(busCollidables.size(), tempPane, busCollidables);
         });
@@ -260,7 +263,7 @@ public class Testing extends Application {
         personCollidable.add(person);
 
         //Using a recursive method to guarantee that the pause actually occurs.
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(500));
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(1000));
         pause.setOnFinished(event1 -> {
             addPeople3D(personCollidable.size(), tempPane, personCollidable);
         });

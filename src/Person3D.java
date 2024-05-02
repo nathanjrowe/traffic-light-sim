@@ -203,7 +203,7 @@ public class Person3D {
             startY = point[3];
         }
         //This is where you edit the Speed
-        seconds = distance / 50;
+        seconds = distance / 150;
         path.setOpacity(0);
     }
 
