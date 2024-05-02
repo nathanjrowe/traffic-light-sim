@@ -545,13 +545,11 @@ public class LightController {
         for (Bus3D bus : allBuses) {
             for (CollisionBox box : lightCollisionBoxes.get("B")) {
                 if (box.isColliding(bus.getBoundsInGrandparent(bus.returnCarShape()))) {
-                    System.out.println("Bus is approaching");
                     this.busApproaching = true;
                 }
             }
             //Check if there is no bus in either lanes
             if(!box1.isColliding(bus.getBoundsInGrandparent(bus.returnCarShape())) && !box2.isColliding(bus.getBoundsInGrandparent(bus.returnCarShape()))){
-                System.out.println("Bus is not in collision boxes");
                 this.busApproaching = false;
             }
         }
