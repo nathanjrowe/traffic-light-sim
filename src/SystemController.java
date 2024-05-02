@@ -111,9 +111,9 @@ public class SystemController {
             add(new Object[]{"N", TrafficLight.type.RIGHT, 319, 467});
             add(new Object[]{"S", TrafficLight.type.RIGHT, 268, 328});
             add(new Object[]{"S", TrafficLight.type.LEFT, 284, 328});
-            add(new Object[]{"E", TrafficLight.type.LEFT, 234, 444});
+            add(new Object[]{"E", TrafficLight.type.RIGHT, 234, 444});
             add(new Object[]{"E", TrafficLight.type.STRAIGHT, 234, 428});
-            add(new Object[]{"E", TrafficLight.type.RIGHT, 234, 408});
+            add(new Object[]{"E", TrafficLight.type.LEFT, 234, 408});
             add(new Object[]{"W", TrafficLight.type.RIGHT, 345, 355});
             add(new Object[]{"W", TrafficLight.type.STRAIGHT, 345, 375});
             add(new Object[]{"W", TrafficLight.type.LEFT, 345, 395});
