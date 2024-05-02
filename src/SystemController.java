@@ -452,6 +452,6 @@ public class SystemController {
         }
         String lightMessage = "Traffic Light: " + id + "\nMessage Received \nAdjusting green time for: "
                 + numVehicles + " cars. \nNew Time: " + time + " seconds";
-        TrafficScene.setSystemData(lightMessage, x, y);
+        TrafficScene.setSystemData(lightMessage, x, y, id);
     }
 }

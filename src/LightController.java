@@ -909,7 +909,9 @@ public class LightController {
     //Send vehicle count to the system controller
     public void sendData() {
         this.maxGreen = SystemController.updateMaxGreenTime(this.vehicleCount, id );
-        TrafficScene.setData("Traffic Light: " + getId()+ "\nCar Counter: " + vehicleCount + "\n Message Sent to Central Controller");
+        String message = "Traffic Light: " + getId()+ "\nCar Counter: " + vehicleCount +
+                "\n Message Sent to Central Controller";
+        TrafficScene.setData(message, 0,0,id);
         this.vehicleCount = 0;
     }
 
