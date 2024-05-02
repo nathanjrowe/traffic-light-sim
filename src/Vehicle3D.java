@@ -33,7 +33,7 @@ public class Vehicle3D {
             //Left first lane, Left Second Lane, Straight
             {13,412,305,412}, {13,412,324,412}, {13,412,269,412},
             //Straight
-            {13,428,269,428},
+            {13,428,269,428},{1185,374,663,374},{13,428,269,428},
             //Straight/Right first lane, Right Second Lane
             {13,445,269,445}, {13,445,289,445},
             //Left first Lane, Left Second Lane, Straight/Right first lane, Right Second Lane
@@ -43,13 +43,15 @@ public class Vehicle3D {
             {305,745,305,659},{305,745,305,677}, {324,745,324,677},
             //Left Turn, Straight Left Lane, Straight Right Lane/Right Turn
             {643,745,643,659},{643,745,643,677}, {663,745,663,677},
+            //bias
+            {1185,374,663,374},{13,428,269,428},
             /**Right Side Starting*/
             //Straight/Right First Lane, Right Second Lane, Left First Lane, Left Second Lane
             {1185,659,663,659},{1185,659,643,659},{1185,659,626,659},{1185,659,608,659},
             //Straight/Right first lane, Right second lane
             {1185,357,663,357},{1185,357,643,357},
             //Straight
-            {1185,374,663,374},
+            {1185,374,663,374},{1185,374,663,374},{13,428,269,428},
             //Straight, Left first Lane, Left Second Lane
             {1185,394,663,394},{1185,394,626,394},{1185,394,608,394},
             //Straight/Right first lane, Right Second Lane, Left first lane, Left Second lane
@@ -58,19 +60,17 @@ public class Vehicle3D {
             //Straight Left Lane, Left Turn, Straight Right Lane/Right Turn
             {626,10,626,108},{626,10,626,127},{608,10,608,108},
             //Straight
-            {466,10,466,127},
+            {466,10,466,127},{1185,374,663,374},{13,428,269,428},
             //Straight
-            //Potentially wrong
-            {412,10,412,108},
+            {412,10,412,108},{1185,374,663,374},{13,428,269,428},
             //Straight Left Lane, Left Turn, Straight/Right Turn
             {289,10,289,108},{289,10,289,127},{269,10,269,108},
 
             //Biasing the Randomness towards main road spawns
             {1185,357,663,357},{1185,357,643,357},
-            {1185,374,663,374},
+            {1185,374,663,374},{13,428,269,428},
             {1185,394,663,394},{1185,394,626,394},{1185,394,608,394},
             {13,412,305,412}, {13,412,324,412}, {13,412,269,412},
-            {13,428,269,428},
             {13,445,269,445}, {13,445,289,445},
     };
 

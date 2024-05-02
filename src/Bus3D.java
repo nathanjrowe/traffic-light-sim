@@ -243,7 +243,7 @@ public class Bus3D {
             startY = point[3];
         }
         //This is where you edit the Speed
-        seconds = distance / 200;
+        seconds = distance / 150;
         path.setOpacity(0);
     }
 
