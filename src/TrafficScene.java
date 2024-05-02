@@ -1,8 +1,5 @@
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
-import javafx.animation.Animation;//unused
-import javafx.animation.AnimationTimer;
-import javafx.animation.Interpolator;
-import javafx.animation.PathTransition;
+import javafx.animation.*;
 import javafx.beans.binding.When;//unused
 import javafx.geometry.Insets;
 import javafx.scene.*;
@@ -23,6 +20,7 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,9 +36,9 @@ public class TrafficScene {
      */
 
     private ImageHelper imageHelper = new ImageHelper();
-    private Testing testing = new Testing();
+    private static Testing testing = new Testing();
     private List<Vehicle> vehicleCollidables = new ArrayList<>();//unused
-    private List<Vehicle3D> vehicleCollidables3D = new ArrayList<>();
+    private static List<Vehicle3D> vehicleCollidables3D = new ArrayList<>();
     private List<Bus3D> busCollidables3D = new ArrayList<>();
     private List<Person3D> personCollidablese3D = new ArrayList<>();
     private List<Person> personCollidables = new ArrayList<>();//unused
@@ -60,6 +58,7 @@ public class TrafficScene {
     int width = 1200;
     int height = 800;
     boolean stop = true;
+    static Pane carsPane = new Pane();
     SystemController systemController = new SystemController();
 
     /**
@@ -93,7 +92,7 @@ public class TrafficScene {
                 new Rotate(0, Rotate.Z_AXIS));*/
         //root3D.getChildren().addAll(Camera, path4);
         PathTransition pathTransition4 = createCameraPath(cameraGroup, path4);
-        pathTransition4.play();
+        //pathTransition4.play();
         pathTransition4.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 
         //Root Pane
@@ -125,7 +124,7 @@ public class TrafficScene {
         Pane streetScene = testing.getRoot();
         Pane tempPane = new Pane();
 
-        streetScene.getChildren().addAll(tempPane, cityMap());
+        streetScene.getChildren().addAll(carsPane, cityMap());
 
         streetScene.setTranslateX(-800);
         streetScene.setTranslateZ(2200);
@@ -133,7 +132,7 @@ public class TrafficScene {
         streetScene.setScaleX(3.75);
         streetScene.setScaleZ(3.75);
 
-        menuPane = menuPane(tempPane);
+        menuPane = menuPane(carsPane);
 
         //Rotate the streetScene for the cars
         streetScene.getTransforms().addAll(new Rotate(-90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
@@ -341,12 +340,19 @@ public class TrafficScene {
 
         return menuPane;
     }
-    public static void setData(String data, int x, int y, int intersectionId){
+
+    /**
+     * Sets data messages that will pop up at the intersection that is sending the message
+     * @param data
+     * @param intersectionId
+     */
+    public static void setData(String data, int intersectionId){
         dataText.setText(data);
-        dataText.setFill(Color.WHITE);
+        dataText.setFill(Color.RED);
         dataText.setScaleY(8);
         dataText.setScaleX(8);
 
+        int x = 0; int y = 0;
         switch (intersectionId){
             case 1: x = 0;  y = 1200; break;
             case 2: x = 1000; y = 1200; break;
@@ -354,10 +360,48 @@ public class TrafficScene {
             case 4: x = 1000; y = 600; break;
             case 5: x = 0; y = -200; break;
             case 6: x = 1000; y = -200;  break;
+            case 7: x = 0; y = 100;  break;
+            case 8: x = 1000; y = 100;  break;
         }
-        inforPane(x,y);
+        inforPane(x,y, dataText);
     }
 
+    /**
+     * Sets a message that will pop up if a car tries to do an illegal move. Called from light controller
+     * @param data
+     * @param x
+     * @param y
+     */
+    public static void setIllegalMove(String data, double x, double y){
+        Text text = new Text(data);
+        text.setText(data);
+        text.setFill(Color.BLUE);
+        text.setScaleY(4);
+        text.setScaleX(4);
+
+        illegalPane(x,y, text);
+    }
+
+    /**
+     * Remove vehicles from the root pane
+     * @param vehicle3D
+     */
+    public static void removeFromRoot(Vehicle3D vehicle3D){
+        try {
+            for (Vehicle3D vehicles : vehicleCollidables3D) {
+                if (vehicles == vehicle3D) {
+                    vehicle3D.removeVehicle(carsPane, vehicleCollidables3D);
+                }
+            }
+        }
+        catch (Exception e){
+            //Do Nothing since I don't know how to avoid this exception lmao
+        }
+    }
+
+    /**
+     * Add the vehicle counters to the intersections
+     */
     public void addVehicleCounters(){
         vehicleCounter1 = new Text();
         vehicleCounter1.setFill(Color.WHITE);
@@ -375,46 +419,46 @@ public class TrafficScene {
         root3D.getChildren().addAll(vehicleCounter1, vehicleCounter2, vehicleCounter3, vehicleCounter4, vehicleCounter5,
                 vehicleCounter6);
         vehicleCounter1.setTranslateX(-1300);
-        vehicleCounter1.setTranslateY(-200);
+        vehicleCounter1.setTranslateY(-500);
         vehicleCounter1.setTranslateZ(1707);
 
-        vehicleCounter1.setScaleX(10);
-        vehicleCounter1.setScaleY(10);
+        vehicleCounter1.setScaleX(7);
+        vehicleCounter1.setScaleY(7);
 
         vehicleCounter2.setTranslateX(0);
-        vehicleCounter2.setTranslateY(-200);
+        vehicleCounter2.setTranslateY(-500);
         vehicleCounter2.setTranslateZ(1707);
 
-        vehicleCounter2.setScaleX(10);
-        vehicleCounter2.setScaleY(10);
+        vehicleCounter2.setScaleX(7);
+        vehicleCounter2.setScaleY(7);
 
         vehicleCounter3.setTranslateX(-1300);
-        vehicleCounter3.setTranslateY(-200);
+        vehicleCounter3.setTranslateY(-500);
         vehicleCounter3.setTranslateZ(707);
 
-        vehicleCounter3.setScaleX(10);
-        vehicleCounter3.setScaleY(10);
+        vehicleCounter3.setScaleX(7);
+        vehicleCounter3.setScaleY(7);
 
         vehicleCounter4.setTranslateX(0);
-        vehicleCounter4.setTranslateY(-200);
+        vehicleCounter4.setTranslateY(-500);
         vehicleCounter4.setTranslateZ(707);
 
-        vehicleCounter4.setScaleX(10);
-        vehicleCounter4.setScaleY(10);
+        vehicleCounter4.setScaleX(7);
+        vehicleCounter4.setScaleY(7);
 
         vehicleCounter5.setTranslateX(-1300);
-        vehicleCounter5.setTranslateY(-200);
+        vehicleCounter5.setTranslateY(-500);
         vehicleCounter5.setTranslateZ(-200);
 
-        vehicleCounter5.setScaleX(10);
-        vehicleCounter5.setScaleY(10);
+        vehicleCounter5.setScaleX(7);
+        vehicleCounter5.setScaleY(7);
 
         vehicleCounter6.setTranslateX(0);
-        vehicleCounter6.setTranslateY(-200);
+        vehicleCounter6.setTranslateY(-500);
         vehicleCounter6.setTranslateZ(-200);
 
-        vehicleCounter6.setScaleX(10);
-        vehicleCounter6.setScaleY(10);
+        vehicleCounter6.setScaleX(7);
+        vehicleCounter6.setScaleY(7);
     }
     public static void vehicleCounters(int count, int intersectionId){
         Text message = new Text(count + "");
@@ -430,20 +474,30 @@ public class TrafficScene {
             case 6: x = 601; y = 652;  vehicleCounter6.setText(count+ "");break;
         }
     }
+
+    /**
+     * Sets messages
+     * @param data
+     * @param intersectionId
+     */
     public static void setMessage(String data, int intersectionId){
      Text message = new Text(data);
-        message.setFill(Color.WHITE);
-        int x = 0;
-        int y = 0;
+        message.setFill(Color.YELLOW);
+        message.setScaleY(4);
+        message.setScaleX(4);
+        int x = 0; int y = 0;
         switch (intersectionId){
-            case 1: x = -1300;  y = 1500; break;
-            case 2: x = 0; y = 1500; break;
-            case 3: x = -1300; y = 700; break;
-            case 4: x = 0; y = 700; break;
-            case 5: x = -1300; y = -200; break;
-            case 6: x = 0; y = -200;  break;
+            case 1: x = 0;  y = 1200; break;
+            case 2: x = 1000; y = 1200; break;
+            case 3: x = 0; y = 600; break;
+            case 4: x = 1000; y = 600; break;
+            case 5: x = 0; y = -200; break;
+            case 6: x = 1000; y = -200;  break;
+            case 7: x = 0; y = 100;  break;
+            case 8: x = 1000; y = 100;  break;
         }
-        Pane infoPanes = new Pane();
+        inforPane(x,y, message);
+    /*    Pane infoPanes = new Pane();
         //infoPanes.getChildren().add(dataText);
 
         infoPanes.setPrefWidth(500);
@@ -458,9 +512,16 @@ public class TrafficScene {
         group.setTranslateZ(-1000);
         group.setTranslateX(-3000);
 
-        root3D.getChildren().add(group);
+        root3D.getChildren().add(group);*/
     }
 
+    /**
+     * System messages that are displayed in the UI Bar
+     * @param data
+     * @param x
+     * @param y
+     * @param intersectionId
+     */
     public static void setSystemData(String data, int x, int y, int intersectionId){
         systemText.setText(data);
         systemText.setFill(Color.WHITE);
@@ -473,26 +534,22 @@ public class TrafficScene {
             case 5: x = -100; y = -200; break;
             case 6: x = 300; y = -200;  break;
         }
-
-       /* newPane.setTranslateX(x*4);
-        newPane.setTranslateY(y*4);
-        newPane.setTranslateZ(-500);*/
-        inforPane(x,y);
+        //inforPane(x,y);
     }
 
-    private static Pane inforPane(int x, int y) {
+    /**
+     * Used for placing messages in scene
+     * @param x
+     * @param y
+     * @return
+     */
+    private static Pane inforPane(double x, double y, Text text) {
         //Menu
-        Box infoBox = new Box(200, 200, 200);
         Pane infoPanes = new Pane();
-        //infoPanes.getChildren().add(dataText);
 
         infoPanes.setPrefWidth(500);
         infoPanes.setPrefHeight(400);
-/*
-        infoBox.setTranslateY(-100);
-        infoBox.setTranslateZ(y*5);
-        infoBox.setTranslateX(x*5);*/
-        infoPanes.getChildren().add(dataText);
+        infoPanes.getChildren().add(text);
 
         infoPanes.setTranslateY(-500);
         infoPanes.setTranslateZ(y*1.5);
@@ -500,10 +557,53 @@ public class TrafficScene {
         infoPanes.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
         Group group = new Group(infoPanes);
-        //group.setTranslateZ(-1000);
         group.setTranslateX(-1500);
 
         root3D.getChildren().add(group);
+        final Timeline timeline = new Timeline();
+        timeline.setCycleCount(1);
+        timeline.setAutoReverse(true);
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1500)));
+        timeline.play();
+        timeline.setOnFinished(event -> {
+            root3D.getChildren().remove(group);
+        });
+        return infoPanes;
+    }
+
+    /**
+     * Used for placing messages in scene
+     * @param x
+     * @param y
+     * @param text
+     * @return
+     */
+    private static Pane illegalPane(double x, double y, Text text) {
+        //Menu
+        Pane infoPanes = new Pane();
+
+        infoPanes.setPrefWidth(500);
+        infoPanes.setPrefHeight(400);
+        infoPanes.getChildren().add(text);
+
+
+        infoPanes.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+        Group group = new Group(infoPanes);
+        infoPanes.setTranslateY(-500);
+        infoPanes.setTranslateZ(y*2);
+        infoPanes.setTranslateX(x*2);
+
+        group.setTranslateX(-500);
+        root3D.getChildren().add(group);
+        final Timeline timeline = new Timeline();
+        timeline.setCycleCount(1);
+        timeline.setAutoReverse(true);
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(2000)));
+        timeline.play();
+        timeline.setOnFinished(event -> {
+            root3D.getChildren().remove(group);
+        });
         return infoPanes;
     }
 

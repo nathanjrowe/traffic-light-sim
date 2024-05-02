@@ -15,6 +15,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 //import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -122,6 +123,8 @@ public class Vehicle3D {
     private List<String> directions = new ArrayList<>();
     private double[] tempSegment;
     private double[] previousSegment;
+    private long timeInIntersection = 0;
+    private long timeAtStopLight = 0;
     /**
      * Constructor
      * @param tempPane
@@ -326,7 +329,7 @@ public class Vehicle3D {
      * This function utilizes tempPane and collidableVehicles, both obtained when the constructor
      * is first called for the vehicle.
      * 
-     * It then adds the path and carShape values to the proveded tempPane, and provided that both values exist
+     * It then adds the path and carShape values to the provided tempPane, and provided that both values exist
      * it will initialize the pathTransition with an event to remove the bus once it has completed the path once.
      * 
      * is the same as Bus.java, Bus3D.java, Person.java, and Person3D.java
@@ -367,6 +370,30 @@ public class Vehicle3D {
                 collidableVehicles.remove(this);
             });
         }
+    }
+
+    /**
+     * Removes the vehicle that was in an accident. Called by traffic scene since we need the streetscene
+     * @param streetScene
+     * @param collidableVehicles
+     */
+    public void removeVehicle(Pane streetScene,  List<Vehicle3D> collidableVehicles){
+
+        try {
+            streetScene.getChildren().removeAll(path, cars);
+            collidableVehicles.removeIf(this::equals);
+        }
+        catch (Exception e){
+
+        }
+
+      /*  Iterator as = collidableVehicles.iterator();
+        for (Iterator it = as; it.hasNext(); ) {
+            Vehicle3D vehicles = (Vehicle3D) it.next();
+            if (vehicles == vehicle3D) {
+                it.remove();
+            }
+        }*/
     }
 
     private boolean checkDirections(double[] current, double[] held, double[] previous){
@@ -489,6 +516,16 @@ public class Vehicle3D {
         //This is where you edit the Speed
         seconds = distance / 100;
         path.setOpacity(0);
+    }
+
+    private Path createNewPath(double x){
+        Path path = new Path();
+
+        path.getElements().add(new MoveTo(x, -3000));
+        path.getElements().add(new LineTo(x, -50));
+        path.getElements().add(new LineTo(-x, -50));
+        path.getElements().add(new LineTo(-x, -3000));
+        return path;
     }
 
     /**
@@ -628,22 +665,40 @@ public class Vehicle3D {
         if(collidedBox != null) {
             if(collidedBox.getState() == CollisionBox.State.GO &&
                     (returnCurrentDirection().matches("Straight")) || returnCurrentDirection().matches("Right")) {
-                this.collided = false;
-                this.stoppedAtLight = false;
-                this.restartVehicle();
-                this.collidedBox = null;
+                if(System.currentTimeMillis() - timeAtStopLight >= 2500 && stoppedAtLight) {
+                    TrafficScene.setIllegalMove("Hey fuck", collidedBox.getX(), collidedBox.getY());
+                }
+                else {
+                    this.collided = false;
+                    this.stoppedAtLight = false;
+                    this.restartVehicle();
+                    this.collidedBox = null;
+                }
+
             } else if (collidedBox.getState() == CollisionBox.State.LEFT && returnCurrentDirection().matches("Left")) {
                 System.out.println("Left Turn Lane");
-                this.collided = false;
-                this.stoppedAtLight = false;
-                this.restartVehicle();
-                this.collidedBox = null;
+                if(System.currentTimeMillis() - timeAtStopLight >= 2500 && stoppedAtLight){
+                    TrafficScene.setIllegalMove("Hey fuck", collidedBox.getX(), collidedBox.getY());
+                }
+                else {
+                    this.collided = false;
+                    this.stoppedAtLight = false;
+                    this.restartVehicle();
+                    this.collidedBox = null;
+                }
+
             } else if (collidedBox.getState() == CollisionBox.State.RIGHT && returnCurrentDirection().matches("Right")) {
                 System.out.println("Right Turn Lane");
-                this.collided = false;
-                this.stoppedAtLight = false;
-                this.restartVehicle();
-                this.collidedBox = null;
+                if(System.currentTimeMillis() - timeAtStopLight >= 2500 && stoppedAtLight){
+                    TrafficScene.setIllegalMove("Hey fuck", collidedBox.getX(), collidedBox.getY());
+                }
+                else {
+                    this.collided = false;
+                    this.stoppedAtLight = false;
+                    this.restartVehicle();
+                    this.collidedBox = null;
+                }
+
             }
         }
         for (CollisionBox collisionBox : collisionBoxes) {
@@ -653,6 +708,10 @@ public class Vehicle3D {
                     this.collided = true;
                     this.stoppedAtLight = true;
                     this.stopVehicle();
+                    this.setTimeAtStoplight(System.currentTimeMillis());
+                    if(System.currentTimeMillis() - timeAtStopLight >= 2500 && stoppedAtLight){
+                        TrafficScene.setIllegalMove("Hey move", collidedBox.getX(), collidedBox.getY());
+                    }
                 }
                 break;
             }
@@ -683,10 +742,15 @@ public class Vehicle3D {
                         if(vehicle.returnStoppedAtLight()) {
                             collided = true;
                             stoppedAtLight = true;
+                            //TrafficScene.setData("Stopped", 1);
                             stopVehicle();
+                            //vehicle.setTimeAtStoplight(System.currentTimeMillis());
                         }
                         stopVehicle();
                         collided = true;
+                      /*  if(System.currentTimeMillis() - timeatStopLight >= 500 ){
+                            TrafficScene.setData("Hey jerk", 1);
+                        }*/
                         break;
                     }
                 }
@@ -744,6 +808,22 @@ public class Vehicle3D {
     protected Bounds getBoundsInGrandparent(Node node) {
         Bounds nodeInParent = node.localToParent(node.getBoundsInLocal());
         return node.getParent().localToParent(nodeInParent);
+    }
+
+    public long getTimeInIntersection(){
+        return timeInIntersection;
+    }
+
+    public void setTimeInIntersection(long time){
+        timeInIntersection = time;
+    }
+
+    public long getTimeatStopLight(){
+        return timeAtStopLight;
+    }
+
+    public void setTimeAtStoplight(long time){
+        timeAtStopLight = time;
     }
     
 }

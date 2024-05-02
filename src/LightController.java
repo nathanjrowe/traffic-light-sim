@@ -598,6 +598,7 @@ public class LightController {
                                 greenTime++;
                             }
                         }
+                        vehicle.setTimeInIntersection(System.currentTimeMillis());
                         vehicleCount++;
                         //System.out.println("Vehicle Count: " + vehicleCount);
                         vehicles.add(vehicle);
@@ -911,7 +912,7 @@ public class LightController {
         this.maxGreen = SystemController.updateMaxGreenTime(this.vehicleCount, id );
         String message = "Traffic Light: " + getId()+ "\nCar Counter: " + vehicleCount +
                 "\n Message Sent to Central Controller";
-        TrafficScene.setData(message, 0,0,id);
+        TrafficScene.setData(message,id);
         this.vehicleCount = 0;
     }
 
@@ -944,6 +945,15 @@ public class LightController {
                         if (!intersectionBox.getBoundsInParent().intersects(vehicle.getBoundsInGrandparent(vehicle.returnCarShape()))) {
                             vehicles.remove(vehicle);
                     }
+
+                        //Send a message about a current accident
+                        if((System.currentTimeMillis() - vehicle.getTimeInIntersection() >= 2500)){
+                            TrafficScene.setData("Accident at intersection: ", id);
+
+                            //Remove the cars that are in the intersection
+                            vehicles.remove(vehicle);
+                            TrafficScene.removeFromRoot(vehicle);
+                        }
 
                     //Update min green time to 30 seconds if the pedestrian light contains an item
                     if(pedLightChanges.size() > 0){
