@@ -801,8 +801,9 @@ public class LightController {
            
         for(Pane pedestrianLight : pedestrianLights.values()){
             root.getChildren().add(pedestrianLight);
-            pedestrianLight.setScaleX(.05);
-            pedestrianLight.setScaleY(.05);
+            pedestrianLight.setScaleX(.025);
+            pedestrianLight.setScaleY(.025);
+            pedestrianLight.setScaleZ(.25);
             pedestrianLight.setTranslateZ(-100);
             pedestrianLight.setTranslateX(-240);
             pedestrianLight.setTranslateY(-80);

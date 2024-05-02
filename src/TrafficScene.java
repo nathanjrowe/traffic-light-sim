@@ -323,15 +323,19 @@ public class TrafficScene {
         Text currentTrafficT = new Text("Traffic: Moderate");
         currentTrafficT.setFill(Color.WHITE);
 
+        CollisionBox collisionBox = new CollisionBox(0,0,0,0,0);
+        Text collisionBoxes = new Text("Collision Boxes");
+        currentTrafficT.setFill(Color.WHITE);
 
+        collisionBoxes.setOnMouseClicked(event -> collisionBox.changeColor());
         Image uiT = imageHelper.getImage("./images/logo.png");
         ImageView uiTitle = new ImageView(uiT);
         uiTitle.setScaleX(.5);
         uiTitle.setScaleY(.5);
         //uiTitle.setFill(Color.WHITE);
 
-        menuPane.getChildren().addAll(startRec, spawnVehiclesBTN(tempPane), uiTitle, currentTimeT,
-                currentTrafficT, systemText);//, testButton);
+        menuPane.getChildren().addAll(startRec, spawnVehiclesBTN(tempPane), uiTitle, //currentTimeT,
+                currentTrafficT, systemText, collisionBoxes);//, testButton);
         menuPane.setMargin(uiTitle, new Insets(-20,0,0,-950));
         menuPane.setMargin(currentTimeT, new Insets(-50,0,0,950));
         menuPane.setMargin(currentTrafficT, new Insets(0,0,0,895));
@@ -348,9 +352,9 @@ public class TrafficScene {
      */
     public static void setData(String data, int intersectionId){
         dataText.setText(data);
-        dataText.setFill(Color.RED);
-        dataText.setScaleY(8);
-        dataText.setScaleX(8);
+        dataText.setFill(Color.WHEAT);
+        dataText.setScaleY(5);
+        dataText.setScaleX(5);
 
         int x = 0; int y = 0;
         switch (intersectionId){
@@ -563,7 +567,12 @@ public class TrafficScene {
         final Timeline timeline = new Timeline();
         timeline.setCycleCount(1);
         timeline.setAutoReverse(true);
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1000)));
+        if(text == dataText){
+            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(3000)));
+        }
+        else {
+            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1000)));
+        }
         timeline.play();
         timeline.setOnFinished(event -> {
             root3D.getChildren().remove(group);
@@ -1984,7 +1993,7 @@ public class TrafficScene {
         AnimationTimer timer = new AnimationTimer() {
             @Override
         public void handle(long l) {
-            if ((l - startingTime1[0]) / 1000000 > 100) {
+            if ((l - startingTime1[0]) / 1000000 > 165) {
                 if(red[0] > 1 && red[0] <= 100 && redFlag[0] == true){
                    red[0]--;
                    if(green[0] >= 2) {
@@ -2016,21 +2025,22 @@ public class TrafficScene {
                 lg1[0] = new LinearGradient(1, 1, 1, 0, true,
                         CycleMethod.NO_CYCLE, stops12[0]);
 
-                switch (counter){
-                    case 0: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 5:00am"); break;
-                    case 5: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 7:00 AM"); break;
-                    case 10: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 9:00 AM");break;
-                    case 15: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 11:00 AM");break;
-                    case 20: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 1:00 PM");break;
-                    case 25: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 3:00 PM");break;
-                    case 30: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 5:00 PM");break;
-                    case 35: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 7:00 PM");break;
-                    case 40: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 9:00 PM");break;
-                    case 45: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 11:00 PM");break;
-                    case 50: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 1:00 AM");break;
-                    case 55: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 3:00 AM"); counter = 0;break;
-                }
-                counter++;
+             /*   switch (counter){
+                    case 0: currentTimeT.textProperty().set("Sim Time: 5:00am"); break;
+                    case 8: currentTimeT.textProperty().set("Sim Time: 7:00 AM"); break;
+                    case 16: currentTimeT.textProperty().set("Sim Time: 9:00 AM");break;
+                    case 24: currentTimeT.textProperty().set("Sim Time: 11:00 AM");break;
+                    case 32: currentTimeT.textProperty().set("Sim Time: 1:00 PM");break;
+                    case 40: currentTimeT.textProperty().set("Sim Time: 3:00 PM");break;
+                    case 48:  currentTimeT.textProperty().set("Sim Time: 5:00 PM");break;
+                    case 56:  currentTimeT.textProperty().set("Sim Time: 7:00 PM");break;
+                    case 64:  currentTimeT.textProperty().set("Sim Time: 9:00 PM");break;
+                    case 72:  currentTimeT.textProperty().set("Sim Time: 11:00 PM");break;
+                    case 80:  currentTimeT.textProperty().set("Sim Time: 1:00 AM");break;
+                    case 88:  currentTimeT.textProperty().set("Sim Time: 3:00 AM"); counter = -1;break;
+                }*/
+                scene.setFill(lg1[0]);
+                //counter++;
 
                 startingTime1[0] = l;
             }

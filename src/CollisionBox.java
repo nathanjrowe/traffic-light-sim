@@ -11,12 +11,14 @@ public class CollisionBox extends Rectangle{
     }
 
     private Object parent = null;
+    private static Color color = Color.RED;
+    private boolean isOff = false;
 
     //Constructor for a simple rectangle
     public CollisionBox(double x, double y, int width, int height) {
         super(x, y, width, height);
         this.setFill(Color.TRANSPARENT);
-        this.setStroke(Color.RED);
+        this.setStroke(color);
         this.setStrokeWidth(2);
     }
 
@@ -24,7 +26,7 @@ public class CollisionBox extends Rectangle{
     public CollisionBox(double x, double y, int width, int height, Object parent) {
         super(x, y, width, height);
         this.setFill(Color.TRANSPARENT);
-        this.setStroke(Color.RED);
+        this.setStroke(color);
         this.setStrokeWidth(2);
         this.parent = parent;
     }
@@ -51,5 +53,18 @@ public class CollisionBox extends Rectangle{
     public boolean isColliding(Bounds box){
         return this.getBoundsInParent().intersects(box);
     }
+
+    public void changeColor(){
+        if(!isOff) {
+            color = Color.TRANSPARENT;
+            isOff = true;
+        }
+        else {
+            color = Color.RED;
+            isOff = false;
+        }
+        this.setStroke(color);
+    }
+
 
 }

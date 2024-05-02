@@ -666,7 +666,7 @@ public class Vehicle3D {
             if(collidedBox.getState() == CollisionBox.State.GO &&
                     (returnCurrentDirection().matches("Straight")) || returnCurrentDirection().matches("Right")) {
                 if(System.currentTimeMillis() - timeAtStopLight >= 2500 && stoppedAtLight) {
-                    TrafficScene.setIllegalMove("Hey fuck", collidedBox.getX(), collidedBox.getY());
+                    TrafficScene.setIllegalMove("Beep Bop", collidedBox.getX(), collidedBox.getY());
                 }
                 else {
                     this.collided = false;
@@ -678,7 +678,7 @@ public class Vehicle3D {
             } else if (collidedBox.getState() == CollisionBox.State.LEFT && returnCurrentDirection().matches("Left")) {
                 System.out.println("Left Turn Lane");
                 if(System.currentTimeMillis() - timeAtStopLight >= 2500 && stoppedAtLight){
-                    TrafficScene.setIllegalMove("Hey fuck", collidedBox.getX(), collidedBox.getY());
+                    TrafficScene.setIllegalMove("Honk Honk", collidedBox.getX(), collidedBox.getY());
                 }
                 else {
                     this.collided = false;
@@ -690,7 +690,7 @@ public class Vehicle3D {
             } else if (collidedBox.getState() == CollisionBox.State.RIGHT && returnCurrentDirection().matches("Right")) {
                 System.out.println("Right Turn Lane");
                 if(System.currentTimeMillis() - timeAtStopLight >= 2500 && stoppedAtLight){
-                    TrafficScene.setIllegalMove("Hey fuck", collidedBox.getX(), collidedBox.getY());
+                    TrafficScene.setIllegalMove("Beep Beep", collidedBox.getX(), collidedBox.getY());
                 }
                 else {
                     this.collided = false;
