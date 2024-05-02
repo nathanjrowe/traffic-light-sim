@@ -96,6 +96,9 @@ public class TrafficScene {
         //pathTransition4.play();
         pathTransition4.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 
+        testing.makeCollisionBoxInvisible(0);
+        invisible = true;
+
         //Root Pane
         root.setPrefHeight(height-20);
         root.setPrefWidth(width);
