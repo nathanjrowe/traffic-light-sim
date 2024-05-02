@@ -32,7 +32,7 @@ public class TrafficLight {
     private final ImageView leftTurnRedImageView;
     private final ImageView rightTurnYellowImageView;
     private final ImageView rightTurnRedImageView;
-    private CollisionBox collisionBox;
+    private CollisionBox collisionBox = null;
     private type type;
 
     private LightColor lightColor;
