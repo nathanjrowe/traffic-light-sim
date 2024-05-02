@@ -111,6 +111,9 @@ public class Vehicle3D {
     private Vehicle3D collidedVehicle = null;
     private Boolean stoppedAtLight = false;
     private Group cars = new Group();
+    private List<String> directions = new ArrayList<>();
+    private double[] tempSegment;
+    private double[] previousSegment;
     /**
      * Constructor
      * @param tempPane
@@ -331,9 +334,21 @@ public class Vehicle3D {
 
             //Car Rotation Code
             pathTransition.currentTimeProperty().addListener((obs, old, current) -> {
-                double xPosition = cars.getLayoutX() + cars.getTranslateX();
-                double yPosition = cars.getLayoutY() + cars.getTranslateY();
+                double xPosition = carGroup.getLayoutX() + carGroup.getTranslateX();
+                double yPosition = carGroup.getLayoutY() + carGroup.getTranslateY();
                 double[] currentSegment = findClosestSegmentBasedOnPosition(xPosition, yPosition, temp);
+
+                if (tempSegment == null && !checkDirections(temp.get(0), currentSegment, previousSegment)){
+                    System.out.println(directions);
+                    tempSegment = currentSegment.clone();
+                }
+                if (tempSegment != null && checkDirections(currentSegment, tempSegment, previousSegment)){
+                    previousSegment = tempSegment.clone();
+                    tempSegment = currentSegment.clone();
+                    if (directions.size() > 0) {
+                        directions.remove(0);
+                    }
+                }
                 if (currentSegment != null) {
                     double angle = calculateAngle(currentSegment[0], currentSegment[1], currentSegment[2], currentSegment[3]);
                     cars.setRotate(-angle);
@@ -345,6 +360,20 @@ public class Vehicle3D {
                 collidableVehicles.remove(this);
             });
         }
+    }
+
+    private boolean checkDirections(double[] current, double[] held, double[] previous){
+        if (held[0] != current[0] || held[1] != current[1] ||
+                held[2] != current[2] || held[3] != current[3]){
+            if (previous == null){
+                return true;
+            }
+            if (held[0] != previous[0] || held[1] != previous[1] ||
+                    held[2] != previous[2] || held[3] != previous[3]){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -400,6 +429,53 @@ public class Vehicle3D {
             double endX = point[2];
             double endY = point[3];
             distance += abs((endX - startX)) + abs((endY - startY));
+
+            //Direction List
+            if (i < temp.size() - 1){
+                double x3 = temp.get(i+1)[2];
+                double y3 = temp.get(i+1)[3];
+                //Enter from Top
+                if (startX == endX && startY < endY){
+                    if (endX < x3 && endY == y3){
+                        directions.add("Left");
+                    } else if (endX == x3 && endY < y3) {
+                        directions.add("Straight");
+                    } else if (endX > x3 && endY == y3) {
+                        directions.add("Right");
+                    }
+                }
+                //Enter from Left
+                else if (startX < endX && startY == endY) {
+                    if (endX == x3 && endY > y3){
+                        directions.add("Left");
+                    } else if (endX < x3 && endY == y3) {
+                        directions.add("Straight");
+                    } else if (endX == x3 && endY < y3) {
+                        directions.add("Right");
+                    }
+                }
+                //Enter from Bottom
+                else if (startX == endX && startY > endY) {
+                    if (endX > x3 && endY == y3){
+                        directions.add("Left");
+                    } else if (endX == x3 && endY > y3) {
+                        directions.add("Straight");
+                    } else if (endX < x3 && endY == y3) {
+                        directions.add("Right");
+                    }
+                }
+                //Enter from Right
+                else if (startX > endX && startY == endY) {
+                    if (endX == x3 && endY < y3){
+                        directions.add("Left");
+                    } else if (endX > x3 && endY == y3) {
+                        directions.add("Straight");
+                    } else if (endX == x3 && endY > y3) {
+                        directions.add("Right");
+                    }
+                }
+            }
+
             startX = point[2];
             startY = point[3];
         }
@@ -632,6 +708,14 @@ public class Vehicle3D {
     }
     protected boolean returnStoppedAtLight() {
         return stoppedAtLight;
+    }
+    protected String returnCurrentDirection(){
+        if (directions.size() > 0) {
+            return directions.get(0);
+        }
+        else {
+            return "None";
+        }
     }
 
     /*
