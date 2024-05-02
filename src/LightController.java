@@ -1446,7 +1446,7 @@ public class LightController {
                                 //changePedestrianLight("S", PedestrianLight.LightColor.WALKING);
                                 //Set the collision boxes to go
                                 for(CollisionBox box : pedCollisionBoxes.get("S")){
-                                    System.out.println("Pedestrian Light changing");
+                                    //System.out.println("Pedestrian Light changing");
                                     box.setState(CollisionBox.State.GO);
                                 }
                                 //Remove the item from the list
