@@ -339,7 +339,6 @@ public class Vehicle3D {
                 double[] currentSegment = findClosestSegmentBasedOnPosition(xPosition, yPosition, temp);
 
                 if (tempSegment == null && !checkDirections(temp.get(0), currentSegment, previousSegment)){
-                    System.out.println(directions);
                     tempSegment = currentSegment.clone();
                 }
                 if (tempSegment != null && checkDirections(currentSegment, tempSegment, previousSegment)){
@@ -619,7 +618,19 @@ public class Vehicle3D {
         //Check for collisions every frame
         //Print the bounds of the car
         if(collidedBox != null) {
-            if(collidedBox.getState() != CollisionBox.State.STOP) {
+            if(collidedBox.getState() == CollisionBox.State.GO && returnCurrentDirection().matches("Straight")) {
+                this.collided = false;
+                this.stoppedAtLight = false;
+                this.restartVehicle();
+                this.collidedBox = null;
+            } else if (collidedBox.getState() == CollisionBox.State.LEFT && returnCurrentDirection().matches("Left")) {
+                System.out.println("Left Turn Lane");
+                this.collided = false;
+                this.stoppedAtLight = false;
+                this.restartVehicle();
+                this.collidedBox = null;
+            } else if (collidedBox.getState() == CollisionBox.State.RIGHT && returnCurrentDirection().matches("Right")) {
+                System.out.println("Right Turn Lane");
                 this.collided = false;
                 this.stoppedAtLight = false;
                 this.restartVehicle();
@@ -627,7 +638,6 @@ public class Vehicle3D {
             }
         }
         for (CollisionBox collisionBox : collisionBoxes) {
-            //System.out.println(collisionBox.getBoundsInParent());
             if (frontBoundsInGrandParent.intersects(collisionBox.getBoundsInParent())) {
                 this.collidedBox = collisionBox;
                 if(collisionBox.getState() == CollisionBox.State.STOP) {

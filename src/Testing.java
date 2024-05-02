@@ -167,7 +167,7 @@ public class Testing extends Application {
         vehicleCollidables3D.add(vehicle);
 
         //Using a recursive method to guarantee that the timeframe actually occurs.
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(450));
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.millis(900));
         pause.setOnFinished(event1 -> {
             addVehicles3D(vehicleCollidables3D.size(), tempPane, vehicleCollidables3D);
         });
