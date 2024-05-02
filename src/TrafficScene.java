@@ -1,10 +1,7 @@
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.animation.*;
-import javafx.beans.binding.When;//unused
 import javafx.geometry.Insets;
 import javafx.scene.*;
-import javafx.scene.effect.Light;//unused
-import javafx.scene.effect.Lighting;//unused
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -14,14 +11,13 @@ import javafx.scene.paint.*;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
-import com.interactivemesh.jfx.importer.stl.StlMeshImporter;//unused
 import javafx.util.Duration;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -53,6 +49,7 @@ public class TrafficScene {
     private static Text dataText = new Text();
     private static Text systemText = new Text();
     private PerspectiveCamera camera;
+    PathTransition pathTransition4;
 
     // Define window size
     int width = 1200;
@@ -76,6 +73,9 @@ public class TrafficScene {
 
         testing.startCollisionTimer3D(vehicleCollidables3D, busCollidables3D, personCollidablese3D);
         camera = mainCamera();
+       /* camera.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));*/
+
         createSubScene(); // Container for different components of scene
 
         Group cameraGroup = new Group(camera);
@@ -85,15 +85,22 @@ public class TrafficScene {
         PathTransition pathTransition1 = createCameraPath(cameraGroup, path);//createPathTransition(cameraGroup, path1);
         pathTransition1.play();*/
 
+        cameraGroup.setTranslateZ(500);
+        cameraGroup.setTranslateY(-500);
         Circle path4 = new Circle(1500);
-        path4.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
-                new Rotate(180, Rotate.Z_AXIS));
+        path4.setTranslateY(-1000);
+        path4.setTranslateX(-1000);
+        path4.setTranslateZ(-500);
+        path4.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));
+
 
         /*camera.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));*/
         //root3D.getChildren().addAll(Camera, path4);
-        PathTransition pathTransition4 = createCameraPath(cameraGroup, path4);
-        //pathTransition4.play();
+        pathTransition4 = createCameraPath(cameraGroup, path4);
+        pathTransition4.setRate(.5);
+        pathTransition4.play();
         pathTransition4.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
 
         testing.makeCollisionBoxInvisible(0);
@@ -227,6 +234,23 @@ public class TrafficScene {
 
     private PathTransition createCameraPath(Group group, Circle path) {
         PathTransition pathTransition = new PathTransition(Duration.seconds(10), path, group);
+        AtomicBoolean isFinished = new AtomicBoolean(false);
+        pathTransition.setPath(path);
+        path.setCenterX(50);
+       /* group.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(-45, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.Z_AXIS));*/
+    /*    pathTransition.setOnFinished(event -> {
+            if(isFinished.get()) {
+                group.getChildren().get(0).getTransforms().addAll(new Rotate(450, Rotate.X_AXIS), new Rotate(45, Rotate.Y_AXIS),
+                        new Rotate(0, Rotate.Z_AXIS));
+                isFinished.set(false);
+            }
+            else{
+                group.getChildren().get(0).getTransforms().addAll(new Rotate(-45, Rotate.X_AXIS), new Rotate(-45, Rotate.Y_AXIS),
+                        new Rotate(0, Rotate.Z_AXIS));
+                isFinished.set(true);
+            }
+        });*/
         pathTransition.setCycleCount(PathTransition.INDEFINITE);
         return pathTransition;
     }
@@ -286,9 +310,9 @@ public class TrafficScene {
 
         //Sets the camera properties
         perspectiveCamera.setLayoutY(-1550);
-        perspectiveCamera.setLayoutX(0);
+        perspectiveCamera.setLayoutX(-1000);
         perspectiveCamera.setTranslateZ(-1000);
-        perspectiveCamera.getTransforms().addAll(new Rotate(-30, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS)
+        perspectiveCamera.getTransforms().addAll(new Rotate(-45, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS)
                 ,new Rotate(0, Rotate.Z_AXIS));
 
         return  perspectiveCamera;
@@ -329,6 +353,7 @@ public class TrafficScene {
 
         CollisionBox collisionBox = new CollisionBox(0,0,0,0,0);
         Text collisionBoxes = new Text("Collision Boxes");
+        collisionBoxes.setFill(Color.WHITE);
         currentTrafficT.setFill(Color.WHITE);
 
         collisionBoxes.setOnMouseClicked(event -> {
@@ -341,6 +366,23 @@ public class TrafficScene {
                 invisible = false;
             }
         });
+
+        Text cameraStop = new Text("Camera");
+        cameraStop.setFill(Color.WHITE);
+
+        AtomicBoolean stopCamera = new AtomicBoolean(false);
+        cameraStop.setOnMouseClicked(event -> {
+            if(stopCamera.get() == false) {
+                pathTransition4.stop();
+                pathTransition4.setOrientation(PathTransition.OrientationType.NONE);
+                stopCamera.set(true);
+            }
+            else {
+                pathTransition4.play();
+                pathTransition4.setOrientation(PathTransition.OrientationType.NONE);
+                stopCamera.set(false);
+            }
+        });
         Image uiT = imageHelper.getImage("./images/logo.png");
         ImageView uiTitle = new ImageView(uiT);
         uiTitle.setScaleX(.5);
@@ -348,11 +390,12 @@ public class TrafficScene {
         //uiTitle.setFill(Color.WHITE);
 
         menuPane.getChildren().addAll(startRec, spawnVehiclesBTN(tempPane), uiTitle, //currentTimeT,
-                currentTrafficT, systemText, collisionBoxes);//, testButton);
+                currentTrafficT, systemText, collisionBoxes, cameraStop);//, testButton);
         menuPane.setMargin(uiTitle, new Insets(-20,0,0,-950));
         menuPane.setMargin(currentTimeT, new Insets(-50,0,0,950));
         menuPane.setMargin(currentTrafficT, new Insets(0,0,0,895));
         menuPane.setMargin(systemText, new Insets(0,0,0,600));
+        menuPane.setMargin(cameraStop, new Insets(0,0,0,200));
         menuPane.setMargin(spawnVehiclesBTN(tempPane), new Insets(50,0,0,-800));
 
         return menuPane;
@@ -708,7 +751,7 @@ public class TrafficScene {
         group3.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS),new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.Z_AXIS));
 
-        ImageView imageView = createFollowingImage("white.png");
+        ImageView imageView = createFollowingImage("Joe.png");
         imageView.setScaleX(5);
         imageView.setScaleY(5);
 
