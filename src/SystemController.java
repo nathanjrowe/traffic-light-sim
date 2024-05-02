@@ -94,8 +94,8 @@ public class SystemController {
             add(new Object[]{"N", TrafficLight.type.LEFT, 302, 156});
             add(new Object[]{"S", TrafficLight.type.RIGHT, 264, 86});
             add(new Object[]{"S", TrafficLight.type.LEFT, 284, 86});
-            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 242, 130});
-            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 342, 111});
+            add(new Object[]{"E", TrafficLight.type.SINGLE, 242, 130});
+            add(new Object[]{"W", TrafficLight.type.SINGLE, 342, 111});
            
         }});
         put(2, new ArrayList<Object[]>(){{
@@ -103,8 +103,8 @@ public class SystemController {
             add(new Object[]{"N", TrafficLight.type.RIGHT, 656, 156});
             add(new Object[]{"S", TrafficLight.type.LEFT, 622, 86});
             add(new Object[]{"S", TrafficLight.type.RIGHT, 602, 86});
-            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 576, 130});
-            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 686, 111});
+            add(new Object[]{"E", TrafficLight.type.SINGLE, 576, 130});
+            add(new Object[]{"W", TrafficLight.type.SINGLE, 686, 111});
         }});
         put(3, new ArrayList<Object[]>(){{
             add(new Object[]{"N", TrafficLight.type.LEFT, 299, 467});
@@ -137,8 +137,8 @@ public class SystemController {
             add(new Object[]{"N", TrafficLight.type.RIGHT, 320, 699});
             add(new Object[]{"S", TrafficLight.type.RIGHT, 264, 630});
             add(new Object[]{"S", TrafficLight.type.LEFT, 284, 630});
-            add(new Object[]{"E", TrafficLight.type.STRAIGHT, 237, 674});
-            add(new Object[]{"W", TrafficLight.type.STRAIGHT, 346, 653});
+            add(new Object[]{"E", TrafficLight.type.SINGLE, 237, 674});
+            add(new Object[]{"W", TrafficLight.type.SINGLE, 346, 653});
         }});
         put(6, new ArrayList<Object[]>(){{
             add(new Object[]{"N", TrafficLight.type.LEFT, 638, 699});
