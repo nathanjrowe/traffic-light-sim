@@ -1,7 +1,9 @@
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -294,6 +296,11 @@ public class Bus3D {
     }
     protected boolean returnCollided(){
         return collided;
+    }
+
+    protected Bounds getBoundsInGrandparent(Node node) {
+        Bounds nodeInParent = node.localToParent(node.getBoundsInLocal());
+        return node.getParent().localToParent(nodeInParent);
     }
 
 }
