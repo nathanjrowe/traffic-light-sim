@@ -58,6 +58,7 @@ public class TrafficScene {
     int width = 1200;
     int height = 800;
     boolean stop = true;
+    boolean invisible = false;
     static Pane carsPane = new Pane();
     SystemController systemController = new SystemController();
 
@@ -327,7 +328,16 @@ public class TrafficScene {
         Text collisionBoxes = new Text("Collision Boxes");
         currentTrafficT.setFill(Color.WHITE);
 
-        collisionBoxes.setOnMouseClicked(event -> collisionBox.changeColor());
+        collisionBoxes.setOnMouseClicked(event -> {
+            if (!invisible) {
+                testing.makeCollisionBoxInvisible(0);
+                invisible = true;
+            }
+            else {
+                testing.makeCollisionBoxInvisible(1);
+                invisible = false;
+            }
+        });
         Image uiT = imageHelper.getImage("./images/logo.png");
         ImageView uiTitle = new ImageView(uiT);
         uiTitle.setScaleX(.5);

@@ -123,6 +123,10 @@ public class LightController {
         this.id = id;
     }
 
+    protected CollisionBox returnIntersectionBox(){
+        return intersectionBox;
+    }
+
     //Constructor for busses
     public LightController(int id, lightType type, List<Object[]> lightCoords, List<Object[]> lightCollisionCoords, List<Object[]> pedestrianLightCoords, List<Object[]> pedestrianCollisionCoords) {
         //Create the traffic lights at the intersection
@@ -843,6 +847,14 @@ public class LightController {
         return lightCollisionBoxes.get("B");
     }
 
+    protected List<CollisionBox> getLaneCollisionBoxes(){
+        List<CollisionBox> temp = new ArrayList<>();
+        for (CollisionBox collisionBox : laneCollisionBoxes.values()){
+            temp.add(collisionBox);
+        }
+        return temp;
+    }
+
     //Check collsions with bus collision boxes
     public void checkBusCollision(List<Bus3D> allBuses) {
         //Print the size of the list holding the boxes
@@ -1254,10 +1266,10 @@ public class LightController {
                     for (Vehicle3D vehicle : vehicles) {
                         if (!intersectionBox.getBoundsInParent().intersects(vehicle.getBoundsInGrandparent(vehicle.returnCarShape()))) {
                             vehicles.remove(vehicle);
-                    }
+                        }
 
                         //Send a message about a current accident
-                        if((System.currentTimeMillis() - vehicle.getTimeInIntersection() >= 2500)){
+                        if ((System.currentTimeMillis() - vehicle.getTimeInIntersection() >= 2500)) {
                             TrafficScene.setData("Accident at intersection: ", id);
 
                             //Remove the cars that are in the intersection
@@ -1265,6 +1277,7 @@ public class LightController {
                             TrafficScene.removeFromRoot(vehicle);
                         }
 
+                    }
                     //Update min green time to 30 seconds if the pedestrian light contains an item
                     if(pedLightChanges.size() > 0){
                         minGreen = 30;
@@ -1292,8 +1305,7 @@ public class LightController {
                         //Send traffic data to the system controller
                         sendData();
                     }
-                        
-                    }
+
                     //Change to the left turn arrow
                     if(leftTurnTime > 0){
                         if(dir == direction.NS && pedCrossingNorth.isEmpty() && pedCrossingSouth.isEmpty() && vehicles.isEmpty()){

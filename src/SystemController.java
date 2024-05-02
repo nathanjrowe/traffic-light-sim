@@ -414,6 +414,22 @@ public class SystemController {
             }
         }
     }
+
+    protected void makeCollisionBoxesInvisible(int opacity){
+        for (LightController lightController : lightControllers.values()){
+            for (CollisionBox collisionBox : lightController.getBusCollisionBoxes()){
+                collisionBox.setOpacity(opacity);
+            }
+            for (LightController lightController1 : lightControllers.values()){
+                if (lightController1.returnIntersectionBox() != null){
+                    lightController1.returnIntersectionBox().setOpacity(opacity);
+                }
+            }
+            for (CollisionBox collisionBox1 : lightController.getLaneCollisionBoxes()){
+                collisionBox1.setOpacity(opacity);
+            }
+        }
+    }
     //Get the light collision boxes
     public ArrayList<CollisionBox> getLightCollisionBoxes() {
         ArrayList<CollisionBox> collisionBoxes = new ArrayList<>();

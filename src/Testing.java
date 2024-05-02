@@ -129,6 +129,16 @@ public class Testing extends Application {
         pedCollisionBoxes = systemController.getPedestrianCollisionBoxes();
     }
 
+    protected void makeCollisionBoxInvisible(int opacity){
+        for (CollisionBox collisionBox : lightCollisionBoxes){
+            collisionBox.setOpacity(opacity);
+        }
+        for (CollisionBox collisionBox : pedCollisionBoxes){
+            collisionBox.setOpacity(opacity);
+        }
+        systemController.makeCollisionBoxesInvisible(opacity);
+    }
+
     /**
      * Generates and adds cars to main scene in pane using count as an upper bound
      * @param count amount of vehicles in scene

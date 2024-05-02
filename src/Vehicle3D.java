@@ -663,8 +663,15 @@ public class Vehicle3D {
         //Check for collisions every frame
         //Print the bounds of the car
         if(collidedBox != null) {
-            if(collidedBox.getState() == CollisionBox.State.GO &&
-                    (returnCurrentDirection().matches("Straight")) || returnCurrentDirection().matches("Right")) {
+            if (collidedBox.getState() == CollisionBox.State.GO &&
+                    (collidedBox.getType() == TrafficLight.type.BUS || collidedBox.getType() == TrafficLight.type.BUS_ALT)){
+                this.collided = false;
+                this.stoppedAtLight = false;
+                this.restartVehicle();
+                this.collidedBox = null;
+            } else if(collidedBox.getState() == CollisionBox.State.GO &&
+                    (returnCurrentDirection().matches("Straight")) || returnCurrentDirection().matches("Right")
+                    || returnCurrentDirection().matches("None")) {
                 if(System.currentTimeMillis() - timeAtStopLight >= 2500 && stoppedAtLight) {
                     TrafficScene.setIllegalMove("Beep Bop", collidedBox.getX(), collidedBox.getY());
                 }
@@ -676,7 +683,6 @@ public class Vehicle3D {
                 }
 
             } else if (collidedBox.getState() == CollisionBox.State.LEFT && returnCurrentDirection().matches("Left")) {
-                System.out.println("Left Turn Lane");
                 if(System.currentTimeMillis() - timeAtStopLight >= 2500 && stoppedAtLight){
                     TrafficScene.setIllegalMove("Honk Honk", collidedBox.getX(), collidedBox.getY());
                 }
@@ -688,7 +694,6 @@ public class Vehicle3D {
                 }
 
             } else if (collidedBox.getState() == CollisionBox.State.RIGHT && returnCurrentDirection().matches("Right")) {
-                System.out.println("Right Turn Lane");
                 if(System.currentTimeMillis() - timeAtStopLight >= 2500 && stoppedAtLight){
                     TrafficScene.setIllegalMove("Beep Beep", collidedBox.getX(), collidedBox.getY());
                 }
@@ -718,19 +723,29 @@ public class Vehicle3D {
         }
         //Check for collisions with other vehicles
         if(collidedVehicle != null) {
-            //int s = cars.getChildren().indexOf(carShape);
-            Bounds vehicleBoundsInGrandParent = getBoundsInGrandparent(
-                    collidedVehicle.returnCarShape());
-            if (!frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent) && stoppedAtLight) {
+            if (!vehicles.contains(collidedVehicle)){
                 collidedVehicle = null;
-                collided = false;
+                restartVehicle();
                 stoppedAtLight = false;
-                restartVehicle();
             }
-            if (!frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent) && !stoppedAtLight) {
-                collidedVehicle = null;
-                collided = false;
-                restartVehicle();
+            //int s = cars.getChildren().indexOf(carShape);
+            Bounds vehicleBoundsInGrandParent = null;
+            try {
+                vehicleBoundsInGrandParent = getBoundsInGrandparent(collidedVehicle.returnCarShape());
+            } catch (Exception e) {
+            }
+            if (vehicleBoundsInGrandParent != null) {
+                if (!frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent) && stoppedAtLight) {
+                    collidedVehicle = null;
+                    collided = false;
+                    stoppedAtLight = false;
+                    restartVehicle();
+                }
+                if (!frontBoundsInGrandParent.intersects(vehicleBoundsInGrandParent) && !stoppedAtLight) {
+                    collidedVehicle = null;
+                    collided = false;
+                    restartVehicle();
+                }
             }
         }
         else {
