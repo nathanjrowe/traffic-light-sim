@@ -272,12 +272,31 @@ public class LightController {
                 trafficLight.setScaleY(.5);
                 trafficLight.setScaleX(.5);
                 if(counter == 0) {
-                    if(id == 2 || id == 4) {
+                    if(id == 1){
                         switch (innerCount) {
                             case 0:
                                 trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
                                         new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-14);
+                                trafficLight.setTranslateX(20);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+
                                 trafficLight.setTranslateY(-14.5);
+                                trafficLight.setTranslateX(-40);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                        }
+                    }
+                    if(id == 2) {
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-15);
                                 trafficLight.setTranslateX(-28);
                                 trafficLight.setTranslateZ(-80);
                                 //trafficLight.setTranslateY(-50);
@@ -285,14 +304,13 @@ public class LightController {
                             case 1:
                                 trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
                                         new Rotate(0, Rotate.Z_AXIS));
-                                trafficLight.setTranslateY(-14);
+                                trafficLight.setTranslateY(-14.5);
                                 trafficLight.setTranslateX(30);
                                 trafficLight.setTranslateZ(-140);
-                                //trafficLight.setTranslateY(-50);
                                 break;
                         }
                     }
-                    else{
+                    if(id == 3){
                         switch (innerCount) {
                             case 0:
                                 trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
@@ -300,62 +318,146 @@ public class LightController {
                                 trafficLight.setTranslateY(-13.5);
                                 trafficLight.setTranslateX(20);
                                 trafficLight.setTranslateZ(-140);
-                                //trafficLight.setTranslateY(-50);
                                 break;
                             case 1:
                                 trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
                                         new Rotate(0, Rotate.Z_AXIS));
-                                trafficLight.setTranslateY(-14);
+                                trafficLight.setTranslateY(-14.5);
                                 trafficLight.setTranslateX(-38);
                                 trafficLight.setTranslateZ(-80);
-                                //trafficLight.setTranslateY(-50);
                                 break;
                         }
                     }
+                    if(id == 4){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-14.5);
+                                trafficLight.setTranslateX(26);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+
+                                trafficLight.setTranslateY(-15);
+                                trafficLight.setTranslateX(-34);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                        }
+                    }
+                    if(id == 5){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-16.5);
+                                trafficLight.setTranslateX(-38);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-16);
+                                trafficLight.setTranslateX(20);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
+                    if(id == 6){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-15.5);
+                                trafficLight.setTranslateX(-32);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-15);
+                                trafficLight.setTranslateX(26);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
+                    if(id == 7){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-18);
+                                trafficLight.setTranslateX(-38);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-18);
+                                trafficLight.setTranslateX(22);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
+                    if(id == 8){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-18);
+                                trafficLight.setTranslateX(-14);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-17.5);
+                                trafficLight.setTranslateX(5);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
+
                     innerCount++;
                 }
                 else if(counter == 1){
+                    if(id == 1){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-20);
+                                trafficLight.setTranslateX(-5);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
                     if(id == 2){
                         switch (innerCount) {
                             case 0:
                                 trafficLight.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
                                         new Rotate(90, Rotate.Z_AXIS));
                                 trafficLight.setTranslateY(-20.5);
-                                trafficLight.setTranslateX(8);
+                                trafficLight.setTranslateX(6);
                                 trafficLight.setTranslateZ(-140);
-                                //trafficLight.setTranslateY(-50);
-                                break;
-                            case 1:
-                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
-                                        new Rotate(0, Rotate.Z_AXIS));
-                                trafficLight.setTranslateY(-19.5);
-                                trafficLight.setTranslateX(26);
-                                trafficLight.setTranslateZ(-80);
-                                break;
-                            case 2:
-                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
-                                        new Rotate(0, Rotate.Z_AXIS));
-                                trafficLight.setTranslateY(-19.5);
-                                trafficLight.setTranslateX(26);
-                                trafficLight.setTranslateZ(-80);
                                 break;
                         }
-
                     }
-                    else {
+                    if(id == 3) {
                         switch (innerCount) {
                             case 0:
-
                                 trafficLight.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
                                         new Rotate(90, Rotate.Z_AXIS));
-                                trafficLight.setTranslateY(-60.5);
+                                trafficLight.setTranslateY(-12);
                                 trafficLight.setTranslateX(-5);
-                                trafficLight.setTranslateZ(-140);
+                                trafficLight.setTranslateZ(-80);
                                 break;
                             case 1:
                                 trafficLight.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
                                         new Rotate(90, Rotate.Z_AXIS));
-                                trafficLight.setTranslateY(21.5);
+                                trafficLight.setTranslateY(-22.5);
                                 trafficLight.setTranslateX(-5);
                                 trafficLight.setTranslateZ(-140);
                                 //trafficLight.setTranslateY(-50);
@@ -370,68 +472,190 @@ public class LightController {
                                 break;
                         }
                     }
+                    if(id == 4){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(90, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-8);
+                                trafficLight.setTranslateX(2);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(90, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-9);
+                                trafficLight.setTranslateX(1);
+                                trafficLight.setTranslateZ(-80);
+                                //trafficLight.setTranslateY(-50);
+                                break;
+                            case 2:
+                                trafficLight.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(90, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-21.5);
+                                trafficLight.setTranslateX(2);
+                                trafficLight.setTranslateZ(-140);
+                                //trafficLight.setTranslateY(-50);
+                                break;
+                        }
+                    }
+                    if(id == 5){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(90, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-8);
+                                trafficLight.setTranslateX(0);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
+                    if(id == 6){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(90, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-8);
+                                trafficLight.setTranslateX(0);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
+                    if(id == 7){
+
+                    }
+                    if(id == 8){
+
+                    }
 
                     innerCount++;
                 }
                 else if(counter == 2){
-                    if(id == 2){
+                    if(id == 1){
                         switch (innerCount) {
                             case 0:
                                 trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
                                         new Rotate(0, Rotate.Z_AXIS));
-                                trafficLight.setTranslateY(-20.5);
-                                trafficLight.setTranslateX(26);
+                                trafficLight.setTranslateY(-20);
+                                trafficLight.setTranslateX(-15);
                                 trafficLight.setTranslateZ(-140);
-                                //trafficLight.setTranslateY(-50);
-                                break;
-                            case 1:
-                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
-                                        new Rotate(0, Rotate.Z_AXIS));
-                                trafficLight.setTranslateY(-19.5);
-                                trafficLight.setTranslateX(26);
-                                trafficLight.setTranslateZ(-80);
-                                break;
-                            case 2:
-                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
-                                        new Rotate(0, Rotate.Z_AXIS));
-                                trafficLight.setTranslateY(-19.5);
-                                trafficLight.setTranslateX(26);
-                                trafficLight.setTranslateZ(-80);
                                 break;
                         }
                     }
-                    else {
+                    if(id == 2){
+                    switch (innerCount) {
+                        case 0:
+                            trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                    new Rotate(0, Rotate.Z_AXIS));
+                            trafficLight.setTranslateY(-20);
+                            trafficLight.setTranslateX(-12);
+                            trafficLight.setTranslateZ(-140);
+                            break;
+                        }
+                    }
+
+                    if(id == 3) {
                         switch (innerCount) {
                             case 0:
 
                                 trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
                                         new Rotate(0, Rotate.Z_AXIS));
-                                trafficLight.setTranslateY(-20.5);
-                                trafficLight.setTranslateX(-5);
+                                trafficLight.setTranslateY(18);
+                                trafficLight.setTranslateX(-8);
                                 trafficLight.setTranslateZ(-140);
                                 break;
                             case 1:
                                 trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
                                         new Rotate(0, Rotate.Z_AXIS));
-                                trafficLight.setTranslateY(-20.5);
-                                trafficLight.setTranslateX(-5);
-                                trafficLight.setTranslateZ(-140);
-                                //trafficLight.setTranslateY(-50);
+                                trafficLight.setTranslateY(-78);
+                                trafficLight.setTranslateX(-8);
+                                trafficLight.setTranslateZ(-80);
                                 break;
                             case 2:
                                 trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
                                         new Rotate(0, Rotate.Z_AXIS));
-                                trafficLight.setTranslateY(-20.5);
-                                trafficLight.setTranslateX(-5);
+                                trafficLight.setTranslateY(-25.5);
+                                trafficLight.setTranslateX(-8);
                                 trafficLight.setTranslateZ(-140);
-                                //trafficLight.setTranslateY(-50);
                                 break;
                         }
+                    }
+                    if(id == 4){
+                        switch (innerCount) {
+                            case 0:
+
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-75);
+                                trafficLight.setTranslateX(-1);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(17);
+                                trafficLight.setTranslateX(-1);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                            case 2:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-25.5);
+                                trafficLight.setTranslateX(-1);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
+                    if(id == 5){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(4);
+                                trafficLight.setTranslateX(-10);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
+                    if(id == 6){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(90, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(4);
+                                trafficLight.setTranslateX(-10);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
+                    if(id == 7){
+
+                    }
+                    if(id == 8){
+
                     }
 
                     innerCount++;
                 }
                 else if(counter == 3){
+                    if(id == 1){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-19.5);
+                                trafficLight.setTranslateX(14);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-20.5);
+                                trafficLight.setTranslateX(-4);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
                     if(id == 2){
                         switch (innerCount) {
                             case 0:
@@ -440,7 +664,6 @@ public class LightController {
                                 trafficLight.setTranslateY(-20.5);
                                 trafficLight.setTranslateX(9);
                                 trafficLight.setTranslateZ(-140);
-                                //trafficLight.setTranslateY(-50);
                                 break;
                             case 1:
                                 trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
@@ -451,7 +674,7 @@ public class LightController {
                                 break;
                         }
                     }
-                    else {
+                    if(id == 3) {
                         switch (innerCount) {
                             case 0:
 
@@ -471,12 +694,98 @@ public class LightController {
                                 break;
                         }
                     }
-
+                    if(id == 4){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-20);
+                                trafficLight.setTranslateX(15);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-21);
+                                trafficLight.setTranslateX(-4);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
+                    if(id == 5){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-19.5);
+                                trafficLight.setTranslateX(14);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-20.5);
+                                trafficLight.setTranslateX(-4);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
+                    if(id == 6){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-20);
+                                trafficLight.setTranslateX(18);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-21);
+                                trafficLight.setTranslateX(-2);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
+                    if(id == 7){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-10);
+                                trafficLight.setTranslateX(15);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-10);
+                                trafficLight.setTranslateX(-5);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                        }
+                    }
+                    if(id == 8){
+                        switch (innerCount) {
+                            case 0:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-10);
+                                trafficLight.setTranslateX(2);
+                                trafficLight.setTranslateZ(-140);
+                                break;
+                            case 1:
+                                trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(0, Rotate.Y_AXIS),
+                                        new Rotate(0, Rotate.Z_AXIS));
+                                trafficLight.setTranslateY(-10);
+                                trafficLight.setTranslateX(23);
+                                trafficLight.setTranslateZ(-80);
+                                break;
+                        }
+                    }
                     innerCount++;
                 }
-                //Light rotations 3D
-                //trafficLight.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS),new Rotate(90, Rotate.Y_AXIS),
-                        //new Rotate(0, Rotate.Z_AXIS));
             }
             counter++;
         }

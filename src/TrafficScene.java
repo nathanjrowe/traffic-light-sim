@@ -563,7 +563,7 @@ public class TrafficScene {
         final Timeline timeline = new Timeline();
         timeline.setCycleCount(1);
         timeline.setAutoReverse(true);
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1500)));
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1000)));
         timeline.play();
         timeline.setOnFinished(event -> {
             root3D.getChildren().remove(group);
@@ -1971,11 +1971,11 @@ public class TrafficScene {
         root3D.getChildren().addAll(sunGroup, path, moonGroup, path2);
 
         PathTransition pathTransition = createPathTransition(sunGroup, path);
-        pathTransition.setDuration(Duration.seconds(8.25));
+        pathTransition.setDuration(Duration.seconds(24));
         pathTransition.play();
 
         PathTransition pathTransition2 = createPathTransition(moonGroup, path2);
-        pathTransition2.setDuration(Duration.seconds(8.25));
+        pathTransition2.setDuration(Duration.seconds(24));
         pathTransition2.play();
 
         /**
@@ -1984,7 +1984,7 @@ public class TrafficScene {
         AnimationTimer timer = new AnimationTimer() {
             @Override
         public void handle(long l) {
-            if ((l - startingTime1[0]) / 1000000 > 50) {
+            if ((l - startingTime1[0]) / 1000000 > 100) {
                 if(red[0] > 1 && red[0] <= 100 && redFlag[0] == true){
                    red[0]--;
                    if(green[0] >= 2) {
@@ -2017,20 +2017,20 @@ public class TrafficScene {
                         CycleMethod.NO_CYCLE, stops12[0]);
 
                 switch (counter){
-                    case 0: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 5:00am"); counter++; break;
-                    case 1: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 7:00 AM"); counter++;break;
-                    case 2: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 9:00 AM");counter++;break;
-                    case 3: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 11:00 AM");counter++;break;
-                    case 4: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 1:00 PM");counter++;break;
-                    case 5: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 3:00 PM");counter++;break;
-                    case 6: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 5:00 PM");counter++;break;
-                    case 7: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 7:00 PM");counter++;break;
-                    case 8: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 9:00 PM");counter++;break;
-                    case 9: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 11:00 PM");counter++;break;
-                    case 10: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Sim Time: 1:00 AM");counter++;break;
-                    case 11: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Current Time: 3:00am"); counter = 0;break;
+                    case 0: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 5:00am"); break;
+                    case 5: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 7:00 AM"); break;
+                    case 10: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 9:00 AM");break;
+                    case 15: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 11:00 AM");break;
+                    case 20: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 1:00 PM");break;
+                    case 25: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 3:00 PM");break;
+                    case 30: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 5:00 PM");break;
+                    case 35: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 7:00 PM");break;
+                    case 40: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 9:00 PM");break;
+                    case 45: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 11:00 PM");break;
+                    case 50: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 1:00 AM");break;
+                    case 55: scene.setFill(lg1[0]); currentTimeT.textProperty().set("Sim Time: 3:00 AM"); counter = 0;break;
                 }
-
+                counter++;
 
                 startingTime1[0] = l;
             }
