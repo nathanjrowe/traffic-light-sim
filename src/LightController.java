@@ -196,14 +196,16 @@ public class LightController {
         else {
             collisionBox = new CollisionBox(x, y, 6, 6, this);
             collisionBox.setState(CollisionBox.State.STOP);
-        }
-        //Connect the collision box to the associated traffic light
-        for(Pane trafficLight : trafficLights.get(location)){
-            TrafficLight trafficLightData = (TrafficLight) trafficLight.getUserData();
-            if(trafficLightData.getType() == type && trafficLightData.getCollisionBox() == null){
-                trafficLightData.setCollisionBox(collisionBox);
+
+            //Connect the collision box to the associated traffic light
+            for(Pane trafficLight : trafficLights.get(location)){
+                TrafficLight trafficLightData = (TrafficLight) trafficLight.getUserData();
+                if(trafficLightData.getType() == type && trafficLightData.getCollisionBox() == null){
+                    trafficLightData.setCollisionBox(collisionBox);
+                }
             }
         }
+
 
         //Add collision box to the list of collision boxes for the location
         lightCollisionBoxes.get(location).add(collisionBox);
