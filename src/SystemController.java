@@ -74,15 +74,15 @@ public class SystemController {
         //Coordinates for lights at bus intersections
         put(7, new ArrayList<Object[]>(){{
             add(new Object[]{"N", TrafficLight.type.STRAIGHT, 322, 528});
-            add(new Object[]{"N", TrafficLight.type.STRAIGHT, 302, 528});
+            add(new Object[]{"N", TrafficLight.type.STRAIGHT_ALT, 302, 528});
             add(new Object[]{"S", TrafficLight.type.STRAIGHT, 284, 589});
-            add(new Object[]{"S", TrafficLight.type.STRAIGHT, 264, 589});
+            add(new Object[]{"S", TrafficLight.type.STRAIGHT_ALT, 264, 589});
         }});
         put(8, new ArrayList<Object[]>(){{
             add(new Object[]{"N", TrafficLight.type.STRAIGHT, 636, 528});
-            add(new Object[]{"N", TrafficLight.type.STRAIGHT, 656, 528});
+            add(new Object[]{"N", TrafficLight.type.STRAIGHT_ALT, 656, 528});
             add(new Object[]{"S", TrafficLight.type.STRAIGHT, 602, 589});
-            add(new Object[]{"S", TrafficLight.type.STRAIGHT, 622, 589});
+            add(new Object[]{"S", TrafficLight.type.STRAIGHT_ALT, 622, 589});
         }});
     }};
 
@@ -151,17 +151,17 @@ public class SystemController {
         //Busses
         put(7, new ArrayList<Object[]>(){{
             add(new Object[]{"N", TrafficLight.type.STRAIGHT, 322, 589});
-            add(new Object[]{"N", TrafficLight.type.STRAIGHT, 302, 589});
+            add(new Object[]{"N", TrafficLight.type.STRAIGHT_ALT, 302, 589});
             add(new Object[]{"S", TrafficLight.type.STRAIGHT, 284, 528});
-            add(new Object[]{"S", TrafficLight.type.STRAIGHT, 264, 528});
+            add(new Object[]{"S", TrafficLight.type.STRAIGHT_ALT, 264, 528});
             add(new Object[]{"B", TrafficLight.type.STRAIGHT, 250, 548});
             add(new Object[]{"B", TrafficLight.type.STRAIGHT, 30, 568});
         }});
         put(8, new ArrayList<Object[]>(){{
             add(new Object[]{"N", TrafficLight.type.STRAIGHT, 636, 589});
-            add(new Object[]{"N", TrafficLight.type.STRAIGHT, 656, 589});
+            add(new Object[]{"N", TrafficLight.type.STRAIGHT_ALT, 656, 589});
             add(new Object[]{"S", TrafficLight.type.STRAIGHT, 602, 528});
-            add(new Object[]{"S", TrafficLight.type.STRAIGHT, 622, 528});
+            add(new Object[]{"S", TrafficLight.type.STRAIGHT_ALT, 622, 528});
             add(new Object[]{"B", TrafficLight.type.STRAIGHT, 602, 548});
             add(new Object[]{"B", TrafficLight.type.STRAIGHT, 372, 568});
         }});

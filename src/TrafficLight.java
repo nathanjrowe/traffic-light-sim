@@ -19,7 +19,7 @@ public class TrafficLight {
         GREENRIGHT,YELLOWRIGHT,REDRIGHT
     }
     public enum type{
-        LEFT, RIGHT, STRAIGHT, SINGLE
+        LEFT, RIGHT, STRAIGHT, SINGLE, STRAIGHT_ALT
     }
 
     private final GridPane pane;
