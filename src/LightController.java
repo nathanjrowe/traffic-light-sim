@@ -976,7 +976,7 @@ public class LightController {
                     }
                     //Change to the left turn arrow
                     if(leftTurnTime > 0){
-                        if(dir == direction.NS){
+                        if(dir == direction.NS && pedCrossingNorth.isEmpty() && pedCrossingSouth.isEmpty() && vehicles.isEmpty()){
                             //Set north box to left and east box to right for five seconds
                             if(leftTurnTime >= 30) {
                                 changeLightState("N", TrafficLight.type.LEFT, "green-left");
@@ -1012,7 +1012,7 @@ public class LightController {
                             }
                             
                         }
-                        else if(dir == direction.EW){
+                        else if(dir == direction.EW && pedCrossingNorth.isEmpty() && pedCrossingSouth.isEmpty() && vehicles.isEmpty()){
                             //Set east box to left and north box to right for five seconds
                             if(leftTurnTime >= 30) {
                                 changeLightState("E", TrafficLight.type.LEFT, "green-left");
@@ -1051,11 +1051,11 @@ public class LightController {
                     }
                     //Change the light color for the current direction
                     else if (greenTime > 0) {
-                        if(dir == direction.NS && pedCrossingNorth.isEmpty() && pedCrossingSouth.isEmpty()){
+                        if(dir == direction.NS && pedCrossingNorth.isEmpty() && pedCrossingSouth.isEmpty() && vehicles.isEmpty()){
                             changeAllLightState("N", "green");
                             changeAllLightState("S", "green");
                         }
-                        else if(dir == direction.EW && pedCrossingEast.isEmpty() && pedCrossingWest.isEmpty()){
+                        else if(dir == direction.EW && pedCrossingEast.isEmpty() && pedCrossingWest.isEmpty() && vehicles.isEmpty()){
                             changeAllLightState("E", "green");
                             changeAllLightState("W", "green");
                         }
