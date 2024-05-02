@@ -955,6 +955,7 @@ public class LightController {
                     //If bus light, set green time to 0 if a pedestrian light contains an item
                     
                     if(type == lightType.BUS){
+                        leftTurnTime = 0;
                         //System.out.println(busApproaching);
                         if(busApproaching || pedLightChanges.size() > 0 || !pedCrossingNorth.isEmpty() || !pedCrossingSouth.isEmpty() || !pedCrossingEast.isEmpty() || !pedCrossingWest.isEmpty()){
                             greenTime = 0;
