@@ -197,6 +197,11 @@ public class TrafficScene {
         return path;
     }
 
+    private PathTransition createCameraPath(Group group, Circle path) {
+        PathTransition pathTransition = new PathTransition(Duration.seconds(10), path, group);
+        return pathTransition;
+    }
+
     private PathTransition createPathTransition(Group group, Path path) {
         PathTransition pathTransition = new PathTransition(Duration.seconds(10), path, group);
         pathTransition.setInterpolator(Interpolator.LINEAR);

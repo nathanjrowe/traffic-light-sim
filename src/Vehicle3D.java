@@ -626,7 +626,8 @@ public class Vehicle3D {
         //Check for collisions every frame
         //Print the bounds of the car
         if(collidedBox != null) {
-            if(collidedBox.getState() == CollisionBox.State.GO && returnCurrentDirection().matches("Straight")) {
+            if(collidedBox.getState() == CollisionBox.State.GO &&
+                    (returnCurrentDirection().matches("Straight")) || returnCurrentDirection().matches("Right")) {
                 this.collided = false;
                 this.stoppedAtLight = false;
                 this.restartVehicle();
